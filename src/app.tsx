@@ -1,21 +1,21 @@
-import * as React from 'react';
+import * as React from "react";
+import { BrowserRouter, Route, Routes} from "react-router-dom";
+import Dashboard from "./pages/dashboard/dashboard";
+import Login from "./pages/login";
+import { Home } from "./pages/home";
+import Register from "./pages/register";
+
+
 
 export  function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  return ( 
+    <BrowserRouter>
+      <Routes>
+          <Route path='/' element={<Home/>} />
+          <Route path='/dashboard' element={<Dashboard/>} />
+          <Route path='login' element={<Login/>} />
+          <Route path='register' element={<Register/>} />
+      </Routes>  
+    </BrowserRouter>
   );
 }
