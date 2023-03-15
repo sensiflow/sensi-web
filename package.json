@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack serve",
+    "build": "webpack",
     "lint": "npx eslint src/**",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

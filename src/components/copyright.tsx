@@ -1,13 +1,13 @@
 import * as React from "react";
-import { Typography, Link } from "@mui/material";
+import { Typography, Link, SxProps } from "@mui/material";
 
 //put docs link
-export function Copyright(props: any) {
+export function Copyright(props: SxProps) {
     return (
         <Typography 
             variant="body2" 
-            color="text.secondary" 
-            align="center" {...props}
+            sx = {{ color: "text.secondary", ...props}}
+            align="center"
         >
             {'Copyright © '}
             <Link 
