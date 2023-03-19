@@ -15,7 +15,6 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { mainListItems } from './list-items';
 import { Copyright } from '../../components/copyright';
 
-
 const drawerWidth = 240;
 
 interface AppBarProps extends MuiAppBarProps {
