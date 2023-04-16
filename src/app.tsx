@@ -1,19 +1,19 @@
 import * as React from "react";
 import { BrowserRouter, Route, Routes} from "react-router-dom";
-import Dashboard from "./pages/dashboard/dashboard";
+import DashboardSPA from "./pages/dashboard_spa/dashboardspa";
+import DevicesPage from "./pages/dashboard_spa/devices";
 
 import Login from "./pages/auth/login";
-import { Home } from "./pages/home";
-import Register from "./pages/auth/register";
+import { paths } from "./app-paths";
 
 export  function App() {
   return ( 
     <BrowserRouter>
       <Routes>
-          <Route path='/' element={<Home/>} />
-          <Route path='/dashboard' element={<Dashboard/>} />
-          <Route path='login' element={<Login/>} />
-          <Route path='register' element={<Register/>} />
+          <Route path={paths.login} element={<Login/>} />
+          <Route path={paths.dashboard.home} element={<DashboardSPA/>}>
+            <Route path={paths.dashboard.devices} element={<DevicesPage/>}></Route>
+          </Route>
       </Routes>  
     </BrowserRouter>
   );

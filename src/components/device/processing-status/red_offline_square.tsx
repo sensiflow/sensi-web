@@ -1,12 +1,11 @@
 import { useTheme } from "@mui/material/styles";
 import * as React from "react";
-import { tokens } from "../../theme";
+import { tokens } from "../../../theme";
 
 
 export default function RedOfflineSquare(){
 
     const theme = useTheme()
-    const colors = tokens(theme.palette.mode)
     const isDarkMode = theme.palette.mode === 'dark'
     const redTone = isDarkMode ? 'red' : "#e53935"
 

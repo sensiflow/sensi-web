@@ -1,12 +1,11 @@
 import { useTheme } from '@mui/material/styles';
 import * as React from 'react';
-import { tokens } from '../../theme';
+import { tokens } from '../../../theme';
 
 // Component for the PAUSED state
 export default function YellowPausedRectangles(){
 
   const theme = useTheme();
-  const colors = tokens(theme.palette.mode)
   const isDarkMode = theme.palette.mode === 'dark';
 
   const yellowColor = isDarkMode ? 'yellow' : '#fdd835'

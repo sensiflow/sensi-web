@@ -1,72 +1,80 @@
-import { Box, Typography, useTheme } from "@mui/material";
-import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
-import { devices } from "../../../api/fake/mock-data";
+import { Box, Button } from "@mui/material";
+import { Theme, useTheme } from '@mui/material/styles';
+import { GridPaginationModel } from "@mui/x-data-grid";
+import { devices as mockDevices } from "../../../api/fake/mock-data";
 import * as React from 'react';
-import { Device, DeviceProcessingState } from "../../../model/device";
-import { Page } from "../../../model/page";
 import Header from "../../../components/Header";
-import GreenOnlineCircle from "../../../components/processing-status/green_online_circle";
-import RedOfflineSquare from "../../../components/processing-status/red_offline_square";
-import YellowPausedRectangles from "../../../components/processing-status/yellow_paused_state";
+import DeviceList from "../../../components/device/device-list";
+import CreateDeviceDialog from "../../../components/device/create-device-dialog";
+import { DeviceInput } from "../../../components/device/create-device-dialog";
+import { Device } from "../../../model/device";
+import { Page } from "../../../model/page";
 
 
-// Function to return component based on onlineability
-const getDeviceStatusComponent = (state) => {
-    switch (state) {
-      case DeviceProcessingState.ONLINE:
-        return <GreenOnlineCircle />;
-      case DeviceProcessingState.OFFLINE:
-        return <RedOfflineSquare />;
-      case DeviceProcessingState.PAUSED:
-        return <YellowPausedRectangles/>;
-      default:
-        return null; // Return null for unknown states or handle error case TODO
-    }
-  };
 
-const deviceColumnDefinition: GridColDef<Device>[] = [
-    { field: 'name', headerName: 'Name', editable: true, flex: 1},
-    { field: 'description', headerName: 'Description', editable: true, flex: 1},
-    { field: 'stream', headerName: "Stream", flex: 1},
-    { 
-        field: 'status', 
-        headerName: "Processing Status", 
-        flex: 2,
-        renderCell: ({row: {status}}) => getDeviceStatusComponent(DeviceProcessingState[status]),
-        align: 'center',
-        headerAlign: 'center'
-    }
-  ];
-  
 
-export default function Devices(){
+export default function DevicesPage(){
     const [paginationModel, setPaginationModel] = React.useState<GridPaginationModel>({pageSize: 5, page: 0})
-    return DevicesStateless(devices, paginationModel, (newModel) => setPaginationModel(newModel) )
-}
-
-function DevicesStateless(
-    devicesPage: Page<Device>, 
-    paginationModel: GridPaginationModel,
-    onPaginationModelChange: (GridPaginationModel) => void
-){
-
-    const devices: Array<Device> = devicesPage.items
-    const columnNames: GridColDef<Device>[] = deviceColumnDefinition
-
-    return <Box m="20px">
-        <Header title="Devices" subtitle="Managing the organization devices"/>
-        <Box m="40px 0 0 0" height="75vh">
-            <DataGrid
-            autoHeight
-            checkboxSelection
-            density="comfortable"
-            editMode="cell"
-            paginationModel={paginationModel}
-            onPaginationModelChange={onPaginationModelChange} 
-            columns={columnNames} 
-            rows={devices}
-            />
-        </Box>
-    </Box> 
+    const [openDialog, setOpenDialog] = React.useState(false);
+    const [devices, setDevices] = React.useState(mockDevices)
     
+    const theme: Theme = useTheme()
+    const hoverColor = theme.palette.mode === 'dark' ? '#09A065' : '#0BC87E'
+    
+    return (
+    <Box m="20px">
+      <div style={{display: 'flex', justifyContent: 'space-between', alignItems: "center"}}>
+        <Header title="Devices" subtitle="Managing the organization devices"/>
+
+        <Button variant="contained" sx={{
+          "width":"150px",
+          "height":"60px", 
+          "color":"white", 
+          "font-size":"15px",
+          "backgroundColor":"#2EE59D", 
+          ":hover": {
+              "backgroundColor": hoverColor,
+            },
+          "box-shadow": "0px 8px 15px " + hoverColor}}
+          onClick={() => setOpenDialog(true)}
+          >
+          Add
+        </Button>
+      </div>
+      <Box m="40px 0 0 0" height="75vh">
+          <DeviceList
+            devicesPage={devices}
+            paginationModel={paginationModel}
+            onPaginationModelChange={setPaginationModel}
+          />
+      </Box>
+      <CreateDeviceDialog
+        isOpen={openDialog}
+        handleClose={() => setOpenDialog(false)}
+        onSubmit={(input: DeviceInput) => {
+          const device: Device = {
+            id: devices.items.length + 1,
+            name: input.name,
+            description: input.description,
+            status: "OFFLINE",
+            stream: input.streamUrl,
+            user: 1
+          }
+
+          setDevices((previous) => {
+            return {
+              totalPages: previous.totalPages,
+              totalElements: previous.totalElements + 1,
+              isLast: true,
+              isFirst: true,
+              items: [...previous.items, device],
+            }
+          })
+          setOpenDialog(false)
+        }}
+        theme={theme}
+      />
+    </Box>
+    )
 }
+

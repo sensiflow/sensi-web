@@ -8,7 +8,6 @@ export interface Device{
     user: number
 }
 
-
 export enum DeviceProcessingState{
     ONLINE,
     OFFLINE,

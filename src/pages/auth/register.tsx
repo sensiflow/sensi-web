@@ -32,7 +32,7 @@ export default function Register() {
     });
 
     if (success) {
-      navigate(paths.home)
+      //TODO CHANGE REGISTER
     }
   };
 

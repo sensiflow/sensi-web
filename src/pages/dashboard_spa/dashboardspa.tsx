@@ -3,11 +3,8 @@ import { ColorModeContext, useMode } from '../../theme';
 import { ThemeProvider} from "@mui/material/styles";
 import { CssBaseline } from '@mui/material';
 import Topbar from './global/topbar';
-import { Outlet, Route, Routes } from 'react-router-dom';
-import Sidebar from './global/sidebar';
-import { Home } from '../home';
-import Devices from './devices';
-import { paths } from '../../app-paths';
+import { Outlet } from 'react-router-dom';
+import DashboardSidebar from './global/sidebar';
 
 
 
@@ -16,15 +13,17 @@ export default function DashboardSPA() {
   const [theme, colorMode] = useMode();
 
   return (
-  <ColorModeContext.Provider value={colorMode}>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Sidebar/>
-      <div className='content'>
-        <Topbar/>
-        <Outlet/>
-      </div>
-    </ThemeProvider>
-  </ColorModeContext.Provider>
+    <ColorModeContext.Provider value={colorMode}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <div className='app'>
+          <DashboardSidebar/>
+          <main className='content'>
+            <Topbar/>
+            <Outlet/>
+          </main>
+        </div>
+      </ThemeProvider>
+    </ColorModeContext.Provider>
   );
 }

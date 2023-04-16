@@ -33,7 +33,7 @@ export default function Login() {
     });
 
     if (success) {
-      navigate(paths.home)
+      navigate(paths.dashboard.home)
     }
   };
 
