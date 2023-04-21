@@ -1,7 +1,7 @@
 import { Theme } from "@mui/material";
 import { DeviceInputDTO } from "../../../api/dto/input/device-input";
 import { Device } from "../../../model/device";
-import { UseFormReturn } from "react-hook-form";
+import { MouseEventHandler } from "react";
 
 export interface DeviceDialogProps {
     isOpen: boolean
@@ -22,6 +22,10 @@ export interface DeviceFormDialogProps extends DeviceDialogProps {
 
 type DialogPropsOmitted = 'onSubmit';
 export interface DeleteDeviceDialogProps extends Omit<DeviceDialogProps,DialogPropsOmitted>{
-    onSubmit: (devicesID) => void;
+    onSubmit: (mouseEvent) => void;
+}
+
+export interface UpdateDeviceUrlDialogProps extends Omit<DeviceDialogProps,DialogPropsOmitted> {
+    onSubmit: (mouseEvent) => void;
 }
 

@@ -1,4 +1,4 @@
-import { GridPaginationModel, GridColDef, DataGrid, GridOverlay, GridLoadingOverlay } from "@mui/x-data-grid"
+import { GridPaginationModel, GridColDef, DataGrid } from "@mui/x-data-grid"
 import { Device, DeviceProcessingState } from "../../model/device"
 import { Page } from "../../model/page"
 import * as React from "react"
@@ -18,11 +18,13 @@ interface DeviceListProps{
   onPaginationModelChange: (GridPaginationModel) => void
   onRowSelection: (newSelection) => void
   onRowUpdate: (deviceToUpdate: Device) => void
+  onRowInfoRequest: (deviceID: number) => void
   rowSelectionModel: Array<number>
 }
 
 interface OptionsColumnHandlers{
   onRowUpdate: (deviceToUpdate: Device) => void
+  onRowInfoRequest: (deviceID: number) => void
 }
 
 const deviceColumnDefinition: (handlers: OptionsColumnHandlers) => GridColDef<Device>[] = (handlers) => { return [
@@ -63,7 +65,7 @@ const gridRowOptions = (handlers: OptionsColumnHandlers, row: Device) => {
        <IconButton 
         children= {<InfoIcon />}
         onClick={() => {
-          console.log("Info")
+          handlers.onRowInfoRequest(row.id)
         }}
       />
     </div>
@@ -92,13 +94,14 @@ export default function DeviceList(
         onPaginationModelChange,
         onRowSelection,
         onRowUpdate,
+        onRowInfoRequest,
         rowSelectionModel
       }: DeviceListProps
   ){  
       const theme = useTheme();
       const devices: Array<Device> = devicesPage?.items
-      const columnNames: GridColDef<Device>[] = deviceColumnDefinition({onRowUpdate})
-      console.log(isLoading)
+      const columnNames: GridColDef<Device>[] = deviceColumnDefinition({onRowUpdate, onRowInfoRequest})
+
       return <DataGrid
         paginationMode="server"
         keepNonExistentRowsSelected

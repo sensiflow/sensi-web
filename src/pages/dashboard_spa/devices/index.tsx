@@ -11,18 +11,25 @@ import { DeleteDeviceInputDTO, DeviceInputDTO } from "../../../api/dto/input/dev
 import { createDevice, deleteDevices, getDevices, updateDevice } from "../../../api/fake/fake-api";
 import { PaginationModel } from "../../../model/pagination-model";
 import { Page } from "../../../model/page";
+import UpdateDeviceUrlDialog from "../../../components/device/dialog/edit-confirm-dialog";
+import { useNavigate } from "react-router-dom";
+import { paths, params } from "../../../app-paths";
+import { replaceParamFromUri } from "../../../utils";
 
 export default function DevicesPage(){
+    const navigate = useNavigate()
     const [paginationModel, setPaginationModel] = React.useState<PaginationModel>({pageSize: 5, page: 0})
     const [isLoading, setIsLoading] = React.useState(true)
 
     const [openCreateDialog, setOpenCreateDialog] = React.useState(false)
     const [openDeleteDialog, setOpenDeleteDialog] = React.useState(false)
     const [openUpdateDialog, setOpenUpdateDialog] = React.useState(false)
+    const [openUpdateDeviceUrlDialog, setOpenUpdateDeviceUrlDialog] = React.useState(false)
 
     const [devices, setDevices] = React.useState<Page<Device>>(null)
     const [devicesIDSelected, setDevicesIDSelected] = React.useState<Array<number>>([])
     const [currentDeviceBeingUpdated, setCurrentDeviceBeingUpdated] = React.useState<Device>(null)
+    const [updatedDeviceInfo, setUpdatedDeviceInfo] = React.useState<DeviceInputDTO>(null)
 
     const theme: Theme = useTheme()
     const isDarkMode = theme.palette.mode === 'dark'
@@ -43,10 +50,17 @@ export default function DevicesPage(){
     }, [paginationModel])
 
     const onDeviceCreateSubmit = async (input: DeviceInputDTO) => {
-      await createDevice(input)
+      const responseOutput = await createDevice(input)
+      const deviceID = responseOutput.id
       reloadDevicesPage()
       setOpenCreateDialog(false)
-      //navigate to device page
+      const parameters = {[params.device]: deviceID.toString()}
+      const uri = replaceParamFromUri(paths.dashboard.device, parameters)
+      navigate(uri, {
+        state: {
+          [params.device]: deviceID,
+        }
+      })
     }
 
     const onDeviceDeleteSubmit = async (input: DeleteDeviceInputDTO) => {
@@ -63,11 +77,42 @@ export default function DevicesPage(){
       setOpenUpdateDialog(true)
     }
 
-    const onDeviceUpdateSubmit = async (input: DeviceInputDTO) => {
-      //TODO: alert user that changing the streamUrl shuts down the processing
-      await updateDevice(input, currentDeviceBeingUpdated.id)
+    const onDeviceInfoRequest = (deviceID: number) => {
+      const parameters = {[params.device]: deviceID.toString()}
+      const uri = replaceParamFromUri(paths.dashboard.device, parameters)
+      navigate(uri, {
+        state: {
+          [params.device]: deviceID,
+        }
+      })
+    }
+  
+    const updateDevices = async (input: DeviceInputDTO) => {
+      await updateDevice(input, currentDeviceBeingUpdated.id) 
       reloadDevicesPage()
       setOpenUpdateDialog(false)
+    }
+
+    const onUpdateDialogClose = () => {
+      setOpenUpdateDialog(false)
+      setCurrentDeviceBeingUpdated(null) 
+    }
+
+    const onDeviceUpdateSubmit = async (input: DeviceInputDTO) => {
+      const currentStreamUrl = currentDeviceBeingUpdated.streamUrl
+      if(currentStreamUrl !== "PAUSED" && input.streamUrl !== currentStreamUrl){
+        setUpdatedDeviceInfo(input)
+        setOpenUpdateDeviceUrlDialog(true)
+        return
+      }
+      await updateDevices(input)
+    }
+    
+    const onUpdateDeviceUrlSubmit = async (input: DeviceInputDTO) => {
+      await updateDevices(input)
+      setUpdatedDeviceInfo(null)
+      setOpenUpdateDeviceUrlDialog(false)
+      onUpdateDialogClose()
     }
 
     return (
@@ -118,6 +163,7 @@ export default function DevicesPage(){
             onPaginationModelChange={setPaginationModel}
             onRowSelection={setDevicesIDSelected}
             onRowUpdate={onDeviceUpdateRequest}
+            onRowInfoRequest={onDeviceInfoRequest}
             rowSelectionModel={devicesIDSelected}
           />
         </Box>
@@ -139,16 +185,25 @@ export default function DevicesPage(){
       {
         currentDeviceBeingUpdated !== null && <UpdateDeviceDialog
           isOpen={openUpdateDialog}
-          handleClose={() => { 
-            setOpenUpdateDialog(false)
-            setCurrentDeviceBeingUpdated(null) 
-          }}
+          handleClose={onUpdateDialogClose}
           onSubmit={onDeviceUpdateSubmit}
           theme={theme} 
           currentDevice={currentDeviceBeingUpdated}      
-        /> 
+        />
+      }
+
+      {
+        currentDeviceBeingUpdated !== null && <UpdateDeviceUrlDialog
+          isOpen={openUpdateDeviceUrlDialog}
+          handleClose={() => {
+            setOpenUpdateDeviceUrlDialog(false)
+          }}
+          onSubmit={() => {onUpdateDeviceUrlSubmit(updatedDeviceInfo)}}
+          theme={theme}
+        />
       }
     </Box>
+    
     
     )
 }

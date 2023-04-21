@@ -5,6 +5,7 @@ import DevicesPage from "./pages/dashboard_spa/devices";
 
 import Login from "./pages/auth/login";
 import { paths } from "./app-paths";
+import DevicePage from "./pages/dashboard_spa/device/device";
 
 export  function App() {
   return ( 
@@ -13,6 +14,7 @@ export  function App() {
           <Route path={paths.login} element={<Login/>} />
           <Route path={paths.dashboard.home} element={<DashboardSPA/>}>
             <Route path={paths.dashboard.devices} element={<DevicesPage/>}></Route>
+            <Route path={paths.dashboard.device} element={<DevicePage/>}></Route>
           </Route>
       </Routes>  
     </BrowserRouter>

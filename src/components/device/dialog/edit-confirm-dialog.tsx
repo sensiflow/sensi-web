@@ -1,20 +1,14 @@
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import { UpdateDeviceUrlDialogProps } from './device-dialog-interface';
 import { dialogSx } from './styles';
-import { DeleteDeviceDialogProps } from './device-dialog-interface';
 
-
-export default function DeleteDeviceDialog({
+export default function UpdateDeviceUrlDialog({
   isOpen, 
   theme, 
   handleClose, 
   onSubmit
-}: DeleteDeviceDialogProps) {
+}: UpdateDeviceUrlDialogProps) {
 
   return (
     <div>
@@ -26,12 +20,12 @@ export default function DeleteDeviceDialog({
         sx={dialogSx(theme)}
       >
         <DialogTitle id="alert-dialog-title">
-          {"Delete Devices"}
+          {"Updating Device's Url"}
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
           Are you sure? 
-          This will interrupt every on-going processing and metric analysis of these devices. 
+          Changing this will interrupt every on-going processing and metric analysis of these devices. 
           </DialogContentText>
         </DialogContent>
         <DialogActions>

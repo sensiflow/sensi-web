@@ -73,6 +73,27 @@ export function createDevice(inputDTO: DeviceInputDTO): IdOutputDTO {
 }
 
 /**
+ *  Gets a device by id
+ *  @param {deviceID} number
+ *  @param {expandable} Boolean
+ *  @returns {DeviceOutputDTO}
+ */
+export function getDevice(deviceID: number, expandable: Boolean = false): DeviceOutputDTO {
+    const device = devices.find(device => device.id === deviceID);
+    if(device === undefined) { throw new Error(`Device with id ${deviceID} not found`)}
+
+    if(expandable) {
+        const expandedDevice: DeviceExpandedOutputDTO = {
+            ...device,
+            user: users.find(user => user.id === device.user)
+        }
+        return expandedDevice;
+    }
+
+    return device;
+}
+
+/**
  * Gets all devices
  */
 export function getDevices(paginationModel: PaginationModel, expandable: Boolean = false): PageOutputDTO<DeviceOutputDTO> {
