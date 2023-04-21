@@ -1,11 +1,9 @@
-
 export interface Device{
     id: number,
     name: string,
     description: string,
-    stream: string,
+    streamUrl: string,
     status: DeviceProcessingStateKey,
-    user: number
 }
 
 export enum DeviceProcessingState{
