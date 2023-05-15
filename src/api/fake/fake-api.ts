@@ -9,16 +9,21 @@ import { IdOutputDTO } from "../dto/output/id-output";
 import { PageOutputDTO } from "../dto/output/page-output";
 import { devices, users } from "./mock-data";
 
+
+const WORK_DELAY = 250;
+
 /**
  * Checks if the user matches one and logs him in
  * 
  * @param {inputDTO} LoginInputDTO
  * @returns {AuthOutputDTO} 
  */
-export function login(inputDTO: LoginInputDTO): AuthOutputDTO {
+export async function login(inputDTO: LoginInputDTO): Promise<AuthOutputDTO> {
     const user = users.find(
         user => user.email === inputDTO.email && user.password === inputDTO.password
     );
+
+    await delay(WORK_DELAY);
     
     if(user) {
         console.log(`User with email ${inputDTO.email} logged in`);
@@ -34,7 +39,7 @@ export function login(inputDTO: LoginInputDTO): AuthOutputDTO {
  * @param {inputDTO} RegisterInputDTO 
  * @returns {AuthOutputDTO}
  */
-export function register(inputDTO: RegisterInputDTO): AuthOutputDTO {
+export async function register(inputDTO: RegisterInputDTO): Promise<AuthOutputDTO> {
     const user = users.find(user => user.email === inputDTO.email);
     
     if (user) {
@@ -49,6 +54,8 @@ export function register(inputDTO: RegisterInputDTO): AuthOutputDTO {
         ...inputDTO
     });
 
+    await delay(WORK_DELAY);
+
     return {id: id}
 }
 
@@ -57,18 +64,19 @@ export function register(inputDTO: RegisterInputDTO): AuthOutputDTO {
  * @param {inputDTO} DeviceInputDTO
  * @returns {IdOutputDTO}
  */
-export function createDevice(inputDTO: DeviceInputDTO): IdOutputDTO {
+export async function createDevice(inputDTO: DeviceInputDTO): Promise<IdOutputDTO> {
     const currentIds: number[] = devices.map((device) => {return device.id})
     const device: DeviceSimpleOutputDTO = {
       id: Math.max(...currentIds) + 1, 
       name: inputDTO.name,
       description: inputDTO.description,
-      status: "OFFLINE",
+      status: "INACTIVE",
       streamUrl: inputDTO.streamUrl,
       user: 1
     }
-
-    devices.push(device);
+    await delay(WORK_DELAY);
+    devices.push(device)
+    
     return {id: device.id}
 }
 
@@ -78,7 +86,7 @@ export function createDevice(inputDTO: DeviceInputDTO): IdOutputDTO {
  *  @param {expandable} Boolean
  *  @returns {DeviceOutputDTO}
  */
-export function getDevice(deviceID: number, expandable: Boolean = false): DeviceOutputDTO {
+export async function getDevice(deviceID: number, expandable: Boolean = false): Promise<DeviceOutputDTO> {
     const device = devices.find(device => device.id === deviceID);
     if(device === undefined) { throw new Error(`Device with id ${deviceID} not found`)}
 
@@ -90,15 +98,18 @@ export function getDevice(deviceID: number, expandable: Boolean = false): Device
         return expandedDevice;
     }
 
+    await delay(WORK_DELAY);
+
     return device;
 }
 
 /**
  * Gets all devices
  */
-export function getDevices(paginationModel: PaginationModel, expandable: Boolean = false): PageOutputDTO<DeviceOutputDTO> {
+export async function getDevices(paginationModel: PaginationModel, expandable: Boolean = false): Promise<PageOutputDTO<DeviceOutputDTO>> {
     const items = devices.slice(paginationModel.pageSize * paginationModel.page, paginationModel.pageSize * (paginationModel.page + 1));
     const totalPages = paginationModel.pageSize === 0 ? 0 : Math.ceil(items.length / paginationModel.pageSize)
+    await delay(WORK_DELAY);
     return {
         totalElements: devices.length,
         totalPages: totalPages,
@@ -113,10 +124,11 @@ export function getDevices(paginationModel: PaginationModel, expandable: Boolean
  * @param {inputDTO} DeleteDeviceInputDTO
  * @returns {void}
  */
-export function deleteDevices(inputDTO: DeleteDeviceInputDTO): void {
+export async function deleteDevices(inputDTO: DeleteDeviceInputDTO): Promise<void> {
     const ids = inputDTO.ids.map(id => devices.find(device => device.id === id));
     if(ids.some(id => id === undefined)){ throw new Error(`Device with id ${inputDTO.ids} not found`)}
     const newDevices = devices.filter(device => !ids.includes(device));
+    await delay(WORK_DELAY);
     devices.splice(0, devices.length);
     devices.push(...newDevices);
 }
@@ -127,15 +139,18 @@ export function deleteDevices(inputDTO: DeleteDeviceInputDTO): void {
  * @param {deviceID} number
  * @returns {void}
  */
-export function updateDevice(inputDTO: DeviceInputDTO, deviceID: number): void {
-    const updatedDevice: Device = {
+export async function updateDevice(inputDTO: DeviceInputDTO, deviceID: number): Promise<void> {
+    const updatedDevice: DeviceSimpleOutputDTO = {
       id: deviceID,  
       name: inputDTO.name,
       description: inputDTO.description,
-      status: "OFFLINE",
-      streamUrl: inputDTO.streamUrl
+      status: "INACTIVE",
+      streamUrl: inputDTO.streamUrl,
+      user: 1
     }
-
+    await delay(WORK_DELAY);
     const device = devices.find(device => device.id === deviceID);
     devices.splice(devices.indexOf(device), 1, updatedDevice as DeviceSimpleOutputDTO);
 }
+
+const delay = (ms: number) => new Promise(res => setTimeout(res, ms));

@@ -8,7 +8,8 @@ export const paths = {
     'dashboard': {
         'home': '/dashboard',
         'devices': '/dashboard/devices',
-        'device': `/dashboard/device/:${params.device}`
+        'device': '/dashboard/devices/:id',
+        'user-form': '/dashboard/user-form',
     }
 }
 

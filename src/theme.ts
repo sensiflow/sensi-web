@@ -202,15 +202,24 @@ export const ColorModeContext = createContext({
   toggleColorMode: () => {},
 });
 
+const THEME_KEY = "theme";
+
 export const useMode = (): [Partial<Theme>, { toggleColorMode: () => void }] => {
-  const [mode, setMode] = useState<PalleteMode>("dark");
+  const storedMode = localStorage.getItem(THEME_KEY) as PalleteMode;
+  const [mode, setMode] = useState<PalleteMode>(storedMode || "dark");
+
+  const persistMode = (mode: PalleteMode) => {
+    localStorage.setItem(THEME_KEY, mode);
+  };
 
   const colorMode = useMemo(
     () => ({
-      toggleColorMode: () =>
-        setMode((prev: PalleteMode) => (prev === "light" ? "dark" : "light")),
-    }),
-    []
+      toggleColorMode: () =>{
+        const newMode = mode === "light" ? "dark" : "light";
+        setMode(newMode);
+        persistMode(newMode);
+      }
+    }), [mode]
   );
 
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);

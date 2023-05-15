@@ -1,3 +1,4 @@
+import { Device, DeviceProcessingState, DeviceProcessingStateKey } from "../../../model/device"
 import { UserOutputDTO } from "./user-output"
 
 export interface DeviceOutputDTO{
@@ -5,7 +6,7 @@ export interface DeviceOutputDTO{
     name: string,
     description: string,
     streamUrl: string,
-    status: string,
+    status: DeviceProcessingStateKey,
 }
 
 export interface DeviceSimpleOutputDTO extends DeviceOutputDTO{
@@ -15,4 +16,14 @@ export interface DeviceSimpleOutputDTO extends DeviceOutputDTO{
 
 export interface DeviceExpandedOutputDTO extends DeviceOutputDTO{
     user: UserOutputDTO
+}
+
+export function dtoToDevice(dto: DeviceOutputDTO): Device {
+    return {
+        id: dto.id,
+        name: dto.name,
+        description: dto.description,
+        streamUrl: dto.streamUrl,
+        status: DeviceProcessingState[dto.status]
+    }
 }

@@ -3,13 +3,14 @@ export interface Device{
     name: string,
     description: string,
     streamUrl: string,
-    status: DeviceProcessingStateKey,
+    status: DeviceProcessingState,
 }
 
 export enum DeviceProcessingState{
-    ONLINE,
-    OFFLINE,
-    PAUSED
+    ACTIVE,
+    INACTIVE,
+    PAUSED,
+    PENDING
 }
 
 export type DeviceProcessingStateKey = keyof typeof DeviceProcessingState
