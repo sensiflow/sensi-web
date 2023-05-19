@@ -1,11 +1,9 @@
 
 
 export interface Page<T>{
-
     totalPages: number,
     totalElements: number,
-    isLast: boolean,
-    isFirst: boolean,
+    isLast: Boolean,
+    isFirst: Boolean,
     items: Array<T>
-
 }

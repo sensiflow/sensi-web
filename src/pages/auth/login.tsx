@@ -21,20 +21,8 @@ export default function Login() {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>, firstName, lastName, email, password) => {
     event.preventDefault();
-
-    const success = login(
-      email,
-      password
-    )
-    
-    console.log({
-      email,
-      password
-    });
-
-    if (success) {
-      navigate(paths.dashboard.home)
-    }
+    login({email, password})
+    navigate(paths.dashboard.home)
   };
 
   return (
