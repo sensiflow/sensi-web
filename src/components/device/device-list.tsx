@@ -11,16 +11,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
 import { PaginationModel } from "../../model/pagination-model";
 import DeviceProcessingStatus from "./processing-status/DeviceProcessingStatus";
+import { DataGridListProps } from "../lists/data-grid-list";
 
-interface DeviceListProps {
-  isLoading: boolean;
-  devicesPage: Page<Device>;
-  paginationModel: PaginationModel;
-  onPaginationModelChange: (GridPaginationModel) => void;
+interface DeviceListProps extends DataGridListProps<Device> {
   onRowSelection: (newSelection) => void;
   onRowUpdate: (deviceToUpdate: Device) => void;
   onRowInfoRequest: (deviceID: number) => void;
-  rowSelectionModel: Array<number>;
 }
 
 interface OptionsColumnHandlers {
@@ -79,7 +75,7 @@ const gridRowOptions = (handlers: OptionsColumnHandlers, row: Device) => {
 
 export default function DeviceList({
   isLoading,
-  devicesPage,
+  currentPage,
   paginationModel,
   onPaginationModelChange,
   onRowSelection,
@@ -88,7 +84,7 @@ export default function DeviceList({
   rowSelectionModel,
 }: DeviceListProps) {
   const theme = useTheme();
-  const devices: Array<Device> = devicesPage?.items;
+  const devices: Array<Device> = currentPage?.items;
   const columnNames: GridColDef<Device>[] = deviceColumnDefinition({
     onRowUpdate,
     onRowInfoRequest,
@@ -110,7 +106,7 @@ export default function DeviceList({
       pageSizeOptions={[5, 10, 20]}
       paginationModel={paginationModel as GridPaginationModel}
       onPaginationModelChange={onPaginationModelChange}
-      rowCount={devicesPage?.totalElements ?? 0}
+      rowCount={currentPage?.totalElements ?? 0}
       columns={columnNames}
       rows={devices ?? []}
       onRowSelectionModelChange={(newSelection) => {

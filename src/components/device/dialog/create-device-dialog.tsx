@@ -24,7 +24,7 @@ export const CreateDeviceDialog = (
       handleClose={handleClose}
       onSubmit={onSubmit}
       theme={theme}
-      requiredTextFields={["name", "description", "streamUrl"]}
+      requiredTextFields={["name", "streamUrl"]}
       defaultValues={{} as DeviceInputDTO}
     />
   );

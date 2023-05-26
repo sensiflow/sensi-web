@@ -1,35 +1,46 @@
-import { Device, DeviceProcessingState } from "../../model/device"
-import { Page } from "../../model/page"
-import { DeviceOutputDTO, DeviceSimpleOutputDTO } from "../dto/output/device-output"
+import { UserRole } from "../../model/roles"
+import {  DeviceSimpleOutputDTO } from "../dto/output/device-output"
 
-export const users = [
+export const users  = [
     {   
         'id': 1,
         'firstName': 'Roxi',
         'lastName': 'Hill',
         'email': 'roxihi2441@etondy.com',
-        'password': 'KswODO' 
+        'password': 'KswODO',
+        'role': UserRole.ADMIN
     },
     {   
         'id': 2,
         'firstName': 'Kanos',
         'lastName': 'Kent',
         'email': 'kanos98903@necktai.com',
-        'password': 'CZwTuo'
+        'password': 'CZwTuo',
+        'role': UserRole.USER
     },
     {   
         'id': 3,
         'firstName': 'Nathan',
         'lastName': 'Miller',
         'email': 'nathan5423@devour.com',
-        'password': 'tFSDJm'
+        'password': 'tFSDJm',
+        'role': UserRole.MODERATOR
     },
     {
         'id': 4,
         'firstName': 'Liam',
         'lastName': 'Smith',
         'email': 'admin@gmail.com',
-        'password': 'admin'
+        'password': 'admin',
+        'role': UserRole.MODERATOR
+    },
+    {
+        'id': 5,
+        'firstName': 'John',
+        'lastName': 'Doe',
+        'email': 'johndoe@email.com',
+        'password': 'johndoe',
+        'role': UserRole.ADMIN
     }
 ]
 

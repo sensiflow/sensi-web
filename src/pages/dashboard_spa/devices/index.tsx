@@ -22,7 +22,6 @@ import { Page } from "../../../model/page";
 import UpdateDeviceUrlDialog from "../../../components/device/dialog/edit-confirm-dialog";
 import { useNavigate } from "react-router-dom";
 import { paths, params } from "../../../app-paths";
-import HeaderSkeleton from "../../../components/header/HeaderSkeleton";
 import { dtoToDevice } from "../../../api/dto/output/device-output";
 
 export default function DevicesPage() {
@@ -185,7 +184,7 @@ export default function DevicesPage() {
       <Box m="40px 0 0 0" height="75vh">
         <DeviceList
           isLoading={isLoading}
-          devicesPage={devices}
+          currentPage={devices}
           paginationModel={paginationModel}
           onPaginationModelChange={setPaginationModel}
           onRowSelection={setDevicesIDSelected}

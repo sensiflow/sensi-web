@@ -1,14 +1,9 @@
 import { Theme } from "@mui/material";
 import { DeviceInputDTO } from "../../../api/dto/input/device-input";
 import { Device } from "../../../model/device";
-import { MouseEventHandler } from "react";
+import { DialogProps } from "../../dialog/dialog-interface";
 
-export interface DeviceDialogProps {
-    isOpen: boolean
-    handleClose: () => void
-    onSubmit: (deviceInput: DeviceInputDTO) => void
-    theme: Theme
-}
+export interface DeviceDialogProps extends DialogProps<DeviceInputDTO> {}
 
 export interface UpdateDeviceDialogProps extends DeviceDialogProps {
     currentDevice: Device;

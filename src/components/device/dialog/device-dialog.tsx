@@ -26,9 +26,9 @@ const DeviceDialog = (
     formState: { errors }
   } = useForm<DeviceInputDTO>({defaultValues})
 
-  const nameRegisterOption = isRequiredField(requiredTextFields, 'name') ? { required: 'Name is required' } : {}
-  const descriptionRegisterOption = isRequiredField(requiredTextFields, 'description') ? { required: 'Description is required' } : {}
-  const streamUrlRegisterOption = isRequiredField(requiredTextFields, 'streamUrl') ? { required: 'Stream URL is required' } : {}
+  const nameRegisterOption = isRequiredField(requiredTextFields, 'name') ? { required: 'Name is required' } : { required: false }
+  const descriptionRegisterOption = isRequiredField(requiredTextFields, 'description') ? { required: 'Description is required' } : { required: false }
+  const streamUrlRegisterOption = isRequiredField(requiredTextFields, 'streamUrl') ? { required: 'Stream URL is required' } : { required: false }
 
   React.useEffect(() => {
     reset()

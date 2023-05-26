@@ -1,8 +1,10 @@
-import { Device } from "../../model/device";
 import { PaginationModel } from "../../model/pagination-model";
+import { UserRole } from "../../model/roles";
+import { User } from "../../model/user";
 import { DeleteDeviceInputDTO, DeviceInputDTO } from "../dto/input/device-input";
 import { LoginInputDTO } from "../dto/input/login-input";
 import { RegisterInputDTO } from "../dto/input/register-input";
+import { UserUpdateDTO } from "../dto/input/user-inputs";
 import { AuthOutputDTO } from "../dto/output/auth-output";
 import { DeviceExpandedOutputDTO, DeviceOutputDTO, DeviceSimpleOutputDTO } from "../dto/output/device-output";
 import { IdOutputDTO } from "../dto/output/id-output";
@@ -51,13 +53,70 @@ export async function register(inputDTO: RegisterInputDTO): Promise<AuthOutputDT
 
     users.push({
         id,
-        ...inputDTO
+        ...inputDTO,
+        role: UserRole.USER
     });
 
     await delay(WORK_DELAY);
 
     return {id: id}
 }
+
+/**
+ * Gets all users
+ * @param {paginationModel} PaginationModel
+ */
+export async function getUsers(paginationModel: PaginationModel): Promise<PageOutputDTO<User>> {
+    const allUsers = users.map(user => { return {id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role}});
+    const items = allUsers.slice(paginationModel.pageSize * paginationModel.page, paginationModel.pageSize * (paginationModel.page + 1));
+    const totalPages = paginationModel.pageSize === 0 ? 0 : Math.ceil(items.length / paginationModel.pageSize)
+    await delay(WORK_DELAY);
+    return {
+        totalElements: allUsers.length,
+        totalPages: totalPages,
+        isLast: totalPages === paginationModel.page,
+        isFirst: paginationModel.page === 0,
+        items: items
+    }
+}
+
+
+/**
+ * Deletes a user given an id
+ */
+export async function deleteUser(id: number): Promise<void> {
+    const ids = users.map(user => user.id);
+    const index = ids.indexOf(id);
+    if(index === -1) { throw new Error(`User with id ${id} not found`)}
+    users.splice(index, 1);
+
+    await delay(WORK_DELAY);
+}
+
+/**
+ * Updates the role of a given user
+ */
+export async function updateUserRole(id: number, role: UserRole): Promise<void> {
+    const user = users.find(user => user.id === id);
+    if(user === undefined) { throw new Error(`User with id ${id} not found`)}
+    user.role = role;
+    await delay(WORK_DELAY);
+}
+
+export async function updateUser(id: number, newInfo: UserUpdateDTO): Promise<void> {
+    const user = users.find(user => user.id === id);
+    if(user === undefined) { throw new Error(`User with id ${id} not found`)}
+    const updateUser = {
+        ...user,
+        firstName: newInfo.firstName ?? user.firstName,
+        lastName: newInfo.lastName ?? user.lastName,
+        password: newInfo.password ?? user.password
+    }
+    const index = users.indexOf(user);
+    users[index] = updateUser;
+    await delay(WORK_DELAY);
+}
+
 
 /**
  * Creates a new device

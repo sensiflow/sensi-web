@@ -9,9 +9,8 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../../api/fake/fake-api';
-import { AuthForm } from '../../components/auth-form';
+import { SignInForm } from '../../components/auth-form';
 import { paths } from '../../app-paths';
-import { AuthType } from './auth-type';
 
 
 const theme = createTheme();
@@ -19,9 +18,9 @@ const theme = createTheme();
 export default function Login() {
   const navigate = useNavigate()
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>, firstName, lastName, email, password) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>, email, password) => {
     event.preventDefault();
-    login({email, password})
+    await login({email, password})
     navigate(paths.dashboard.home)
   };
 
@@ -59,10 +58,8 @@ export default function Login() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <AuthForm 
+            <SignInForm 
               handleSubmit={handleSubmit}
-              type={AuthType.Login}
-              redirectHref={paths.register}
             />
           </Box>
         </Grid>
