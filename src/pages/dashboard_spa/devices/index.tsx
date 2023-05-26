@@ -21,9 +21,11 @@ import { PaginationModel } from "../../../model/pagination-model";
 import { Page } from "../../../model/page";
 import UpdateDeviceUrlDialog from "../../../components/device/dialog/edit-confirm-dialog";
 import { useNavigate } from "react-router-dom";
-import { paths, params } from "../../../app-paths";
-import HeaderSkeleton from "../../../components/header/HeaderSkeleton";
+import { paths } from "../../../app-paths";
 import { dtoToDevice } from "../../../api/dto/output/device-output";
+import { AppButton } from "../../../components/buttons/app-button";
+import { tokens } from "../../../theme";
+
 
 export default function DevicesPage() {
   const navigate = useNavigate();
@@ -48,11 +50,7 @@ export default function DevicesPage() {
     React.useState<DeviceInputDTO>(null);
 
   const theme: Theme = useTheme();
-  const isDarkMode = theme.palette.mode === "dark";
-
-  const addHoverColor = isDarkMode ? "#09A065" : "#0BC87E";
-  const redTone = isDarkMode ? "red" : "#e53935";
-  const deleteHoverColor = isDarkMode ? "#E53935" : "#F44336";
+  const colors = tokens(theme.palette.mode);
 
   const reloadDevicesPage = async () => {
     setIsLoading(true);
@@ -90,11 +88,7 @@ export default function DevicesPage() {
   };
 
   const navigateToDevice = (deviceID: number) => {
-    navigate(paths.dashboard.devices + "/" + deviceID, {
-      state: {
-        [params.device]: deviceID,
-      },
-    });
+    navigate(paths.dashboard.devices + "/" + deviceID);
   };
 
   const updateDevices = async (input: DeviceInputDTO) => {
@@ -104,7 +98,6 @@ export default function DevicesPage() {
   };
 
   const onUpdateDialogClose = () => {
-    console.log("onUpdateDialogClose");
     setOpenUpdateDialog(false);
     setCurrentDeviceBeingUpdated(null);
   };
@@ -112,11 +105,12 @@ export default function DevicesPage() {
   const onDeviceUpdateSubmit = async (input: DeviceInputDTO) => {
     const currentStreamUrl = currentDeviceBeingUpdated.streamUrl;
     if (currentStreamUrl !== "PAUSED" && input.streamUrl !== currentStreamUrl) {
-      setUpdatedDeviceInfo(input);
+      setUpdatedDeviceInfo(input); 
       setOpenUpdateDeviceUrlDialog(true);
       return;
     }
     await updateDevices(input);
+    setCurrentDeviceBeingUpdated(null);
   };
 
   const onUpdateDeviceUrlSubmit = async (input: DeviceInputDTO) => {
@@ -140,45 +134,22 @@ export default function DevicesPage() {
           subTitle="Managing the organization devices"
           isLoading={isLoading}
         />
-        <div style={{ display: "flex", margin: "0px 0px 20px, 20px" }}>
+        <div style={{ display: "flex" }}>
           {devicesIDSelected.length > 0 && (
-            <Button
-              variant="contained"
-              sx={{
-                width: "150px",
-                height: "60px",
-                color: "white",
-                fontSize: "15px",
-                backgroundColor: redTone,
-                ":hover": {
-                  backgroundColor: deleteHoverColor,
-                },
-                boxShadow: "0px 8px 15px " + deleteHoverColor,
-                "margin-right": "30px",
-              }}
+            <AppButton
+              text="Delete"
+              backgroundColor={colors.buttonAccent.delete.backgroundColor}
+              hoverColor={colors.buttonAccent.delete.hoverColor}
               onClick={() => setOpenDeleteDialog(true)}
-            >
-              Delete
-            </Button>
+            />
           )}
 
-          <Button
-            variant="contained"
-            sx={{
-              width: "150px",
-              height: "60px",
-              color: "white",
-              "font-size": "15px",
-              backgroundColor: "#2EE59D",
-              ":hover": {
-                backgroundColor: addHoverColor,
-              },
-              "box-shadow": "0px 8px 15px " + addHoverColor,
-            }}
+          <AppButton
+            text="Add"
+            backgroundColor={colors.buttonAccent.add.backgroundColor}
+            hoverColor={colors.buttonAccent.add.hoverColor}
             onClick={() => setOpenCreateDialog(true)}
-          >
-            Add
-          </Button>
+          />
         </div>
       </div>
 
@@ -192,6 +163,7 @@ export default function DevicesPage() {
           onRowUpdate={onDeviceUpdateRequest}
           onRowInfoRequest={navigateToDevice}
           rowSelectionModel={devicesIDSelected}
+          enableEdit={true}
         />
         <Box m="40px 0 0 0" />
       </Box>

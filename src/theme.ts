@@ -62,6 +62,16 @@ export const tokens = (mode: PalleteMode) => ({
           800: "#2a2d64",
           900: "#151632",
         },
+        buttonAccent: {
+          add: {
+            backgroundColor: "#2EE59D",
+            hoverColor: "#09A065",
+          },
+          delete: {
+            backgroundColor: "red",
+            hoverColor: "#E53935",
+          }
+        }
       }
     : {
         grey: {
@@ -119,6 +129,16 @@ export const tokens = (mode: PalleteMode) => ({
           800: "#c3c6fd",
           900: "#e1e2fe",
         },
+        buttonAccent: {
+          add: {
+            backgroundColor: "#2EE59D",
+            hoverColor: "#0BC87E",
+          },
+          delete: {
+            backgroundColor: "#E53935",
+            hoverColor: "#F44336",
+          }
+        }
       }),
 });
 

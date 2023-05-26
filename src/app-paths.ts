@@ -1,5 +1,6 @@
 export const params = {
-    'device': 'id'
+    'device': 'deviceId',
+    'group': 'groupId'
 }
 
 export const paths = {
@@ -8,8 +9,10 @@ export const paths = {
     'dashboard': {
         'home': '/dashboard',
         'devices': '/dashboard/devices',
-        'device': '/dashboard/devices/:id',
         'user-form': '/dashboard/user-form',
+        'device': `/dashboard/devices/:${params.device}`,
+        'groups': '/dashboard/groups',
+        'group': `/dashboard/groups/:${params.group}`,
     }
 }
 

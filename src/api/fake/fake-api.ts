@@ -1,13 +1,17 @@
+import { Search } from "@mui/icons-material";
 import { Device } from "../../model/device";
 import { PaginationModel } from "../../model/pagination-model";
 import { DeleteDeviceInputDTO, DeviceInputDTO } from "../dto/input/device-input";
+import { GroupDevicesInputDTO } from "../dto/input/group-devices";
 import { LoginInputDTO } from "../dto/input/login-input";
 import { RegisterInputDTO } from "../dto/input/register-input";
 import { AuthOutputDTO } from "../dto/output/auth-output";
 import { DeviceExpandedOutputDTO, DeviceOutputDTO, DeviceSimpleOutputDTO } from "../dto/output/device-output";
+import { DeviceGroupOutputDTO } from "../dto/output/group-output";
 import { IdOutputDTO } from "../dto/output/id-output";
 import { PageOutputDTO } from "../dto/output/page-output";
-import { devices, users } from "./mock-data";
+import { devices, users, groups } from "./mock-data";
+import { GroupInputUpdateDTO } from "../dto/input/group-update-input";
 
 
 const WORK_DELAY = 250;
@@ -106,14 +110,15 @@ export async function getDevice(deviceID: number, expandable: Boolean = false): 
 /**
  * Gets all devices
  */
-export async function getDevices(paginationModel: PaginationModel, expandable: Boolean = false): Promise<PageOutputDTO<DeviceOutputDTO>> {
-    const items = devices.slice(paginationModel.pageSize * paginationModel.page, paginationModel.pageSize * (paginationModel.page + 1));
-    const totalPages = paginationModel.pageSize === 0 ? 0 : Math.ceil(items.length / paginationModel.pageSize)
+export async function getDevices(paginationModel: PaginationModel, expandable: Boolean = false, query: {search: string} = null): Promise<PageOutputDTO<DeviceOutputDTO>> {
+    const filteredItems = query?.search ? devices.filter(item => item.name.includes(query.search)) : devices;
+    const items = filteredItems.slice(paginationModel.pageSize * paginationModel.page, paginationModel.pageSize * (paginationModel.page + 1));
+    const totalPages = paginationModel.pageSize === 0 ? 0 : Math.ceil(filteredItems.length / paginationModel.pageSize) 
     await delay(WORK_DELAY);
     return {
-        totalElements: devices.length,
+        totalElements: filteredItems.length,
         totalPages: totalPages,
-        isLast: totalPages === paginationModel.page,
+        isLast: totalPages === paginationModel.page + 1,
         isFirst: paginationModel.page === 0,
         items: items
     }
@@ -151,6 +156,123 @@ export async function updateDevice(inputDTO: DeviceInputDTO, deviceID: number): 
     await delay(WORK_DELAY);
     const device = devices.find(device => device.id === deviceID);
     devices.splice(devices.indexOf(device), 1, updatedDevice as DeviceSimpleOutputDTO);
+}
+
+/**
+ * Gets all groups of devices.
+ * @param {paginationModel} PaginationModel
+ * @returns {PageOutputDTO<DeviceGroupOutputDTO>}
+ */
+export async function getDevicesGroups(paginationModel: PaginationModel): Promise<PageOutputDTO<DeviceGroupOutputDTO>> {
+    const items = groups.slice(paginationModel.pageSize * paginationModel.page, paginationModel.pageSize * (paginationModel.page + 1));
+    const totalPages = paginationModel.pageSize === 0 ? 0 : Math.ceil(groups.length / paginationModel.pageSize)
+    const groupsOutputDTO = items.map(group => {
+        return {
+            id: group.id,
+            name: group.name,
+            description: group.description
+        }
+    }) 
+    await delay(250); 
+    return {
+        totalElements: groups.length,
+        totalPages: totalPages,
+        isLast: totalPages === paginationModel.page + 1,
+        isFirst: paginationModel.page === 0,
+        items: groupsOutputDTO
+    } 
+}
+
+/**
+ * Gets a group of devices.
+ */
+export async function getDevicesGroup(groupID: number): Promise<DeviceGroupOutputDTO> {
+    const group = groups.find(group => group.id === groupID);
+    if(group === undefined) { throw new Error(`Group with id ${groupID} not found`)}
+    await delay(250);
+    return {
+        id: group.id,
+        name: group.name,
+        description: group.description
+    }
+}
+
+
+/**
+ * Gets all devices from a group.
+ * @param {paginationModel} PaginationModel
+ * @returns {PageOutputDTO<DeviceOutputDTO>}
+ */
+export async function getDevicesFromGroup(paginationModel: PaginationModel, groupID: number): Promise<PageOutputDTO<DeviceOutputDTO>> {
+    const group = groups.find(group => group.id === groupID);
+    const itemsIds = group.devices.slice(paginationModel.pageSize * paginationModel.page, paginationModel.pageSize * (paginationModel.page + 1));
+    const devicesPromises = itemsIds.map(id => getDevice(id));
+    const devices = await Promise.all(devicesPromises);
+    const devicesPages = devices.length === 0 ? 1 : Math.ceil(group.devices.length / paginationModel.pageSize);
+    const totalPages = paginationModel.pageSize === 0 ? 0 : devicesPages
+
+    await delay(250); 
+    return {
+        totalElements: group.devices.length,
+        totalPages: totalPages,
+        isLast: totalPages === paginationModel.page + 1,
+        isFirst: paginationModel.page === 0,
+        items: devices
+    } 
+}
+
+/**
+ * Adds devices to the list of devices of a group.
+ * @param {inputDTO} GroupDevicesInputDTO
+ * @param {groupID} number the id of the group
+ */
+export async function addGroupDevices(inputDTO: GroupDevicesInputDTO, groupID: number){
+    const group = groups.find(group => group.id === groupID);
+    if(group === undefined) { throw new Error(`Group with id ${groupID} not found`)}
+    console.log(inputDTO.devicesIDs);
+    group.devices.push(...inputDTO.devicesIDs);
+    await delay(WORK_DELAY);
+}
+
+/**
+ * Removes devices from the list of devices of a group.
+ */
+export async function removeGroupDevices(inputDTO: GroupDevicesInputDTO, groupID: number){
+    const group = groups.find(group => group.id === groupID);
+    if(group === undefined) { throw new Error(`Group with id ${groupID} not found`)}
+    const newDevices = group.devices.filter(deviceID => !inputDTO.devicesIDs.includes(deviceID));
+    group.devices.splice(0, group.devices.length);
+    group.devices.push(...newDevices);
+    await delay(WORK_DELAY);
+}
+
+/**
+ * Deletes a group.
+ * @param {groupID} number the id of the group
+ */
+export async function deleteGroup(groupID: number): Promise<void> {
+    const group = groups.find(group => group.id === groupID);
+    if(group === undefined) { throw new Error(`Group with id ${groupID} not found`)}
+    const newGroups = groups.filter(group => group.id !== groupID);
+    await delay(WORK_DELAY);
+    groups.splice(0, groups.length);
+    groups.push(...newGroups);
+}
+
+/**
+ * Updates a group.
+ */
+export async function updateGroup(inputDTO: GroupInputUpdateDTO, groupID: number): Promise<void> {
+    const group = groups.find(group => group.id === groupID);
+    if(group === undefined) { throw new Error(`Group with id ${groupID} not found`)}
+    const updatedGroup = {
+        id: groupID,
+        name: inputDTO.name,
+        description: inputDTO.description,
+        devices: group.devices
+    }
+    await delay(WORK_DELAY);
+    groups.splice(groups.indexOf(group), 1, updatedGroup);
 }
 
 const delay = (ms: number) => new Promise(res => setTimeout(res, ms));

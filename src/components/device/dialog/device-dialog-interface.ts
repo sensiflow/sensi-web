@@ -1,7 +1,6 @@
 import { Theme } from "@mui/material";
 import { DeviceInputDTO } from "../../../api/dto/input/device-input";
 import { Device } from "../../../model/device";
-import { MouseEventHandler } from "react";
 
 export interface DeviceDialogProps {
     isOpen: boolean

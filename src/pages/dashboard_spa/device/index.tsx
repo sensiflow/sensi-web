@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { getDevice } from "../../../api/fake/fake-api";
 import { dtoToDevice as deviceDtoToDevice } from "../../../api/dto/output/device-output";
 import { Box, Divider, Skeleton, useMediaQuery, useTheme } from "@mui/material";
-import { params } from "../../../app-paths";
+import { params, paths } from "../../../app-paths";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 import HeaderSkeleton from "../../../components/header/HeaderSkeleton";
 import Header from "../../../components/header/Header";
@@ -11,14 +11,15 @@ import { tokens } from "../../../theme";
 import { Device, DeviceProcessingState } from "../../../model/device";
 import DeviceProcessingStatus from "../../../components/device/processing-status/DeviceProcessingStatus";
 import { ProcessingStateControls } from "../../../components/device/ProcessingStateControls";
+import { extractFromUri } from "../../../utils";
 
 export default function DevicePage() {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const { state } = useLocation();
-  const { [params.device]: id } = state;
-  const validatedDeviceID = parseInt(id);
+  const { pathname } = useLocation();
+  const ids = extractFromUri(pathname, paths.dashboard.device)
+  const validatedDeviceID = parseInt(ids[params.device]);
 
   const [device, setDevice] = React.useState<Device>(null);
   const isNonMobile = useMediaQuery("(min-width:720px)");
@@ -110,7 +111,7 @@ export default function DevicePage() {
                     sx={{
                       fontSize: "60px",
                       color: theme.palette.background.default,
-                      strokeWidth: "10px",
+                      strokeWidth: "10px"
                     }}
                   />
                 </Box>
