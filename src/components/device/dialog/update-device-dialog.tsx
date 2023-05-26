@@ -13,7 +13,6 @@ const UpdateDeviceDialog = (
         theme,
       }: UpdateDeviceDialogProps 
   ) => {
-
     return (
       <DeviceDialog
         dialogTitle="Update Device"

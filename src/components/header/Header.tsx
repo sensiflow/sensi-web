@@ -27,7 +27,7 @@ const Header = ({
   };
 
   return !isLoading ? (
-    <Box>
+    <Box mb="20px">
       <Typography variant="h2" color={colors.grey[100]} fontWeight="bold">
         {title}
       </Typography>

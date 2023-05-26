@@ -16,7 +16,7 @@ export function Copyright(props: SxProps) {
             {'Copyright © '}
             <Link 
                 color="inherit" 
-                href="https://mui.com/"
+                href="https://docs.sensiflow.org/"
             > 
                 Sensi
             </Link>{' '}

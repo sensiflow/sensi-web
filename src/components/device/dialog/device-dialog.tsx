@@ -17,8 +17,6 @@ const DeviceDialog = (
       defaultValues
     }: DeviceFormDialogProps
 ) => {
-  const [isClosed, setIsClosed] = React.useState(false)
-
   const {
     handleSubmit,
     register,
@@ -32,17 +30,11 @@ const DeviceDialog = (
 
   React.useEffect(() => {
     reset()
-    setIsClosed(false)
-  }, [isClosed]);
-
-  const onCloseHandler = () => {
-    handleClose()
-    setIsClosed(true)
-  }
+  }, [isOpen]);
 
   return (
     <div>
-      <Dialog open={isOpen} onClose={onCloseHandler}
+      <Dialog open={isOpen} onClose={handleClose}
         sx={dialogSx(theme)}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -77,7 +69,7 @@ const DeviceDialog = (
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={onCloseHandler} color="secondary">
+            <Button onClick={handleClose} color="secondary">
               Cancel
             </Button>
             <Button variant="contained" color="primary" type="submit">

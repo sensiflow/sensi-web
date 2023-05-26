@@ -12,11 +12,14 @@ import InfoIcon from "@mui/icons-material/Info";
 import { PaginationModel } from "../../model/pagination-model";
 import DeviceProcessingStatus from "./processing-status/DeviceProcessingStatus";
 import { DataGridListProps } from "../lists/data-grid-list";
+import { truncate } from "lodash";
 
 interface DeviceListProps extends DataGridListProps<Device> {
   onRowSelection: (newSelection) => void;
   onRowUpdate: (deviceToUpdate: Device) => void;
   onRowInfoRequest: (deviceID: number) => void;
+  rowSelectionModel: Array<number>;
+  enableEdit: boolean;
 }
 
 interface OptionsColumnHandlers {
@@ -25,8 +28,9 @@ interface OptionsColumnHandlers {
 }
 
 const deviceColumnDefinition: (
-  handlers: OptionsColumnHandlers
-) => GridColDef<Device>[] = (handlers) => {
+  handlers: OptionsColumnHandlers,
+  enableEdit: boolean
+) => GridColDef<Device>[] = (handlers, enableEdit) => {
   return [
     { field: "name", headerName: "Name", flex: 1 },
     { field: "description", headerName: "Description", flex: 1 },
@@ -47,22 +51,25 @@ const deviceColumnDefinition: (
       disableColumnMenu: true,
       disableReorder: true,
       sortable: false,
-      renderCell: (grid) => gridRowOptions(handlers, grid.row),
+      renderCell: (grid) => gridRowOptions(handlers, grid.row, enableEdit),
       flex: 0.7,
       align: "center",
     },
   ];
 };
 
-const gridRowOptions = (handlers: OptionsColumnHandlers, row: Device) => {
+const gridRowOptions = (handlers: OptionsColumnHandlers, row: Device, enableEdit: boolean) => {
   return (
     <div>
-      <IconButton
-        children={<EditIcon />}
-        onClick={() => {
-          handlers.onRowUpdate(row);
-        }}
-      />
+      {
+        enableEdit && <IconButton
+          children={<EditIcon />}
+          onClick={() => {
+            handlers.onRowUpdate(row);
+          }}
+        />
+      }
+
       <IconButton
         children={<InfoIcon />}
         onClick={() => {
@@ -82,13 +89,17 @@ export default function DeviceList({
   onRowUpdate,
   onRowInfoRequest,
   rowSelectionModel,
+  enableEdit,
 }: DeviceListProps) {
   const theme = useTheme();
   const devices: Array<Device> = currentPage?.items;
-  const columnNames: GridColDef<Device>[] = deviceColumnDefinition({
-    onRowUpdate,
-    onRowInfoRequest,
-  });
+  const columnNames: GridColDef<Device>[] = deviceColumnDefinition(
+      {
+      onRowUpdate,
+      onRowInfoRequest,
+      },
+      enableEdit
+  );
 
   return (
     <DataGrid
@@ -103,7 +114,7 @@ export default function DeviceList({
         loadingOverlay: LinearProgress,
       }}
       editMode="cell"
-      pageSizeOptions={[5, 10, 20]}
+      pageSizeOptions={[5, 10, 15, 20]}
       paginationModel={paginationModel as GridPaginationModel}
       onPaginationModelChange={onPaginationModelChange}
       rowCount={currentPage?.totalElements ?? 0}
