@@ -51,6 +51,9 @@ export default function GroupList(
         navigate(paths.dashboard.groups + "/" + groupID)
     }
 
+    const navigateToGroup = (groupID: number) => {
+        navigate(paths.dashboard.groups + "/" + groupID)
+    }
     return (
             <> { !isLoading &&
                 groups?.map((group) => {
@@ -66,6 +69,9 @@ export default function GroupList(
                         width="100%"
                     >           
                         <Header 
+                            onHeaderClick={() => {
+                                navigateToGroup(group.id)
+                            }}
                             title={group.name} 
                             subTitle={group.description}
                         />
@@ -105,12 +111,12 @@ export default function GroupList(
                         
                         <DividerBtn
                             keyID={group.id}
-                            text="Show All"
+                            text="More Info"
                             btnIcon={<NavigateNextIcon sx={{color:dividerColor}}/>}
                             dividerColor={dividerColor}
                             hideShowMoreButton={devicesIsEmpty}
                             onShowMore={() => {
-                                navigate(paths.dashboard.groups + "/" + group.id)
+                                navigateToGroup(group.id)
                             }}
                         />
                     </Box>

@@ -9,10 +9,12 @@ const Header = ({
   title,
   subTitle,
   isLoading,
+  onHeaderClick,
 }: {
   title: string;
   subTitle: string;
   isLoading?: boolean;
+  onHeaderClick?: () => void;
 }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -26,8 +28,15 @@ const Header = ({
     return subTitle;
   };
 
+  const cursor = onHeaderClick ? "pointer" : "default";
   return !isLoading ? (
-    <Box mb="20px">
+    <Box mb="20px"
+      sx={{
+        cursor: cursor,
+        width: "fit-content"
+      }}
+      onClick={onHeaderClick}
+    >
       <Typography variant="h2" color={colors.grey[100]} fontWeight="bold">
         {title}
       </Typography>

@@ -11,6 +11,7 @@ import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import DevicesIcon from '@mui/icons-material/Devices';
+import GroupIcon from '@mui/icons-material/Group';
 
 const SIDEBAR_TRANSITION_DURATION = 300;
 
@@ -27,8 +28,15 @@ const sidebarEvent : CustomEvent<ISideBarData> = new CustomEvent(
   }
 );
 
+interface ItemProps {
+    title: string;
+    to: string;
+    icon: React.ReactNode;
+    selected: string;
+    setSelected: React.Dispatch<React.SetStateAction<string>>;
+}
 
-const Item = ({ title, to, icon, selected, setSelected }) => {
+const Item = ({ title, to, icon, selected, setSelected } : ItemProps) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   return (
@@ -151,6 +159,13 @@ const DashboardSidebar = () => {
               icon={<DevicesIcon />}
               selected={selected}
               setSelected={setSelected}
+            />
+            <Item
+               title="Manage users"
+               to={paths.dashboard.users}
+               icon={<GroupIcon />}
+               selected={selected}
+               setSelected={setSelected}
             />
           </Box>
         </Menu>

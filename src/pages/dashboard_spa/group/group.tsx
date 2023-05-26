@@ -208,7 +208,7 @@ export default function GroupPage() {
             <Box m="40px 0 0 0" height="75vh">
                 <DeviceList
                     isLoading={isLoadingDevices}
-                    devicesPage={groupDevicesPages}
+                    currentPage={groupDevicesPages}
                     paginationModel={groupDevicesPagination}
                     onPaginationModelChange={setGroupDevicesPagination}
                     onRowSelection={setDevicesIDSelected}
