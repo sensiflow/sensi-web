@@ -6,10 +6,27 @@ import "react-pro-sidebar/dist/css/styles.css";
 import { Link } from "react-router-dom";
 import { tokens } from "../../../theme";
 import { paths } from "../../../app-paths";
+import { ISideBarData, sidebarEventName } from "../../../events/sidebar-resize"
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import DevicesIcon from '@mui/icons-material/Devices';
+
+const SIDEBAR_TRANSITION_DURATION = 300;
+
+/**
+ * Event that is dispatched when the sidebar is resized
+ */
+const sidebarEvent : CustomEvent<ISideBarData> = new CustomEvent(
+  sidebarEventName,
+  {
+      detail : {
+          delay : SIDEBAR_TRANSITION_DURATION
+      },
+      bubbles: true,
+  }
+);
+
 
 const Item = ({ title, to, icon, selected, setSelected }) => {
   const theme = useTheme();
@@ -35,6 +52,10 @@ const DashboardSidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
 
+  const SwitchIsCollapsed = () => {
+    setIsCollapsed(!isCollapsed);
+    document.dispatchEvent(sidebarEvent)
+  };
   return (
     <Box
       sx={{
@@ -59,7 +80,7 @@ const DashboardSidebar = () => {
         <Menu iconShape="square">
           {/* LOGO AND MENU ICON */}
           <MenuItem
-            onClick={() => setIsCollapsed(!isCollapsed)}
+            onClick={SwitchIsCollapsed}
             icon={isCollapsed ? <MenuOutlinedIcon /> : undefined}
             style={{
               margin: "10px 0 20px 0",
@@ -76,7 +97,7 @@ const DashboardSidebar = () => {
                 <Typography variant="h3" color={colors.grey[100]}>
                     Management
                 </Typography>
-                <IconButton onClick={() => setIsCollapsed(!isCollapsed)}>
+                <IconButton onClick={SwitchIsCollapsed}>
                   <MenuOutlinedIcon />
                 </IconButton>
               </Box>
