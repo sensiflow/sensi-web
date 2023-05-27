@@ -1,9 +1,10 @@
 //Ref: https://dev.to/manufac/using-apache-echarts-with-react-and-typescript-353k
+//Modified to support siderbar resize event
 import * as React from "react";
 import { init, getInstanceByDom } from "echarts";
 import type { CSSProperties } from "react";
 import type { EChartsOption, ECharts, SetOptionOpts } from "echarts";
-import { ISideBarData } from "../../events/sidebar-resize";
+import { ISideBarData } from "../../logic/events/sidebar-resize";
 import * as echarts from 'echarts/core';
 import { SVGRenderer, CanvasRenderer } from 'echarts/renderers';
 

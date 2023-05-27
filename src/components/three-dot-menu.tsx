@@ -5,16 +5,30 @@ import MenuItem from '@mui/material/MenuItem';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Box from '@mui/material/Box';
 
+
+const ITEM_HEIGHT = 48;
+
+interface DropMenuProps {
+    options: MenuOption[];
+    icon: React.ReactNode;
+}
+
+export function ThreeDotMenu({
+    options
+}: { options: MenuOption[] }) {
+  return (
+    <DropMenu options={options} icon={<MoreVertIcon />} />
+  );
+}
+
 export interface MenuOption {
     label: string;
     handler : () => void;
 } 
 
-const ITEM_HEIGHT = 48;
-
-export default function ThreeDotMenu({
-    options ,
-}) {
+export function DropMenu({
+    options, icon
+}: DropMenuProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -35,7 +49,7 @@ export default function ThreeDotMenu({
         aria-haspopup="true"
         onClick={handleClick}
       >
-        <MoreVertIcon />
+        {icon}
       </IconButton>
       <Menu
         id="long-menu"

@@ -10,15 +10,17 @@ import { DialogProps } from "../../dialog/dialog-interface"
 
 interface UpdateInfoDialogProps extends DialogProps<UserInfoUpdateDTO> {
     user : User
+    label: string
 }
 
-export function UpdateInfoDialog (
+export function UserUpdateInfoDialog (
     { 
         isOpen,
         handleClose,
         onSubmit,
         theme,
-        user
+        user,
+        label
      } : UpdateInfoDialogProps
 ){
 
@@ -44,7 +46,7 @@ export function UpdateInfoDialog (
         <Dialog open={isOpen} onClose={handleClose} sx={dialogSx(theme)}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <DialogTitle>
-                    {`Updating ${user.firstName} ${user.lastName}`}
+                    {label}
                 </DialogTitle>
                 <DialogContent>
 

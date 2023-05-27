@@ -6,7 +6,7 @@ import "react-pro-sidebar/dist/css/styles.css";
 import { Link } from "react-router-dom";
 import { tokens } from "../../../theme";
 import { paths } from "../../../app-paths";
-import { ISideBarData, sidebarEventName } from "../../../events/sidebar-resize"
+import { ISideBarData, sidebarEventName } from "../../../logic/events/sidebar-resize"
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";

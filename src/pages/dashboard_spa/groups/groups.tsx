@@ -4,7 +4,7 @@ import { getDevicesFromGroup, getDevicesGroups } from "../../../api/fake/fake-ap
 import { DevicesGroup } from "../../../model/group";
 import GroupList from "../../../components/groups/group-list";
 import { Box } from "@mui/material";
-import useWindowSize from "../../../components/use-window-size";
+import useWindowSize from "../../../logic/hooks/use-window-size";
 import { dtoToDevice } from "../../../api/dto/output/device-output";
 import { debounce } from "lodash";
 

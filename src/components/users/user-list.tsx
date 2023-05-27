@@ -1,12 +1,9 @@
 import { GridPaginationModel, GridColDef, DataGrid } from "@mui/x-data-grid";
-import { Device, DeviceProcessingState } from "../../model/device";
-import { Page } from "../../model/page";
 import * as React from "react";
 import { LinearProgress } from "@mui/material";
-import ThreeDotMenu, { MenuOption } from "../menu";
+import { MenuOption, ThreeDotMenu } from "../three-dot-menu";
 import { User } from "../../model/user";
 import { DataGridListProps } from "../lists/data-grid-list";
-import { UserRole } from "../../model/roles";
 import InfoMousePopover from "../info-pop-over";
 
 
@@ -14,9 +11,9 @@ interface OptionsColumnHandlers {
     onPasswordUpdateClick?: (user: User) => void;
     onUserUpdateClick?: (user: User) => void;
     onRoleUpdateClick?: (user: User) => void;
-    onUserDeleteClick?: (user: User) => void; //TODO: implement  //TODO: implement user list on api
+    onUserDeleteClick?: (user: User) => void;
 }
-                                               //TODO: implement user list on api, and delete user
+
 
 const gridRowOptions = (handlers: OptionsColumnHandlers, row: User, canUserActOn : (user: User) => boolean ) => {
     const menuOptions : MenuOption[] = []
