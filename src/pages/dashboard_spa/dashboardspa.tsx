@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ColorModeContext, useMode } from "../../theme";
 import { ThemeProvider } from "@mui/material/styles";
-import { Box, CssBaseline } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 import Topbar from "./global/topbar";
 import { Outlet } from "react-router-dom";
 import DashboardSidebar from "./global/sidebar";

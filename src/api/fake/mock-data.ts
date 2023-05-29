@@ -1,8 +1,5 @@
 import { UserRole } from "../../model/roles"
-import { Device, DeviceProcessingState } from "../../model/device"
-import { Page } from "../../model/page"
-import { DeviceOutputDTO, DeviceSimpleOutputDTO } from "../dto/output/device-output"
-import { DeviceGroupOutputDTO } from "../dto/output/group-output"
+import {  DeviceSimpleOutputDTO } from "../dto/output/device-output"
 
 export const users  = [
     {   

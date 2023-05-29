@@ -10,4 +10,7 @@ export const constants = {
         backgroundColor: '#2f3748', //change to theme 
         scrollDebounceTime: 20
     },
+    cookie: {
+        USE_COOKIE_CHECK_INTERVAL : 5000
+    }
 }

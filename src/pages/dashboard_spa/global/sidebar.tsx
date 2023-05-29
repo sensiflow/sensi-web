@@ -12,6 +12,7 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import DevicesIcon from '@mui/icons-material/Devices';
 import GroupIcon from '@mui/icons-material/Group';
+import {useCurrentUser} from "../../../logic/context/user-context";
 
 const SIDEBAR_TRANSITION_DURATION = 300;
 
@@ -59,11 +60,16 @@ const DashboardSidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
+  const { currentUser  } = useCurrentUser()
 
   const SwitchIsCollapsed = () => {
     setIsCollapsed(!isCollapsed);
     document.dispatchEvent(sidebarEvent)
   };
+
+
+const roleColor = colors.greenAccent[500] //TODO: change color based on role
+
   return (
     <Box
       sx={{
@@ -121,10 +127,10 @@ const DashboardSidebar = () => {
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                  Teodosie Pienescu
+                    {`${currentUser.firstName} ${currentUser.lastName}`}
                 </Typography>
-                <Typography variant="h5" color={colors.greenAccent[500]}>
-                  User
+                <Typography variant="h5" color={roleColor}>
+                    {currentUser.role}
                 </Typography>
               </Box>
             </Box>

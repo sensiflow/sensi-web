@@ -4,6 +4,12 @@ import { Theme, useTheme } from '@mui/material/styles';
 import { tokens } from "../../theme";
 import Typography from '@mui/material/Typography';
 
+interface InfoBoxProps {
+    title: string
+    value: string | number
+    icon: React.ReactElement
+}
+
 /**
  * Creates a component that displays a title, value, and icon
  * This component includes a skeleton loader when the value is null or undefined
@@ -16,14 +22,14 @@ export function InfoBox({
     title,
     value,
     icon,
-}){
+}: InfoBoxProps){
     const theme: Theme = useTheme()
     const colors = tokens(theme.palette.mode);
 
     const newIcon = React.cloneElement(icon, {
         sx: {
-            "font-size":"36px",
-            "margin-bottom":"5px",
+            "fontSize":"36px",
+            "marginBottom":"5px",
             "color" : colors.grey[100]
         },
         color: colors.grey[100]
@@ -47,7 +53,7 @@ export function InfoBox({
                 color={colors.grey[100]}
                 fontSize={24}
                 sx={{
-                    "margin-bottom":"5px"
+                    "marginBottom":"5px"
                 }}
             >
                 {title}
@@ -70,8 +76,8 @@ export function InfoBox({
                     variant="h5"
                     color={colors.grey[100]}
                     sx={{
-                        "font-size":"22px",
-                        "margin-bottom":"5px"
+                        "fontSize":"22px",
+                        "marginBottom":"5px"
                     }}
                 >
                     {value}
@@ -83,5 +89,5 @@ export function InfoBox({
             </Box>
             }
         </Box>
-        )
+    )
 }

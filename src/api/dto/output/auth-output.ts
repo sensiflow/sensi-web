@@ -1,3 +1,8 @@
 export interface AuthOutputDTO {
-    id: number
+    id: number;
+    expiresIn: number;
+}
+
+export interface RegisterOutputDTO {
+    id: number;
 }

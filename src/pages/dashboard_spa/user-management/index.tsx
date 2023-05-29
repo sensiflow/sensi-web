@@ -18,15 +18,15 @@ import { UpdateRoleDialog } from "../../../components/users/dialog/update-role-d
 import { UserUpdateInfoDialog } from "../../../components/users/dialog/update-info-dialog";
 import { useCurrentUser } from "../../../logic/context/user-context";
 
-
-  
- let userRole = UserRole.ADMIN;//TODO: receive role properly from redux
-
+//TODO: cant delete myself
 export default function UserManagementPage(){
     const theme: Theme = useTheme();
     const isDarkMode = theme.palette.mode === "dark";
    
-    const userID = 3;//TODO: receive user id properly from cookie
+    const { currentUser, fetchCurrentUser } = useCurrentUser()
+    const userRole = currentUser.role;
+    const userID = currentUser.id
+
 
     const [paginationModel, setPaginationModel] = React.useState<PaginationModel>(
       { pageSize: 5, page: 0 }
@@ -92,7 +92,7 @@ export default function UserManagementPage(){
     const onRegisterSubmit = async (input: RegisterInputDTO) => {
 
       await register(input)
-      reloadUsersPage()
+      await reloadUsersPage()
       setUserUnderUpdate(null);
       dispatchDialog({type: "close", target: UserMGMDialogs.REGISTER})
     };
@@ -102,14 +102,14 @@ export default function UserManagementPage(){
         password : input.password
       }
       await updateUser(userUnderUpdate.id,userUpdateInput);
-      reloadUsersPage()
+      await reloadUsersPage()
       setUserUnderUpdate(null);
       dispatchDialog({type: "close", target: UserMGMDialogs.UPDATE_PASSWORD})
     }
 
     const onUserDeleteSubmit = async (id : number) => {
       await deleteUser(id)
-      reloadUsersPage()
+      await reloadUsersPage()
 
       setUserUnderUpdate(null);
       dispatchDialog({type: "close", target: UserMGMDialogs.DELETE})
@@ -118,7 +118,13 @@ export default function UserManagementPage(){
     const onRoleUpdateSubmit = async (newRole: UserRole) => {
       await updateUserRole(userUnderUpdate.id,newRole);
 
-      reloadUsersPage()
+      await reloadUsersPage()
+
+      if(currentUser.id === userUnderUpdate.id){
+          console.log("fetching current user");
+          await fetchCurrentUser()
+      }
+
       setUserUnderUpdate(null);
       dispatchDialog({type: "close", target: UserMGMDialogs.UPDATE_ROLE})
     }
@@ -130,7 +136,10 @@ export default function UserManagementPage(){
       }
       await updateUser(userUnderUpdate.id,userUpdateInput);
 
-      reloadUsersPage()
+      await reloadUsersPage()
+      if(currentUser.id === userUnderUpdate.id)
+          await fetchCurrentUser();
+
       setUserUnderUpdate(null);
       dispatchDialog({type: "close", target: UserMGMDialogs.UPDATE_INFO})
     }
@@ -145,8 +154,6 @@ export default function UserManagementPage(){
         //else check if user can act on the other user
         const hierarchy = getRolesBellow(userRole)
 
-        console.log(hierarchy);
-        console.log(user.role);
         return hierarchy.includes(user.role);
       }
     }
@@ -182,12 +189,12 @@ export default function UserManagementPage(){
                   width: "200px",
                   height: "60px",
                   color: "white",
-                  "font-size": "15px",
+                  "fontSize": "15px",
                   backgroundColor: "#2EE59D",
                   ":hover": {
                     backgroundColor: addHoverColor,
                   },
-                  "box-shadow": "0px 8px 15px " + addHoverColor,
+                  "boxShadow": "0px 8px 15px " + addHoverColor,
                 }}
                 onClick={() => dispatchDialog({type: "open", target: UserMGMDialogs.REGISTER}) }
               >
@@ -254,7 +261,12 @@ export default function UserManagementPage(){
               handleClose={() => dispatchDialog({type: "close", target: UserMGMDialogs.UPDATE_INFO})}
               onSubmit={onUserUpdateSubmit}
               theme={theme}
-              user={userUnderUpdate}
+              defaultValues = {
+                {
+                    firstName: userUnderUpdate.firstName,
+                    lastName: userUnderUpdate.lastName
+                }
+            }
               label={`Updating ${userUnderUpdate.firstName} ${userUnderUpdate.lastName}`}
             />
           }

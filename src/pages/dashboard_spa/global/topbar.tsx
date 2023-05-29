@@ -1,23 +1,23 @@
 import * as React from "react";
-import { Box, IconButton, useTheme, InputBase } from "@mui/material";
+import { Box, IconButton, useTheme } from "@mui/material";
 import { useContext } from "react";
 import { ColorModeContext, tokens } from "../../../theme";
 import {
   LightModeOutlined,
   SettingsOutlined,
   DarkModeOutlined,
-  PersonOutlined,
-  Search,
 } from "@mui/icons-material";
+import { UserMenu } from "./user-menu";
 
 const Topbar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const colorMode = useContext(ColorModeContext);
 
+
+
   return (
     <Box display="flex" justifyContent="flex-end" p={2}>
-      {/* ICONS */}
       <Box display="flex">
         <IconButton onClick={colorMode.toggleColorMode}>
           {theme.palette.mode === "dark" ? (
@@ -29,11 +29,10 @@ const Topbar = () => {
         <IconButton>
           <SettingsOutlined />
         </IconButton>
-        <IconButton>
-          <PersonOutlined />
-        </IconButton>
+        <UserMenu/>
       </Box>
     </Box>
+      
   );
 };
 

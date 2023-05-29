@@ -7,21 +7,18 @@ import { updateUser } from "../../../api/fake/fake-api";
 import { UserUpdateInfoDialog } from "../../../components/users/dialog/update-info-dialog";
 import { UpdatePasswordDialog } from "../../../components/users/dialog/update-password-dialog";
 import { UserMenuDialogReducerState, UserMenuDialogReducerAction, UserMenuDialogReducer, UserMenuDialogs } from "./user-menu-dialog-reducer";
+import {useCurrentUser} from "../../../logic/context/user-context";
+import {useAuth} from "../../../logic/context/auth-context";
 
 
 export function UserMenu(){
-
-    const [user, setUser] = React.useState(null);
     const theme = useTheme();
 
-    const onLogout = () => {
-    }
-    const reloadUser =  () => {
-    }
+    const { currentUser, fetchCurrentUser } = useCurrentUser()
+    const { logout } = useAuth()
 
     const [dialogState, dispatchDialog] : [UserMenuDialogReducerState, (action: UserMenuDialogReducerAction) => void]
-    = React.useReducer(
-        UserMenuDialogReducer,
+    = React.useReducer( UserMenuDialogReducer,
      {
        openUpdatePasswordDialog: false,
        openUpdateInfoDialog: false,
@@ -30,25 +27,23 @@ export function UserMenu(){
 
 
 
-
     const onUserUpdateSubmit = async (input: UserUpdateDTO) => {
-    const userUpdateInput = {
-        firstName: input.firstName,
-        lastName: input.lastName
-    }
-    await updateUser(user.id,userUpdateInput);
+        const userUpdateInput = {
+            firstName: input.firstName,
+            lastName: input.lastName
+        }
+        await updateUser(currentUser.id,userUpdateInput);
 
-    reloadUser()
-    dispatchDialog({type: "close", target: UserMenuDialogs.UPDATE_INFO})
+        await fetchCurrentUser()
+        dispatchDialog({type: "close", target: UserMenuDialogs.UPDATE_INFO})
     }
 
     const onPasswordUpdateSubmit = async (input: PasswordUpdateDTO) => {
-    const userUpdateInput = {
-        password : input.password
-    }
-    await updateUser(user.id,userUpdateInput);
-    reloadUser()
-    dispatchDialog({type: "close", target: UserMenuDialogs.UPDATE_PASSWORD})
+        const userUpdateInput = {
+            password : input.password
+        }
+        await updateUser(currentUser.id,userUpdateInput);
+        dispatchDialog({type: "close", target: UserMenuDialogs.UPDATE_PASSWORD})
     }
     const onUpdateClick= () =>  dispatchDialog({type: "open", target: UserMenuDialogs.UPDATE_INFO})
     const onPasswordUpdateClick=() => dispatchDialog({type: "open", target: UserMenuDialogs.UPDATE_PASSWORD})
@@ -61,6 +56,10 @@ export function UserMenu(){
         {
             label: "Update Password",
             handler: onPasswordUpdateClick
+        },
+        {
+            label: "Logout",
+            handler: logout
         }
     ]
 
@@ -73,13 +72,18 @@ export function UserMenu(){
                 onSubmit={onPasswordUpdateSubmit}
                 theme={theme}
             />
-            { user && 
+            { currentUser &&
             <UserUpdateInfoDialog
                 isOpen={dialogState.openUpdateInfoDialog}
                 handleClose={() => dispatchDialog({type: "close", target: UserMenuDialogs.UPDATE_INFO})}
                 onSubmit={onUserUpdateSubmit}
                 theme={theme}
-                user={user}
+                defaultValues = {
+                    {
+                        firstName: currentUser.firstName,
+                        lastName: currentUser.lastName
+                    }
+                }
                 label={`Update your information:`}
             />
             }

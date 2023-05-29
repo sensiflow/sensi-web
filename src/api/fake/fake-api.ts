@@ -1,6 +1,4 @@
 import { PaginationModel } from "../../model/pagination-model";
-import { Search } from "@mui/icons-material";
-import { Device } from "../../model/device";
 import { UserRole } from "../../model/roles";
 import { User } from "../../model/user";
 import { DeleteDeviceInputDTO, DeviceInputDTO } from "../dto/input/device-input";
@@ -8,7 +6,7 @@ import { GroupDevicesInputDTO } from "../dto/input/group-devices";
 import { LoginInputDTO } from "../dto/input/login-input";
 import { RegisterInputDTO } from "../dto/input/register-input";
 import { UserUpdateDTO } from "../dto/input/user-inputs";
-import { AuthOutputDTO } from "../dto/output/auth-output";
+import {AuthOutputDTO, RegisterOutputDTO} from "../dto/output/auth-output";
 import { DeviceExpandedOutputDTO, DeviceOutputDTO, DeviceSimpleOutputDTO } from "../dto/output/device-output";
 import { DeviceGroupOutputDTO } from "../dto/output/group-output";
 import { IdOutputDTO } from "../dto/output/id-output";
@@ -21,9 +19,9 @@ const WORK_DELAY = 250;
 
 /**
  * Checks if the user matches one and logs him in
- * 
- * @param {inputDTO} LoginInputDTO
- * @returns {AuthOutputDTO} 
+ *
+ * @returns {AuthOutputDTO}
+ * @param inputDTO
  */
 export async function login(inputDTO: LoginInputDTO): Promise<AuthOutputDTO> {
     const user = users.find(
@@ -34,7 +32,7 @@ export async function login(inputDTO: LoginInputDTO): Promise<AuthOutputDTO> {
     
     if(user) {
         console.log(`User with email ${inputDTO.email} logged in`);
-        return {id: user.id}
+        return {id: user.id, expiresIn: 60 * 60 * 1000 } // 1 Hour
     }
 
     throw new Error(`User with email ${inputDTO.email} not found`);
@@ -42,11 +40,11 @@ export async function login(inputDTO: LoginInputDTO): Promise<AuthOutputDTO> {
 
 /**
  * Registers a new user if the email is not already in use
- * 
- * @param {inputDTO} RegisterInputDTO 
- * @returns {AuthOutputDTO}
+ *
+ * @returns {RegisterOutputDTO}
+ * @param inputDTO
  */
-export async function register(inputDTO: RegisterInputDTO): Promise<AuthOutputDTO> {
+export async function register(inputDTO: RegisterInputDTO): Promise<RegisterOutputDTO> {
     const user = users.find(user => user.email === inputDTO.email);
     
     if (user) {
@@ -67,6 +65,10 @@ export async function register(inputDTO: RegisterInputDTO): Promise<AuthOutputDT
     return {id: id}
 }
 
+export async function logout(): Promise<void> {
+    await delay(WORK_DELAY);
+}
+
 /**
  * Gets all users
  * @param {paginationModel} PaginationModel
@@ -83,6 +85,18 @@ export async function getUsers(paginationModel: PaginationModel): Promise<PageOu
         isFirst: paginationModel.page === 0,
         items: items
     }
+}
+
+/**
+ * Gets a user by id
+ * @param id number the id of the user
+ */
+export async function getUser(id: number): Promise<User> {
+    const user = users.find(user => user.id === id);
+
+    if(user === undefined) { throw new Error(`User with id ${id} not found`)}
+    await delay(WORK_DELAY);
+    return user;
 }
 
 
@@ -150,7 +164,7 @@ export async function createDevice(inputDTO: DeviceInputDTO): Promise<IdOutputDT
  *  @param {expandable} Boolean
  *  @returns {DeviceOutputDTO}
  */
-export async function getDevice(deviceID: number, expandable: Boolean = false): Promise<DeviceOutputDTO> {
+export async function getDevice(deviceID: number, expandable: boolean = false): Promise<DeviceOutputDTO> {
     const device = devices.find(device => device.id === deviceID);
     if(device === undefined) { throw new Error(`Device with id ${deviceID} not found`)}
 
@@ -170,7 +184,7 @@ export async function getDevice(deviceID: number, expandable: Boolean = false): 
 /**
  * Gets all devices
  */
-export async function getDevices(paginationModel: PaginationModel, expandable: Boolean = false, query: {search: string} = null): Promise<PageOutputDTO<DeviceOutputDTO>> {
+export async function getDevices(paginationModel: PaginationModel, expandable: boolean = false, query: {search: string} = null): Promise<PageOutputDTO<DeviceOutputDTO>> {
     const filteredItems = query?.search ? devices.filter(item => item.name.includes(query.search)) : devices;
     const items = filteredItems.slice(paginationModel.pageSize * paginationModel.page, paginationModel.pageSize * (paginationModel.page + 1));
     const totalPages = paginationModel.pageSize === 0 ? 0 : Math.ceil(filteredItems.length / paginationModel.pageSize)

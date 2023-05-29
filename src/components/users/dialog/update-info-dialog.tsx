@@ -9,7 +9,7 @@ import { DialogProps } from "../../dialog/dialog-interface"
 
 
 interface UpdateInfoDialogProps extends DialogProps<UserInfoUpdateDTO> {
-    user : User
+    defaultValues : UserInfoUpdateDTO
     label: string
 }
 
@@ -19,7 +19,7 @@ export function UserUpdateInfoDialog (
         handleClose,
         onSubmit,
         theme,
-        user,
+        defaultValues,
         label
      } : UpdateInfoDialogProps
 ){
@@ -30,15 +30,13 @@ export function UserUpdateInfoDialog (
         reset,
         formState: { errors }
       } = useForm<UserInfoUpdateDTO>({
-        defaultValues: {
-            firstName: user.firstName,
-            lastName: user.lastName
-        }})
+        defaultValues: defaultValues
+      })
     
 
     React.useEffect(() => {
-        reset()
-    }, [isOpen]);
+        reset(defaultValues)
+    }, [defaultValues]);
     
 
     return (

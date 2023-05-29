@@ -24,12 +24,12 @@ export function AppButton(
               width: "150px",
               height: "60px",
               color: "white",
-              "font-size": "15px",
+              "fontSize": "15px",
               backgroundColor: backgroundColor,
               ":hover": {
                 backgroundColor: hoverColor,
               },
-              "box-shadow": "0px 8px 15px " + hoverColor,
+              "boxShadow": "0px 8px 15px " + hoverColor,
               "textTransform": "capitalize"
             }}
             onClick={onClick}

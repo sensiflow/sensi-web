@@ -8,21 +8,26 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../../api/fake/fake-api';
 import { SignInForm } from '../../components/auth-form';
 import { paths } from '../../app-paths';
+import {useAuth} from "../../logic/context/auth-context";
 
 
 const theme = createTheme();
 
 export default function Login() {
-  const navigate = useNavigate()
+    const navigate = useNavigate()
+    const { login , isLoggedIn } = useAuth()
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>, email, password) => {
+        event.preventDefault();
+        await login({email, password})
+    };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>, email, password) => {
-    event.preventDefault();
-    await login({email, password})
-    navigate(paths.dashboard.home)
-  };
+  React.useEffect(() => {
+    if (isLoggedIn) {
+      navigate(paths.dashboard.home)
+    }
+  }, [isLoggedIn])
 
   return (
     <ThemeProvider theme={theme}>
