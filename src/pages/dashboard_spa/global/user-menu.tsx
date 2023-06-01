@@ -3,13 +3,13 @@ import * as React from "react"
 import { DropMenu } from "../../../components/three-dot-menu"
 import {Box, useTheme} from "@mui/material";
 import { UserUpdateDTO, PasswordUpdateDTO } from "../../../api/dto/input/user-inputs";
-import { updateUser } from "../../../api/fake/fake-api";
+
 import { UserUpdateInfoDialog } from "../../../components/users/dialog/update-info-dialog";
 import { UpdatePasswordDialog } from "../../../components/users/dialog/update-password-dialog";
 import { UserMenuDialogReducerState, UserMenuDialogReducerAction, UserMenuDialogReducer, UserMenuDialogs } from "./user-menu-dialog-reducer";
 import {useCurrentUser} from "../../../logic/context/user-context";
 import {useAuth} from "../../../logic/context/auth-context";
-
+import { updateUser } from "../../../api/axios/user/api";
 
 export function UserMenu(){
     const theme = useTheme();

@@ -4,12 +4,14 @@ import { dialogSx } from "./styles";
 import DevicesCheckboxList from "../devices-checkbox-list";
 import { Device } from "../../../model/device";
 import { SearchBar } from "../../search-bar";
+import { DeviceInformation } from "../../../pages/dashboard_spa/group";
 
 interface AddDeviceToGroupDialogProps {
     theme: Theme;
     isOpen: boolean;
     dialogTitle: string;
-    devices: Array<Device>;
+    devicesInformation: Array<DeviceInformation>;
+    groupID: number;
     isLoadingDevices: boolean;
     resetScrollToTop: boolean;
     onScrollReset: () => void;
@@ -24,7 +26,8 @@ const AddDevicesToGroupDialog = (
         theme,
         isOpen,
         dialogTitle,
-        devices,
+        devicesInformation,
+        groupID,
         isLoadingDevices,
         resetScrollToTop,
         onScrollReset,
@@ -57,7 +60,8 @@ const AddDevicesToGroupDialog = (
               onInputChange={onSearchInputChange}
             />
             <DevicesCheckboxList 
-              devices={devices}
+              devices={devicesInformation}
+              groupID={groupID}
               isLoadingDevices={isLoadingDevices}
               resetScrollToTop={resetScrollToTop}
               onScrollReset={onScrollReset}

@@ -1,7 +1,7 @@
 export interface DeviceInputDTO {
     name: string;
     description: string;
-    streamUrl: string;
+    streamURL: string;
 }
 
 export interface DeleteDeviceInputDTO {

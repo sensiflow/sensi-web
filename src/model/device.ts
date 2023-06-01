@@ -2,7 +2,7 @@ export interface Device{
     id: number,
     name: string,
     description: string,
-    streamUrl: string,
+    streamURL: string,
     status: DeviceProcessingState,
 }
 

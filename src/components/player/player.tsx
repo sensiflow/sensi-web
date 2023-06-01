@@ -63,8 +63,6 @@ export function Player(props: PlayerProps) {
     }, [props.url,playerKey])
 
     const onError = (error,data,hl,hls) => {
-        console.log('onError', error)
-        console.log('data', data)
         if(data) {  //TODO: serve error message
             if(data.fatal) {
                 setErrorMessage(data.message)
@@ -78,7 +76,6 @@ export function Player(props: PlayerProps) {
 
     const onReady = () => {
         setVideoBackDropOpen(false)
-        console.log('onReady')
     }
 
     const onBuffer = () => {

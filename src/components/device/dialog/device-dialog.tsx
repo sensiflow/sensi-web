@@ -26,7 +26,7 @@ const DeviceDialog = (
 
   const nameRegisterOption = isRequiredField(requiredTextFields, 'name') ? { required: 'Name is required' } : { required: false }
   const descriptionRegisterOption = isRequiredField(requiredTextFields, 'description') ? { required: 'Description is required' } : { required: false }
-  const streamUrlRegisterOption = isRequiredField(requiredTextFields, 'streamUrl') ? { required: 'Stream URL is required' } : { required: false }
+  const streamUrlRegisterOption = isRequiredField(requiredTextFields, 'streamURL') ? { required: 'Stream URL is required' } : { required: false }
 
   React.useEffect(() => {
     reset()
@@ -62,9 +62,9 @@ const DeviceDialog = (
               label="Stream URL"
               fullWidth
               margin="normal"
-              {...register('streamUrl', streamUrlRegisterOption)}
-              error={!!errors.streamUrl}
-              helperText={errors.streamUrl?.message}
+              {...register('streamURL', streamUrlRegisterOption)}
+              error={!!errors.streamURL}
+              helperText={errors.streamURL?.message}
               color='secondary'
             />
           </DialogContent>

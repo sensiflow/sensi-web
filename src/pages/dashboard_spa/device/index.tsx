@@ -1,6 +1,5 @@
 import * as React from "react";
 import { useLocation } from "react-router-dom";
-import { getDevice } from "../../../api/fake/fake-api";
 import { dtoToDevice as deviceDtoToDevice } from "../../../api/dto/output/device-output";
 import { Box, Divider, Skeleton, useMediaQuery, useTheme } from "@mui/material";
 import { params, paths } from "../../../app-paths";
@@ -12,6 +11,7 @@ import { Device, DeviceProcessingState } from "../../../model/device";
 import DeviceProcessingStatus from "../../../components/device/processing-status/DeviceProcessingStatus";
 import { ProcessingStateControls } from "../../../components/device/ProcessingStateControls";
 import { extractFromUri } from "../../../utils";
+import {getDevice} from "../../../api/axios/device/api";
 
 export default function DevicePage() {
   const theme = useTheme();

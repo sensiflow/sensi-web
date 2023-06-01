@@ -8,10 +8,12 @@ import { debounce } from 'lodash';
 import { tokens } from '../../theme';
 import { Device } from '../../model/device';
 import { constants } from '../../constants';
+import { DeviceInformation } from '../../pages/dashboard_spa/group';
 
 
 interface DevicesCheckboxListProps {
-  devices: Array<Device>;
+  devices: Array<DeviceInformation>;
+  groupID: number;
   isLoadingDevices: boolean;
   resetScrollToTop: boolean;
   handleSelectedDevices: boolean;
@@ -23,6 +25,7 @@ interface DevicesCheckboxListProps {
 export default function DevicesCheckboxList(
   { 
     devices,
+    groupID,
     isLoadingDevices,
     resetScrollToTop,
     handleSelectedDevices,
@@ -102,13 +105,14 @@ export default function DevicesCheckboxList(
     >
       {devices.map((item) => (
           <ListItem 
-            key={`item-${item.name}`}
+            key={`item-${item.device.name}`}
             secondaryAction={
               <Checkbox
                 edge="end"
-                onChange={handleToggle(item)}
-                checked={getCheckedDeviceIndex(item) !== -1}
-                inputProps={{ 'aria-labelledby':  `checkbox-list-secondary-label-${item.name}` }}
+                onChange={handleToggle(item.device)}
+                checked={getCheckedDeviceIndex(item.device) !== -1}
+                disabled={item.groupsID.includes(groupID)}
+                inputProps={{ 'aria-labelledby':  `checkbox-list-secondary-label-${item.device.name}` }}
               />
             }
             sx={{
@@ -118,7 +122,7 @@ export default function DevicesCheckboxList(
             }}
           >
             <ListItemText 
-              primary={item.name} 
+              primary={item.device.name}
               sx={{
                 marginRight: '250px'
               }}

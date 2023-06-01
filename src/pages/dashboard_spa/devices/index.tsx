@@ -12,10 +12,7 @@ import {
   DeviceInputDTO,
 } from "../../../api/dto/input/device-input";
 import {
-  createDevice,
-  deleteDevices,
-  getDevices,
-  updateDevice,
+  deleteDevices
 } from "../../../api/fake/fake-api";
 import { PaginationModel } from "../../../model/pagination-model";
 import { Page } from "../../../model/page";
@@ -25,7 +22,7 @@ import { paths } from "../../../app-paths";
 import { dtoToDevice } from "../../../api/dto/output/device-output";
 import { AppButton } from "../../../components/buttons/app-button";
 import { tokens } from "../../../theme";
-
+import {createDevice, getDevices, updateDevice} from "../../../api/axios/device/api";
 
 export default function DevicesPage() {
   const navigate = useNavigate();
@@ -103,8 +100,8 @@ export default function DevicesPage() {
   };
 
   const onDeviceUpdateSubmit = async (input: DeviceInputDTO) => {
-    const currentStreamUrl = currentDeviceBeingUpdated.streamUrl;
-    if (currentStreamUrl !== "PAUSED" && input.streamUrl !== currentStreamUrl) {
+    const currentStreamUrl = currentDeviceBeingUpdated.streamURL;
+    if (currentStreamUrl !== "PAUSED" && input.streamURL !== currentStreamUrl) {
       setUpdatedDeviceInfo(input);
       setOpenUpdateDeviceUrlDialog(true);
       return;

@@ -1,10 +1,10 @@
 import * as React from "react"
-import { getUser } from "../../api/fake/fake-api"
+
 import {User} from "../../model/user";
 import useCookie from "../hooks/useCookie";
 import {AUTH_COOKIE_NAME} from "./auth-context";
 import useLocalStorageState from 'use-local-storage-state'
-
+import {getUser} from "../../api/axios/user/api";
 
 export const CurrentUserContext = React.createContext(null)
 
@@ -41,9 +41,6 @@ export const CurrentUserProvider = ({children } : { children : React.ReactNode})
       return
     }
     const user = await getUser(uid)
-    console.log("fetchCurrentUser", user)
-    if(currentUser === user) return
-    console.log("after")
     setCurrentUser(user)
   },[UID])
 

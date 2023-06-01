@@ -13,6 +13,7 @@ import { PaginationModel } from "../../model/pagination-model";
 import DeviceProcessingStatus from "./processing-status/DeviceProcessingStatus";
 import { DataGridListProps } from "../lists/data-grid-list";
 import { truncate } from "lodash";
+import {DeviceInformation} from "../../pages/dashboard_spa/group";
 
 interface DeviceListProps extends DataGridListProps<Device> {
   onRowSelection: (newSelection) => void;

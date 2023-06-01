@@ -14,3 +14,7 @@ export interface UserInfoUpdateDTO {
     firstName?: string;
     lastName?: string;
 }
+
+export interface UserRoleInput {
+    role: string;
+}

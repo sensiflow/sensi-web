@@ -7,7 +7,6 @@ export type UserMGMDialogReducerState = {
     openRegisterDialog : boolean,
     openDeleteDialog : boolean,
   }
-  
 
 export enum UserMGMDialogs{
     REGISTER = "register",
@@ -28,6 +27,5 @@ const dialogsAssociation = {
 }
 
 export const UserMGMDialogReducer = (state : UserMGMDialogReducerState, action: UserMGMDialogReducerAction) => {
-
   return DialogReducer<UserMGMDialogs,UserMGMDialogReducerState>(state, action, dialogsAssociation)
 }

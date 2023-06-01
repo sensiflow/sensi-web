@@ -1,5 +1,6 @@
 import { UserRole } from "../../model/roles"
 import {  DeviceSimpleOutputDTO } from "../dto/output/device-output"
+import {DeviceGroupExpandedOutputDTO, DeviceGroupSimpleOutputDTO} from "../dto/output/group-output";
 
 export const users  = [
     {   
@@ -49,233 +50,262 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "id": 1,
         "name": "Security Camera 1",
         "description": "Main entrance",
-        "streamUrl": "rtsp://stream1:5412/1",
+        "streamURL": "rtsp://stream1:5412/1",
         "status": "ACTIVE",
-        "user": 1
+        "user": 1,
+        "deviceGroupsID": [3]
       },
       {
         "id": 2,
         "name": "Outdoor Camera 1",
         "description": "Backyard",
-        "streamUrl": "rtsp://stream2:5412/2",
+        "streamURL": "rtsp://stream2:5412/2",
         "status": "INACTIVE",
-        "user": 1
+        "user": 1,
+        "deviceGroupsID": [2]
       },
       {
         "id": 3,
         "name": "Indoor Camera 1",
         "description": "Living room",
-        "streamUrl": "rtsp://stream3:5412/3",
+        "streamURL": "rtsp://stream3:5412/3",
         "status": "PAUSED",
-        "user": 2
+        "user": 2,
+        "deviceGroupsID": [1,6,8,9,20]
       },
       {
         "id": 4,
         "name": "Security Camera 2",
         "description": "Parking lot",
-        "streamUrl": "rtsp://stream4:5412/4",
+        "streamURL": "rtsp://stream4:5412/4",
         "status": "ACTIVE",
-        "user": 2
+        "user": 2,
+        "deviceGroupsID": [3]
       },
       {
         "id": 5,
         "name": "Outdoor Camera 2",
         "description": "Front yard",
-        "streamUrl": "rtsp://stream5:5412/5",
+        "streamURL": "rtsp://stream5:5412/5",
         "status": "INACTIVE",
-        "user": 3
+        "user": 3,
+        "deviceGroupsID": [2]
       },
       {
         "id": 6,
         "name": "Indoor Camera 2",
         "description": "Kitchen",
-        "streamUrl": "rtsp://stream6:5412/6",
+        "streamURL": "rtsp://stream6:5412/6",
         "status": "PAUSED",
-        "user": 3
+        "user": 3,
+        "deviceGroupsID": [1,6,8,9,20]
       },
       {
         "id": 7,
         "name": "Security Camera 3",
         "description": "Office entrance",
-        "streamUrl": "rtsp://stream7:5412/7",
+        "streamURL": "rtsp://stream7:5412/7",
         "status": "ACTIVE",
-        "user": 1
+        "user": 1,
+        "deviceGroupsID": [3]
       },
       {
         "id": 8,
         "name": "Outdoor Camera 3",
         "description": "Patio",
-        "streamUrl": "rtsp://stream8:5412/8",
+        "streamURL": "rtsp://stream8:5412/8",
         "status": "INACTIVE",
-        "user": 1
+        "user": 1,
+        "deviceGroupsID": [2]
       },
       {
         "id": 9,
         "name": "Indoor Camera 3",
         "description": "Bedroom",
-        "streamUrl": "rtsp://stream9:5412/9",
+        "streamURL": "rtsp://stream9:5412/9",
         "status": "PAUSED",
-        "user": 2
+        "user": 2,
+        "deviceGroupsID": [1,7,9,15,16,19,20]
       },
       {
         "id": 10,
         "name": "Security Camera 4",
         "description": "Back entrance",
-        "streamUrl": "rtsp://stream10:5412/10",
+        "streamURL": "rtsp://stream10:5412/10",
         "status": "ACTIVE",
-        "user": 2
+        "user": 2,
+        "deviceGroupsID": [3]
       },
       {
         "id": 11,
         "name": "Outdoor Camera 4",
         "description": "Garden",
-        "streamUrl": "rtsp://stream11:5412/11",
+        "streamURL": "rtsp://stream11:5412/11",
         "status": "INACTIVE",
-        "user": 3
+        "user": 3,
+        "deviceGroupsID": [2,12,13]
       },
       {
         "id": 12,
         "name": "Indoor Camera 4",
         "description": "Study room",
-        "streamUrl": "rtsp://stream12:5412/12",
+        "streamURL": "rtsp://stream12:5412/12",
         "status": "PAUSED",
-        "user": 3
+        "user": 3,
+        "deviceGroupsID": [1,7,15,16,19,20]
       },
       {
         "id": 13,
         "name": "Outdoor Camera 5",
         "description": "Driveway",
-        "streamUrl": "rtsp://stream14:5412/14",
+        "streamURL": "rtsp://stream14:5412/14",
         "status": "INACTIVE",
-        "user": 1
+        "user": 1,
+        "deviceGroupsID": [2,12]
       },
       {
         "id": 14,
         "name": "Indoor Camera 5",
         "description": "Conference room",
-        "streamUrl": "rtsp://stream15:5412/15",
+        "streamURL": "rtsp://stream15:5412/15",
         "status": "PAUSED",
-        "user": 2
+        "user": 2,
+        "deviceGroupsID": [1,6,7,10,11,15,20]
       },
       {
         "id": 15,
         "name": "Security Camera 6",
         "description": "Loading dock",
-        "streamUrl": "rtsp://stream16:5412/16",
+        "streamURL": "rtsp://stream16:5412/16",
         "status": "ACTIVE",
-        "user": 2
+        "user": 2,
+        "deviceGroupsID": [3]
       },
       {
         "id": 16,
         "name": "Outdoor Camera 6",
         "description": "Pool area",
-        "streamUrl": "rtsp://stream17:5412/17",
+        "streamURL": "rtsp://stream17:5412/17",
         "status": "INACTIVE",
-        "user": 3
+        "user": 3,
+        "deviceGroupsID": [2,12,14]
       },
       {
         "id": 17,
         "name": "Indoor Camera 6",
         "description": "Bathroom",
-        "streamUrl": "rtsp://stream18:5412/18",
+        "streamURL": "rtsp://stream18:5412/18",
         "status": "PAUSED",
-        "user": 3
+        "user": 3,
+        "deviceGroupsID": [1,10,11,15,16,20]
       },
       {
         "id": 18,
         "name": "Security Camera 7",
         "description": "Server room",
-        "streamUrl": "rtsp://stream19:5412/19",
+        "streamURL": "rtsp://stream19:5412/19",
         "status": "ACTIVE",
-        "user": 1
+        "user": 1,
+        "deviceGroupsID": [3]
       },
       {
         "id": 19,
         "name": "Outdoor Camera 7",
         "description": "Sidewalk",
-        "streamUrl": "rtsp://stream20:5412/20",
+        "streamURL": "rtsp://stream20:5412/20",
         "status": "INACTIVE",
-        "user": 1
+        "user": 1,
+        "deviceGroupsID": []
       },
       {
         "id": 20,
         "name": "Indoor Camera 7",
         "description": "Dining area",
-        "streamUrl": "rtsp://stream21:5412/21",
+        "streamURL": "rtsp://stream21:5412/21",
         "status": "PAUSED",
-        "user": 2
+        "user": 2,
+        "deviceGroupsID": [5]
       },
       {
         "id": 21,
         "name": "Security Camera 8",
         "description": "Staircase",
-        "streamUrl": "rtsp://stream22:5412/22",
+        "streamURL": "rtsp://stream22:5412/22",
         "status": "ACTIVE",
-        "user": 2
+        "user": 2,
+        "deviceGroupsID": [5]
       },
       {
         "id": 22,
         "name": "Outdoor Camera 8",
         "description": "Rooftop",
-        "streamUrl": "rtsp://stream23:5412/23",
+        "streamURL": "rtsp://stream23:5412/23",
         "status": "INACTIVE",
-        "user": 3
+        "user": 3,
+        "deviceGroupsID": [5]
       },
       {
         "id": 23,
         "name": "Indoor Camera 8",
         "description": "Lobby",
-        "streamUrl": "rtsp://stream24:5412/24",
+        "streamURL": "rtsp://stream24:5412/24",
         "status": "PAUSED",
-        "user": 3
+        "user": 3,
+        "deviceGroupsID": [5]
       },
       {
         "id": 24,
         "name": "Security Camera 9",
         "description": "Control room",
-        "streamUrl": "rtsp://stream25:5412/25",
+        "streamURL": "rtsp://stream25:5412/25",
         "status": "ACTIVE",
-        "user": 1
+        "user": 1,
+        "deviceGroupsID": [3]
       },
       {
         "id": 25,
         "name": "Outdoor Camera 9",
         "description": "Gated entrance",
-        "streamUrl": "rtsp://stream26:5412/26",
+        "streamURL": "rtsp://stream26:5412/26",
         "status": "INACTIVE",
-        "user": 1
+        "user": 1,
+        "deviceGroupsID": [2]
       },
       {
         "id": 26,
         "name": "Indoor Camera 9",
         "description": "Break room",
-        "streamUrl": "rtsp://stream27:5412/27",
+        "streamURL": "rtsp://stream27:5412/27",
         "status": "PAUSED",
-        "user": 2
+        "user": 2,
+        "deviceGroupsID": [1,10,15,16,17,20]
       },
       {
         "id": 27,
         "name": "Security Camera 10",
         "description": "Elevator",
-        "streamUrl": "rtsp://stream28:5412/28",
+        "streamURL": "rtsp://stream28:5412/28",
         "status": "ACTIVE",
-        "user": 2
+        "user": 2,
+        "deviceGroupsID": [5]
       },
       {
         "id": 28,
         "name": "Outdoor Camera 10",
         "description": "Playground",
-        "streamUrl": "rtsp://stream29:5412/29",
+        "streamURL": "rtsp://stream29:5412/29",
         "status": "INACTIVE",
-        "user": 3
+        "user": 3,
+        "deviceGroupsID": [2]
       },
       {
         "id": 29,
         "name": "Indoor Camera 10",
         "description": "Reception area",
-        "streamUrl": "rtsp://stream30:5412/30",
+        "streamURL": "rtsp://stream30:5412/30",
         "status": "PAUSED",
-        "user": 3
+        "user": 3,
+        "deviceGroupsID": [1,10,15,16,17,18,20]
       }
 ]
 

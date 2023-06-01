@@ -12,5 +12,9 @@ export const constants = {
     },
     cookie: {
         USE_COOKIE_CHECK_INTERVAL : 5000
+    },
+    groupPage: {
+      DEFAULT_CHECKBOX_LIST_PAGINATION: {pageSize: 10, page: 0},
+      DEFAULT_GROUP_DEVICES_PAGINATION: {pageSize: 5, page: 0}
     }
 }

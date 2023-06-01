@@ -16,7 +16,7 @@ interface DeleteGroupDevicesDialogProps {
     onSubmit: () => void;
 }
 
-export default function DeleteGroupDevicesDialog({
+export default function RemoveGroupDevicesDialog({
   isOpen, 
   theme, 
   handleClose, 

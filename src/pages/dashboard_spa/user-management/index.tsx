@@ -4,19 +4,22 @@ import * as React from "react";
 import Header from "../../../components/header/Header";
 import { PaginationModel } from "../../../model/pagination-model";
 import { Page } from "../../../model/page";
-import { deleteUser, getUsers, register, updateUser, updateUserRole } from "../../../api/fake/fake-api";
+import {deleteUser, getUsers} from "../../../api/fake/fake-api";
 import { User } from "../../../model/user";
 import UserList from "../../../components/users/user-list";
 import { UserMGMDialogReducer, UserMGMDialogs, UserMGMDialogReducerState, UserMGMDialogReducerAction } from "./user-mgm-dialog-reducer";
 import { RegisterDialog } from "../../../components/users/dialog/register-dialog";
 import { RegisterInputDTO } from "../../../api/dto/input/register-input";
-import { PasswordUpdateDTO, UserUpdateDTO } from "../../../api/dto/input/user-inputs";
+import {PasswordUpdateDTO, UserRoleInput, UserUpdateDTO} from "../../../api/dto/input/user-inputs";
 import { UpdatePasswordDialog } from "../../../components/users/dialog/update-password-dialog";
 import { UserRole, checkRolePermission, getRoleHierarchy, getRolesBellow } from "../../../model/roles";
 import { DeleteUserDialog } from "../../../components/users/dialog/delete-user-dialog";
 import { UpdateRoleDialog } from "../../../components/users/dialog/update-role-dialog";
 import { UserUpdateInfoDialog } from "../../../components/users/dialog/update-info-dialog";
 import { useCurrentUser } from "../../../logic/context/user-context";
+import {updateUser, updateUserRole} from "../../../api/axios/user/api";
+import { register } from "../../../api/axios/authentication/api";
+
 
 //TODO: cant delete myself
 export default function UserManagementPage(){
@@ -116,7 +119,8 @@ export default function UserManagementPage(){
     }
 
     const onRoleUpdateSubmit = async (newRole: UserRole) => {
-      await updateUserRole(userUnderUpdate.id,newRole);
+      const newUserRole = {role: newRole} as UserRoleInput
+      await updateUserRole(userUnderUpdate.id, newUserRole);
 
       await reloadUsersPage()
 

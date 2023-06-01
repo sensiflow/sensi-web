@@ -20,8 +20,12 @@ const UpdateDeviceDialog = (
         handleClose={handleClose}
         onSubmit={onSubmit}
         theme={theme}
-        requiredTextFields={["name", "streamUrl"]}
-        defaultValues={currentDevice as DeviceInputDTO}
+        requiredTextFields={["name", "streamURL"]}
+        defaultValues={{
+            name: currentDevice.name,
+            description: currentDevice.description,
+            streamURL: currentDevice.streamURL
+      }}
       />
     )
   };

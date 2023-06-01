@@ -26,7 +26,6 @@ export function ProtectedRoute({
     const { login, logout, isLoggedIn , uid } = useAuth()
 
     const isAllowed = () => {
-        console.log("isAllowed",isLoggedIn)
         if (!isLoggedIn) {
             return false
         }

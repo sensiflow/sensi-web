@@ -1,8 +1,8 @@
 import * as React from "react";
 import useCookie from "../hooks/useCookie";
-import { login, logout} from "../../api/fake/fake-api";
 import { useCurrentUser} from "./user-context";
 import {LoginInputDTO} from "../../api/dto/input/login-input";
+import {login, logout} from "../../api/axios/authentication/api";
 
 export const AuthContext = React.createContext(null)
 
@@ -45,7 +45,6 @@ export const AuthProvider = ({children } : { children : React.ReactNode}) => {
     }, [])
 
     const isLoggedIn = React.useMemo(() => {
-        console.log("isLoggedIn", currentUser, cookie)
         return (( currentUser !== undefined && currentUser !== null) && (cookie !== undefined && cookie !== null )  )
     }, [currentUser, cookie])
 

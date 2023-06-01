@@ -1,12 +1,12 @@
 import * as React from "react";
 import { PaginationModel } from "../../../model/pagination-model";
-import { getDevicesFromGroup, getDevicesGroups } from "../../../api/fake/fake-api";
 import { DevicesGroup } from "../../../model/group";
 import GroupList from "../../../components/groups/group-list";
 import { Box } from "@mui/material";
 import useWindowSize from "../../../logic/hooks/use-window-size";
 import { dtoToDevice } from "../../../api/dto/output/device-output";
 import { debounce } from "lodash";
+import {getDevicesFromGroup, getDevicesGroups} from "../../../api/axios/groups/api";
 
 export default function GroupsPage() {
 
