@@ -8,11 +8,13 @@ const SUBTITLE_MAX_LENGTH = 42;
 const Header = ({
   title,
   subTitle,
+  noSubTitleText,
   isLoading,
   onHeaderClick,
 }: {
   title: string;
   subTitle: string;
+  noSubTitleText?: string;
   isLoading?: boolean;
   onHeaderClick?: () => void;
 }) => {
@@ -20,7 +22,8 @@ const Header = ({
   const colors = tokens(theme.palette.mode);
 
   let handleSubTitle = (subTitle) => {
-    if (subTitle.length == 0) return "No subtitle";
+    if (!subTitle || subTitle.length == 0)
+      return noSubTitleText ?? "No description";
 
     if (subTitle.length > SUBTITLE_MAX_LENGTH)
       return subTitle.slice(0, SUBTITLE_MAX_LENGTH) + "...";
@@ -30,10 +33,11 @@ const Header = ({
 
   const cursor = onHeaderClick ? "pointer" : "default";
   return !isLoading ? (
-    <Box mb="20px"
+    <Box
+      mb="20px"
       sx={{
         cursor: cursor,
-        width: "fit-content"
+        width: "fit-content",
       }}
       onClick={onHeaderClick}
     >
