@@ -1,12 +1,11 @@
 import { Box, Button } from "@mui/material";
 import { Theme, useTheme } from "@mui/material/styles";
 import * as React from "react";
-import Header from "../../../components/header/Header";
+import Header from "../../../components/header/header";
 import { PaginationModel } from "../../../model/pagination-model";
 import { Page } from "../../../model/page";
-import {deleteUser, getUsers} from "../../../api/fake/fake-api";
 import { User } from "../../../model/user";
-import UserList from "../../../components/users/user-list";
+import UserList, { UserAction } from "../../../components/users/user-list";
 import { UserMGMDialogReducer, UserMGMDialogs, UserMGMDialogReducerState, UserMGMDialogReducerAction } from "./user-mgm-dialog-reducer";
 import { RegisterDialog } from "../../../components/users/dialog/register-dialog";
 import { RegisterInputDTO } from "../../../api/dto/input/register-input";
@@ -17,11 +16,10 @@ import { DeleteUserDialog } from "../../../components/users/dialog/delete-user-d
 import { UpdateRoleDialog } from "../../../components/users/dialog/update-role-dialog";
 import { UserUpdateInfoDialog } from "../../../components/users/dialog/update-info-dialog";
 import { useCurrentUser } from "../../../logic/context/user-context";
-import {updateUser, updateUserRole} from "../../../api/axios/user/api";
+import {deleteUser, getUsers, updateUser, updateUserRole} from "../../../api/axios/user/api";
 import { register } from "../../../api/axios/authentication/api";
 
 
-//TODO: cant delete myself
 export default function UserManagementPage(){
     const theme: Theme = useTheme();
     const isDarkMode = theme.palette.mode === "dark";
@@ -150,16 +148,19 @@ export default function UserManagementPage(){
 
 
 
-    const canUserActOn = (user: User) => {
+    const canUserActOn = (user: User, action : UserAction) => {
       //if user is the same as the one being updated, then it can act
-      if(userID === user.id) return true;
-      else if(userRole === UserRole.ADMIN) return true;
-      else {
+        if(action === UserAction.DeleteUser ){
+            if(userID === user.id) return false;
+        }
+        if(userID === user.id) return true;
+        else if(userRole === UserRole.ADMIN) return true;
+        else {
         //else check if user can act on the other user
         const hierarchy = getRolesBellow(userRole)
 
         return hierarchy.includes(user.role);
-      }
+        }
     }
 
     const possibleRegisterRoles = userRole === UserRole.ADMIN ? getRoleHierarchy(UserRole.ADMIN) : getRolesBellow(UserRole.MODERATOR);

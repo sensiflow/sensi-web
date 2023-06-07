@@ -3,6 +3,11 @@ import { BrowserRouter } from "react-router-dom"
 import userEvent from "@testing-library/user-event"
 import * as React from "react"
 import Login from "../src/pages/auth/login"
+import { AuthProvider } from "../src/logic/context/auth-context"
+import { CurrentUserProvider } from "../src/logic/context/user-context"
+import Cookies from 'js-cookie'
+
+
 
 /**
  * Checks if the Sign in header is rendered in the Login page
@@ -39,6 +44,7 @@ describe('Test the Login component', () => {
      * Checks if after sumbitting the login form, the user is redirected to the home page using mock data.
      */
     test('submit the login form', async () => {
+        Cookies.get = jest.fn()
         const { findByLabelText, getByTestId } = renderLoginComponent()
         const submitBtn = getByTestId('submit')
     
@@ -61,8 +67,12 @@ describe('Test the Login component', () => {
  */
 const renderLoginComponent = () => {
     return render(
-        <BrowserRouter>
-            <Login />
-        </BrowserRouter>
+        <CurrentUserProvider>
+            <AuthProvider>
+                <BrowserRouter>
+                    <Login />
+                </BrowserRouter>
+            </AuthProvider>
+        </CurrentUserProvider>
     )
 }

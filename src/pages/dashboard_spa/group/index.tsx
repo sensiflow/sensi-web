@@ -1,6 +1,6 @@
 import {Box, useTheme} from "@mui/material";
 import * as React from "react";
-import Header from "../../../components/header/Header";
+import Header from "../../../components/header/header";
 
 import {useLocation, useNavigate} from "react-router-dom";
 import {extractFromUri} from "../../../utils";
@@ -15,7 +15,7 @@ import AddDevicesToGroupDialog from "../../../components/group/dialog/add-device
 import DeviceList from "../../../components/device/device-list";
 import {Page} from "../../../model/page";
 import DeleteGroupDialog from "../../../components/group/dialog/delete-group-dialog";
-import UpdateGroupDialog from "../../../components/group/dialog/update-group";
+import UpdateGroupDialog from "../../../components/group/dialog/update-group-dialog";
 import {GroupInputUpdateDTO} from "../../../api/dto/input/group-update-input";
 import {DevicesGroup} from "../../../model/group";
 import RemoveGroupDevicesDialog from "../../../components/group/dialog/delete-devices-dialog";

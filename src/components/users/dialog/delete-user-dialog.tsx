@@ -1,6 +1,6 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from "@mui/material";
 import * as React from "react";
-import { dialogSx } from "../../device/dialog/styles";
+import { dialogSx } from "../../dialog/styles";
 import { User } from "../../../model/user";
 
 

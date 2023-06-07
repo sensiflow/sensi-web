@@ -51,7 +51,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Security Camera 1",
         "description": "Main entrance",
         "streamURL": "rtsp://stream1:5412/1",
-        "status": "ACTIVE",
+        "processingState": "ACTIVE",
         "user": 1,
         "deviceGroupsID": [3]
       },
@@ -60,7 +60,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Outdoor Camera 1",
         "description": "Backyard",
         "streamURL": "rtsp://stream2:5412/2",
-        "status": "INACTIVE",
+        "processingState": "INACTIVE",
         "user": 1,
         "deviceGroupsID": [2]
       },
@@ -69,7 +69,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Indoor Camera 1",
         "description": "Living room",
         "streamURL": "rtsp://stream3:5412/3",
-        "status": "PAUSED",
+        "processingState": "PAUSED",
         "user": 2,
         "deviceGroupsID": [1,6,8,9,20]
       },
@@ -78,7 +78,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Security Camera 2",
         "description": "Parking lot",
         "streamURL": "rtsp://stream4:5412/4",
-        "status": "ACTIVE",
+        "processingState": "ACTIVE",
         "user": 2,
         "deviceGroupsID": [3]
       },
@@ -87,7 +87,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Outdoor Camera 2",
         "description": "Front yard",
         "streamURL": "rtsp://stream5:5412/5",
-        "status": "INACTIVE",
+        "processingState": "INACTIVE",
         "user": 3,
         "deviceGroupsID": [2]
       },
@@ -96,7 +96,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Indoor Camera 2",
         "description": "Kitchen",
         "streamURL": "rtsp://stream6:5412/6",
-        "status": "PAUSED",
+        "processingState": "PAUSED",
         "user": 3,
         "deviceGroupsID": [1,6,8,9,20]
       },
@@ -105,7 +105,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Security Camera 3",
         "description": "Office entrance",
         "streamURL": "rtsp://stream7:5412/7",
-        "status": "ACTIVE",
+        "processingState": "ACTIVE",
         "user": 1,
         "deviceGroupsID": [3]
       },
@@ -114,7 +114,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Outdoor Camera 3",
         "description": "Patio",
         "streamURL": "rtsp://stream8:5412/8",
-        "status": "INACTIVE",
+        "processingState": "INACTIVE",
         "user": 1,
         "deviceGroupsID": [2]
       },
@@ -123,7 +123,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Indoor Camera 3",
         "description": "Bedroom",
         "streamURL": "rtsp://stream9:5412/9",
-        "status": "PAUSED",
+        "processingState": "PAUSED",
         "user": 2,
         "deviceGroupsID": [1,7,9,15,16,19,20]
       },
@@ -132,7 +132,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Security Camera 4",
         "description": "Back entrance",
         "streamURL": "rtsp://stream10:5412/10",
-        "status": "ACTIVE",
+        "processingState": "ACTIVE",
         "user": 2,
         "deviceGroupsID": [3]
       },
@@ -141,7 +141,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Outdoor Camera 4",
         "description": "Garden",
         "streamURL": "rtsp://stream11:5412/11",
-        "status": "INACTIVE",
+        "processingState": "INACTIVE",
         "user": 3,
         "deviceGroupsID": [2,12,13]
       },
@@ -150,7 +150,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Indoor Camera 4",
         "description": "Study room",
         "streamURL": "rtsp://stream12:5412/12",
-        "status": "PAUSED",
+        "processingState": "PAUSED",
         "user": 3,
         "deviceGroupsID": [1,7,15,16,19,20]
       },
@@ -159,7 +159,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Outdoor Camera 5",
         "description": "Driveway",
         "streamURL": "rtsp://stream14:5412/14",
-        "status": "INACTIVE",
+        "processingState": "INACTIVE",
         "user": 1,
         "deviceGroupsID": [2,12]
       },
@@ -168,7 +168,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Indoor Camera 5",
         "description": "Conference room",
         "streamURL": "rtsp://stream15:5412/15",
-        "status": "PAUSED",
+        "processingState": "PAUSED",
         "user": 2,
         "deviceGroupsID": [1,6,7,10,11,15,20]
       },
@@ -177,7 +177,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Security Camera 6",
         "description": "Loading dock",
         "streamURL": "rtsp://stream16:5412/16",
-        "status": "ACTIVE",
+        "processingState": "ACTIVE",
         "user": 2,
         "deviceGroupsID": [3]
       },
@@ -186,7 +186,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Outdoor Camera 6",
         "description": "Pool area",
         "streamURL": "rtsp://stream17:5412/17",
-        "status": "INACTIVE",
+        "processingState": "INACTIVE",
         "user": 3,
         "deviceGroupsID": [2,12,14]
       },
@@ -195,7 +195,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Indoor Camera 6",
         "description": "Bathroom",
         "streamURL": "rtsp://stream18:5412/18",
-        "status": "PAUSED",
+        "processingState": "PAUSED",
         "user": 3,
         "deviceGroupsID": [1,10,11,15,16,20]
       },
@@ -204,7 +204,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Security Camera 7",
         "description": "Server room",
         "streamURL": "rtsp://stream19:5412/19",
-        "status": "ACTIVE",
+        "processingState": "ACTIVE",
         "user": 1,
         "deviceGroupsID": [3]
       },
@@ -213,7 +213,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Outdoor Camera 7",
         "description": "Sidewalk",
         "streamURL": "rtsp://stream20:5412/20",
-        "status": "INACTIVE",
+        "processingState": "INACTIVE",
         "user": 1,
         "deviceGroupsID": []
       },
@@ -222,7 +222,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Indoor Camera 7",
         "description": "Dining area",
         "streamURL": "rtsp://stream21:5412/21",
-        "status": "PAUSED",
+        "processingState": "PAUSED",
         "user": 2,
         "deviceGroupsID": [5]
       },
@@ -231,7 +231,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Security Camera 8",
         "description": "Staircase",
         "streamURL": "rtsp://stream22:5412/22",
-        "status": "ACTIVE",
+        "processingState": "ACTIVE",
         "user": 2,
         "deviceGroupsID": [5]
       },
@@ -240,7 +240,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Outdoor Camera 8",
         "description": "Rooftop",
         "streamURL": "rtsp://stream23:5412/23",
-        "status": "INACTIVE",
+        "processingState": "INACTIVE",
         "user": 3,
         "deviceGroupsID": [5]
       },
@@ -249,7 +249,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Indoor Camera 8",
         "description": "Lobby",
         "streamURL": "rtsp://stream24:5412/24",
-        "status": "PAUSED",
+        "processingState": "PAUSED",
         "user": 3,
         "deviceGroupsID": [5]
       },
@@ -258,7 +258,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Security Camera 9",
         "description": "Control room",
         "streamURL": "rtsp://stream25:5412/25",
-        "status": "ACTIVE",
+        "processingState": "ACTIVE",
         "user": 1,
         "deviceGroupsID": [3]
       },
@@ -267,7 +267,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Outdoor Camera 9",
         "description": "Gated entrance",
         "streamURL": "rtsp://stream26:5412/26",
-        "status": "INACTIVE",
+        "processingState": "INACTIVE",
         "user": 1,
         "deviceGroupsID": [2]
       },
@@ -276,7 +276,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Indoor Camera 9",
         "description": "Break room",
         "streamURL": "rtsp://stream27:5412/27",
-        "status": "PAUSED",
+        "processingState": "PAUSED",
         "user": 2,
         "deviceGroupsID": [1,10,15,16,17,20]
       },
@@ -285,7 +285,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Security Camera 10",
         "description": "Elevator",
         "streamURL": "rtsp://stream28:5412/28",
-        "status": "ACTIVE",
+        "processingState": "ACTIVE",
         "user": 2,
         "deviceGroupsID": [5]
       },
@@ -294,7 +294,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Outdoor Camera 10",
         "description": "Playground",
         "streamURL": "rtsp://stream29:5412/29",
-        "status": "INACTIVE",
+        "processingState": "INACTIVE",
         "user": 3,
         "deviceGroupsID": [2]
       },
@@ -303,7 +303,7 @@ export const devices: Array<DeviceSimpleOutputDTO> = [
         "name": "Indoor Camera 10",
         "description": "Reception area",
         "streamURL": "rtsp://stream30:5412/30",
-        "status": "PAUSED",
+        "processingState": "PAUSED",
         "user": 3,
         "deviceGroupsID": [1,10,15,16,17,18,20]
       }

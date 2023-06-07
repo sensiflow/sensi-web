@@ -3,7 +3,7 @@ import GreenOnlineCircle from "./green_online_circle";
 import RedOfflineSquare from "./red_offline_square";
 import YellowPausedRectangles from "./yellow_paused_state";
 import { DeviceProcessingState } from "../../../model/device";
-import ThreeDotsPendingAnimation from "./ThreeDotsPendingAnimation";
+import ThreeDotsPendingAnimation from "./three-dots-pending-animation";
 
 export default function DeviceProcessingStatus(props: {
   state: DeviceProcessingState;

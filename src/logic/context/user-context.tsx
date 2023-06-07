@@ -1,10 +1,10 @@
 import * as React from "react"
 
 import {User} from "../../model/user";
-import useCookie from "../hooks/useCookie";
 import {AUTH_COOKIE_NAME} from "./auth-context";
 import useLocalStorageState from 'use-local-storage-state'
 import {getUser} from "../../api/axios/user/api";
+import useCookie from "../hooks/use-cookie";
 
 export const CurrentUserContext = React.createContext(null)
 

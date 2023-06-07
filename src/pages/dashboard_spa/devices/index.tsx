@@ -1,7 +1,7 @@
 import { Box, Button } from "@mui/material";
 import { Theme, useTheme } from "@mui/material/styles";
 import * as React from "react";
-import Header from "../../../components/header/Header";
+import Header from "../../../components/header/header";
 import DeviceList from "../../../components/device/device-list";
 import CreateDeviceDialog from "../../../components/device/dialog/create-device-dialog";
 import { Device } from "../../../model/device";

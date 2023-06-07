@@ -6,7 +6,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import { dialogSx } from "../../device/dialog/styles";
+import { dialogSx } from "../../dialog/styles";
 import { UserRole } from "../../../model/roles";
 import { DropDownMenu } from "../../dropdown-menu";
 import { User } from "../../../model/user";

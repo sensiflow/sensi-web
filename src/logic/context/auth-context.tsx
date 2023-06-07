@@ -1,8 +1,8 @@
 import * as React from "react";
-import useCookie from "../hooks/useCookie";
 import { useCurrentUser} from "./user-context";
 import {LoginInputDTO} from "../../api/dto/input/login-input";
 import {login, logout} from "../../api/axios/authentication/api";
+import useCookie from "../hooks/use-cookie";
 
 export const AuthContext = React.createContext(null)
 
@@ -39,9 +39,10 @@ export const AuthProvider = ({children } : { children : React.ReactNode}) => {
     }, [])
 
     const logoutCB = React.useCallback(async () => {
-        await logout();
+
         removeCookie();
         await fetchCurrentUser(-1)
+        await logout();
     }, [])
 
     const isLoggedIn = React.useMemo(() => {

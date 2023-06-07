@@ -1,7 +1,7 @@
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button } from '@mui/material';
 import * as React from 'react';
 import { UpdateDeviceUrlDialogProps } from './device-dialog-interface';
-import { dialogSx } from './styles';
+import { dialogSx } from '../../dialog/styles';
 
 export default function UpdateDeviceUrlDialog({
   isOpen, 

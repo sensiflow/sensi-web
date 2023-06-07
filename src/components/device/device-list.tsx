@@ -1,19 +1,12 @@
 import { GridPaginationModel, GridColDef, DataGrid } from "@mui/x-data-grid";
-import { Device, DeviceProcessingState } from "../../model/device";
-import { Page } from "../../model/page";
+import { Device } from "../../model/device";
 import * as React from "react";
-import GreenOnlineCircle from "./processing-status/green_online_circle";
-import RedOfflineSquare from "./processing-status/red_offline_square";
-import YellowPausedRectangles from "./processing-status/yellow_paused_state";
 import { IconButton, LinearProgress, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
-import { PaginationModel } from "../../model/pagination-model";
-import DeviceProcessingStatus from "./processing-status/DeviceProcessingStatus";
+import DeviceProcessingStatus from "./processing-status/device-processing-status";
 import { DataGridListProps } from "../lists/data-grid-list";
-import { truncate } from "lodash";
-import {DeviceInformation} from "../../pages/dashboard_spa/group";
 
 interface DeviceListProps extends DataGridListProps<Device> {
   onRowSelection: (newSelection) => void;
@@ -64,19 +57,21 @@ const gridRowOptions = (handlers: OptionsColumnHandlers, row: Device, enableEdit
     <div>
       {
         enableEdit && <IconButton
-          children={<EditIcon />}
           onClick={() => {
             handlers.onRowUpdate(row);
           }}
-        />
+        >
+          <EditIcon/>
+        </IconButton>
       }
 
       <IconButton
-        children={<InfoIcon />}
         onClick={() => {
           handlers.onRowInfoRequest(row.id);
         }}
-      />
+      >
+          <InfoIcon/>
+      </IconButton>
     </div>
   );
 };

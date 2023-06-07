@@ -7,7 +7,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
-import { dialogSx } from "../../device/dialog/styles";
+import { dialogSx } from "../../dialog/styles";
 import { useForm } from "react-hook-form";
 import { UserRole } from "../../../model/roles";
 import { EmailConstraints, NameConstraints, PasswordConstraints } from "../../../model/user";

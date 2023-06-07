@@ -3,7 +3,7 @@ import * as React from "react";
 import { DevicesGroup } from "../../model/group";
 import { tokens } from "../../theme";
 import { Device } from "../../model/device";
-import Header from "../header/Header";
+import Header from "../header/header";
 import DeviceBox from "./device-box";
 import DividerBtn from "../search-more-divider";
 import { AppButton } from "../buttons/app-button";

@@ -1,8 +1,8 @@
 import * as React from "react";
-import { Box, TextField, useMediaQuery } from "@mui/material";
-import Header from "../../../components/header/Header";
+import { Box, useMediaQuery } from "@mui/material";
+import Header from "../../../components/header/header";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import FormInputText from "../../../components/form/FormInputText";
+import FormInputText from "../../../components/form/form-input-text";
 
 type FormInput = {
   firstName: string;

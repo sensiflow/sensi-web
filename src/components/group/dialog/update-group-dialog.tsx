@@ -2,8 +2,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, T
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { DeviceInputDTO } from "../../../api/dto/input/device-input";
-import { dialogSx } from "./styles";
 import { GroupInputUpdateDTO } from "../../../api/dto/input/group-update-input";
+import {dialogSx} from "../../dialog/styles";
 
 interface UpdateGroupDialogProps {
     isOpen: boolean;

@@ -1,10 +1,10 @@
 import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, Theme, Box } from "@mui/material";
 import * as React from "react";
-import { dialogSx } from "./styles";
 import DevicesCheckboxList from "../devices-checkbox-list";
 import { Device } from "../../../model/device";
 import { SearchBar } from "../../search-bar";
 import { DeviceInformation } from "../../../pages/dashboard_spa/group";
+import { dialogSx } from "../../dialog/styles";
 
 interface AddDeviceToGroupDialogProps {
     theme: Theme;

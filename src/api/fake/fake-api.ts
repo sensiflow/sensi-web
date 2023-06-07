@@ -1,41 +1,9 @@
-import { PaginationModel } from "../../model/pagination-model";
-import { User } from "../../model/user";
 import { DeleteDeviceInputDTO } from "../dto/input/device-input";
 import { DeviceOutputDTO } from "../dto/output/device-output";
-import { PageOutputDTO } from "../dto/output/page-output";
 import { devices, users, groups } from "./mock-data";
 
 const WORK_DELAY = 250;
 
-/**
- * Gets all users
- * @param {paginationModel} PaginationModel
- */
-export async function getUsers(paginationModel: PaginationModel): Promise<PageOutputDTO<User>> {
-    const allUsers = users.map(user => { return {id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role}});
-    const items = allUsers.slice(paginationModel.pageSize * paginationModel.page, paginationModel.pageSize * (paginationModel.page + 1));
-    const totalPages = paginationModel.pageSize === 0 ? 0 : Math.ceil(items.length / paginationModel.pageSize)
-    await delay(WORK_DELAY);
-    return {
-        totalElements: allUsers.length,
-        totalPages: totalPages,
-        isLast: totalPages === paginationModel.page,
-        isFirst: paginationModel.page === 0,
-        items: items
-    }
-}
-
-/**
- * Deletes a user given an id
- */
-export async function deleteUser(id: number): Promise<void> {
-    const ids = users.map(user => user.id);
-    const index = ids.indexOf(id);
-    if(index === -1) { throw new Error(`User with id ${id} not found`)}
-    users.splice(index, 1);
-
-    await delay(WORK_DELAY);
-}
 
 /**
  *  Gets a device by id

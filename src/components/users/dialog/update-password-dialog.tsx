@@ -3,7 +3,7 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { PasswordUpdateDTO } from "../../../api/dto/input/user-inputs";
 import { PasswordConstraints } from "../../../model/user";
-import { dialogSx } from "../../device/dialog/styles";
+import { dialogSx } from "../../dialog/styles";
 import { DialogProps } from "../../dialog/dialog-interface";
 import { PasswordTextField } from "../password-text-field";
 

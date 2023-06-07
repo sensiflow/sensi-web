@@ -13,6 +13,7 @@ import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import DevicesIcon from '@mui/icons-material/Devices';
 import GroupIcon from '@mui/icons-material/Group';
 import {useCurrentUser} from "../../../logic/context/user-context";
+import {getRoleHierarchy, getRolesBellow, UserRole} from "../../../model/roles";
 
 const SIDEBAR_TRANSITION_DURATION = 300;
 
@@ -67,6 +68,9 @@ const DashboardSidebar = () => {
     document.dispatchEvent(sidebarEvent)
   };
 
+const userRole = currentUser.role
+
+const isUserMgmtVisible = userRole === UserRole.ADMIN || userRole === UserRole.MODERATOR;
 
 const roleColor = colors.greenAccent[500] //TODO: change color based on role
 
@@ -166,6 +170,7 @@ const roleColor = colors.greenAccent[500] //TODO: change color based on role
               selected={selected}
               setSelected={setSelected}
             />
+            {isUserMgmtVisible &&
             <Item
                title="Manage users"
                to={paths.dashboard.users}
@@ -173,6 +178,7 @@ const roleColor = colors.greenAccent[500] //TODO: change color based on role
                selected={selected}
                setSelected={setSelected}
             />
+            }
           </Box>
         </Menu>
       </ProSidebar>

@@ -4,14 +4,14 @@ import { dtoToDevice as deviceDtoToDevice } from "../../../api/dto/output/device
 import { Box, Divider, Skeleton, useMediaQuery, useTheme } from "@mui/material";
 import { params, paths } from "../../../app-paths";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
-import HeaderSkeleton from "../../../components/header/HeaderSkeleton";
-import Header from "../../../components/header/Header";
+import HeaderSkeleton from "../../../components/header/header-skeleton";
+import Header from "../../../components/header/header";
 import { tokens } from "../../../theme";
 import { Device, DeviceProcessingState } from "../../../model/device";
-import DeviceProcessingStatus from "../../../components/device/processing-status/DeviceProcessingStatus";
-import { ProcessingStateControls } from "../../../components/device/ProcessingStateControls";
+import { ProcessingStateControls } from "../../../components/device/processing-state-controls";
 import { extractFromUri } from "../../../utils";
 import {getDevice} from "../../../api/axios/device/api";
+import DeviceProcessingStatus from "../../../components/device/processing-status/device-processing-status";
 
 export default function DevicePage() {
   const theme = useTheme();

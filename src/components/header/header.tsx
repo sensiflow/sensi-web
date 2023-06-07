@@ -1,17 +1,18 @@
 import * as React from "react";
 import { Typography, Box, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
-import HeaderSkeleton from "./HeaderSkeleton";
+import HeaderSkeleton from "./header-skeleton";
+
 
 const SUBTITLE_MAX_LENGTH = 42;
 
 const Header = ({
-  title,
-  subTitle,
-  noSubTitleText,
-  isLoading,
-  onHeaderClick,
-}: {
+                  title,
+                  subTitle,
+                  noSubTitleText,
+                  isLoading,
+                  onHeaderClick,
+                }: {
   title: string;
   subTitle: string;
   noSubTitleText?: string;
@@ -21,7 +22,7 @@ const Header = ({
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  let handleSubTitle = (subTitle) => {
+  const handleSubTitle = (subTitle) => {
     if (!subTitle || subTitle.length == 0)
       return noSubTitleText ?? "No description";
 
@@ -33,23 +34,23 @@ const Header = ({
 
   const cursor = onHeaderClick ? "pointer" : "default";
   return !isLoading ? (
-    <Box
-      mb="20px"
-      sx={{
-        cursor: cursor,
-        width: "fit-content",
-      }}
-      onClick={onHeaderClick}
-    >
-      <Typography variant="h2" color={colors.grey[100]} fontWeight="bold">
-        {title}
-      </Typography>
-      <Typography variant="h5" color={colors.greenAccent[400]}>
-        {handleSubTitle(subTitle)}
-      </Typography>
-    </Box>
+      <Box
+          mb="20px"
+          sx={{
+            cursor: cursor,
+            width: "fit-content",
+          }}
+          onClick={onHeaderClick}
+      >
+        <Typography variant="h2" color={colors.grey[100]} fontWeight="bold">
+          {title}
+        </Typography>
+        <Typography variant="h5" color={colors.greenAccent[400]}>
+          {handleSubTitle(subTitle)}
+        </Typography>
+      </Box>
   ) : (
-    <HeaderSkeleton />
+      <HeaderSkeleton />
   );
 };
 

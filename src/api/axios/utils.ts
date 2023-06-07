@@ -14,10 +14,14 @@ declare global{
         catchAndThrowAsProblem(): Promise<T>
     }
 }
-
+//TODO: https://axios-http.com/docs/handling_errors
 Promise.prototype.catchAndThrowAsProblem = function() {
     return this.catch((e) => {
         if(e instanceof AxiosError) {
+            console.log(e)
+            if(e.code === "ERR_NETWORK") {
+                throw {title: "Network error", status: 500} as Problem
+            }
             console.log({title: e.message, status: e.response.status} as Problem)
             throw {title: e.message, status: e.response.status} as Problem
         }

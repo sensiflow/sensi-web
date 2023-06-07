@@ -1,10 +1,10 @@
 import * as React from "react"
-import DeviceProcessingStatus from "../device/processing-status/DeviceProcessingStatus"
 import { Box, Paper, useTheme } from "@mui/material"
 import { Device } from "../../model/device"
 import { tokens } from "../../theme"
 import { useNavigate } from "react-router-dom"
-import { params, paths } from "../../app-paths"
+import { paths } from "../../app-paths"
+import DeviceProcessingStatus from "../device/processing-status/device-processing-status"
 
 interface DeviceBoxProps {
     device: Device

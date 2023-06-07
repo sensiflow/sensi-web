@@ -5,7 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { dialogSx } from './styles';
+import { dialogSx } from '../../dialog/styles';
 import { DeleteDeviceDialogProps } from './device-dialog-interface';
 
 

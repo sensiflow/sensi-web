@@ -1,6 +1,6 @@
 import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, useTheme, Theme } from "@mui/material";
 import * as React from "react";
-import { dialogSx } from "./styles";
+import { dialogSx } from "../../dialog/styles";
 
 interface DeleteGroupDialogProps {
     isOpen: boolean;

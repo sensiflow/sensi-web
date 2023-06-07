@@ -14,31 +14,34 @@ interface OptionsColumnHandlers {
     onUserDeleteClick?: (user: User) => void;
 }
 
+export enum UserAction{
+    UpdatePassword,
+    UpdateInfo,
+    UpdateRole,
+    DeleteUser
+}
 
-const gridRowOptions = (handlers: OptionsColumnHandlers, row: User, canUserActOn : (user: User) => boolean ) => {
+const gridRowOptions = (handlers: OptionsColumnHandlers, row: User, canUserActOn : (user: User, userAction : UserAction) => boolean ) => {
     const menuOptions : MenuOption[] = []
-    
-    const canUserAct = canUserActOn(row);
 
 
-    handlers.onUserUpdateClick && canUserAct && menuOptions.push({
+    handlers.onUserUpdateClick && canUserActOn(row,UserAction.UpdateInfo) && menuOptions.push({
         label: "Update User Info",
         handler: () => handlers.onUserUpdateClick(row)
     })
-    handlers.onPasswordUpdateClick && canUserAct && menuOptions.push({
+    handlers.onPasswordUpdateClick && canUserActOn(row,UserAction.UpdatePassword) && menuOptions.push({
         label: "Update Password",
         handler: () => handlers.onPasswordUpdateClick(row)
     }) 
-    handlers.onRoleUpdateClick && canUserAct && menuOptions.push({
+    handlers.onRoleUpdateClick && canUserActOn(row,UserAction.UpdateRole) && menuOptions.push({
         label: "Update Role",
         handler: () => handlers.onRoleUpdateClick(row)
     })
-    handlers.onUserDeleteClick && canUserAct && menuOptions.push({
+    handlers.onUserDeleteClick && canUserActOn(row,UserAction.DeleteUser) && menuOptions.push({
         label: "Delete User",
         handler: () => handlers.onUserDeleteClick(row)
     })
-    
-    
+
 
     return (
         menuOptions.length > 0 ? (
@@ -58,7 +61,7 @@ const gridRowOptions = (handlers: OptionsColumnHandlers, row: User, canUserActOn
     );
 };
 
-function userColumnDefinition(handlers: OptionsColumnHandlers, canUserActOn : (user: User) => boolean ): GridColDef<User>[] {
+function userColumnDefinition(handlers: OptionsColumnHandlers, canUserActOn : (user: User,userAction:UserAction) => boolean ): GridColDef<User>[] {
     return [
         { field: "firstName", headerName: "First Name", flex: 1.4 },
         { field: "lastName", headerName: "Last Name", flex: 1.4 },
@@ -86,7 +89,7 @@ interface UserListProps extends DataGridListProps<User> {
     onUserUpdateClick?: (user: User) => void;
     onRoleUpdateClick?: (user: User) => void;
     onUserDeleteClick?: (user: User) => void;
-    canUserActOn: (user: User) => boolean;
+    canUserActOn: (user: User,userAction : UserAction) => boolean;
 }
 
 export default function UserList({

@@ -1,11 +1,10 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from "@mui/material"
 import * as React from "react"
-import { dialogSx } from "../../device/dialog/styles"
 import { EmailConstraints, NameConstraints, User } from "../../../model/user"
-import register from "../../../pages/register"
 import { useForm } from "react-hook-form"
 import { UserInfoUpdateDTO } from "../../../api/dto/input/user-inputs"
 import { DialogProps } from "../../dialog/dialog-interface"
+import {dialogSx} from "../../dialog/styles";
 
 
 interface UpdateInfoDialogProps extends DialogProps<UserInfoUpdateDTO> {

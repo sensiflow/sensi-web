@@ -1,7 +1,7 @@
 import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, Theme } from "@mui/material";
 import * as React from "react";
 import { DeviceFormDialogProps } from "./device-dialog-interface";
-import { dialogSx } from "./styles";
+import { dialogSx } from "../../dialog/styles";
 import { useForm } from "react-hook-form";
 import { DeviceInputDTO } from "../../../api/dto/input/device-input";
 
