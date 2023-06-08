@@ -7,7 +7,7 @@ import { Page } from "../../../model/page";
 import { User } from "../../../model/user";
 import UserList, { UserAction } from "../../../components/users/user-list";
 import { UserMGMDialogReducer, UserMGMDialogs, UserMGMDialogReducerState, UserMGMDialogReducerAction } from "./user-mgm-dialog-reducer";
-import { RegisterDialog } from "../../../components/users/dialog/register-dialog";
+import {RegisterDialog, RegisterDialogForm} from "../../../components/users/dialog/register-dialog";
 import { RegisterInputDTO } from "../../../api/dto/input/register-input";
 import {PasswordUpdateDTO, UserRoleInput, UserUpdateDTO} from "../../../api/dto/input/user-inputs";
 import { UpdatePasswordDialog } from "../../../components/users/dialog/update-password-dialog";
@@ -90,12 +90,19 @@ export default function UserManagementPage(){
 
     //Submit functions
 
-    const onRegisterSubmit = async (input: RegisterInputDTO) => {
+    const onRegisterSubmit = async (input: RegisterDialogForm) => {
+        const registerInput : RegisterInputDTO = {
+            firstName: input.firstName,
+            lastName: input.lastName,
+            email: input.email,
+            password: input.password
+        }
 
-      await register(input)
-      await reloadUsersPage()
-      setUserUnderUpdate(null);
-      dispatchDialog({type: "close", target: UserMGMDialogs.REGISTER})
+        const registerOutput = await register(registerInput)
+        await updateUserRole(registerOutput.id, {role:  input.role});
+        await reloadUsersPage()
+        setUserUnderUpdate(null);
+        dispatchDialog({type: "close", target: UserMGMDialogs.REGISTER})
     };
 
     const onPasswordUpdateSubmit = async (input: PasswordUpdateDTO) => {

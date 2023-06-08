@@ -8,7 +8,7 @@ import "../utils"
 
 export async function getDevices(
     paginationModel: PaginationModel,
-    expandable: boolean = false,
+    expandable = false,
     query: {search: string} = null
 ): Promise<PageOutputDTO<DeviceOutputDTO>> {
     const response = await axios({
@@ -27,7 +27,7 @@ export async function createDevice(inputDTO: DeviceInputDTO): Promise<IdOutputDT
     return response.data
 }
 
-export async function getDevice(deviceID: number, expandable: boolean = false): Promise<DeviceOutputDTO> {
+export async function getDevice(deviceID: number, expandable = false): Promise<DeviceOutputDTO> {
     const response = await axios({
         url: `/devices/${deviceID}?expanded=${expandable}`,
         method: 'GET',

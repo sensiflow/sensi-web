@@ -19,6 +19,13 @@ interface RegisterDialogProps extends DialogProps<RegisterInputDTO> {
   possibleRoles: UserRole[]
 }
 
+export interface RegisterDialogForm {
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+  role: string;
+}
 
 export function RegisterDialog(
     { isOpen, handleClose, onSubmit, theme , possibleRoles }: RegisterDialogProps
@@ -28,8 +35,9 @@ export function RegisterDialog(
     handleSubmit,
     register,
     reset,
+    setValue,
     formState: { errors }
-  } = useForm<RegisterInputDTO>({})
+  } = useForm<RegisterDialogForm>({})
 
   React.useEffect(() => {
       reset()
@@ -82,7 +90,9 @@ export function RegisterDialog(
           <DropDownMenu //TODO: add role colors
             label='Role'
             values={possibleRoles}
-            onValueChange={(it)=> console.log('change',it)}
+            onValueChange={(it)=> {
+              setValue('role', it)
+            }}
           />
           
         </DialogContent>

@@ -56,6 +56,19 @@ const Item = ({ title, to, icon, selected, setSelected } : ItemProps) => {
   );
 };
 
+function getRoleColor(role: UserRole) {
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
+      switch (role) {
+        case UserRole.ADMIN:
+          return colors.roles.admin;
+        case UserRole.MODERATOR:
+          return colors.roles.moderator;
+        case UserRole.USER:
+          return colors.roles.user
+      }
+}
+
 const DashboardSidebar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -72,7 +85,7 @@ const userRole = currentUser.role
 
 const isUserMgmtVisible = userRole === UserRole.ADMIN || userRole === UserRole.MODERATOR;
 
-const roleColor = colors.greenAccent[500] //TODO: change color based on role
+const roleColor = getRoleColor(userRole)//TODO: change color based on role
 
   return (
     <Box

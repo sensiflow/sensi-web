@@ -1,5 +1,5 @@
 import * as React from "react";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import DashboardSPA from "./pages/dashboard_spa/dashboardspa";
 import DevicesPage from "./pages/dashboard_spa/devices";
 import DashboardHome from "./pages/dashboard_spa/home";
@@ -15,6 +15,7 @@ import {CurrentUserProvider} from "./logic/context/user-context";
 import {UserRole} from "./model/roles";
 import {AuthProvider} from "./logic/context/auth-context";
 import {ProtectedRoute} from "./components/protected-route";
+import {ErrorPage} from "./pages/dashboard_spa/error";
 
 export function App() {
 
@@ -34,6 +35,8 @@ export function App() {
                   <Route path={paths.dashboard.group} element={<ProtectedRoute element=<GroupPage/> />}></Route>
                   <Route path={paths.dashboard.users} element={<ProtectedRoute element=<UserManagementPage/> allowedRoles={[UserRole.MODERATOR,UserRole.ADMIN]} />}></Route>
                 </Route>
+                <Route path="*" element={<Navigate to={paths["not-found"]} replace={true} />}/>
+                <Route path={paths["not-found"]} element={<ErrorPage/>}/>
             </Routes>
           </BrowserRouter>
        </AuthProvider>

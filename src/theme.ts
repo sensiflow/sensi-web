@@ -71,6 +71,11 @@ export const tokens = (mode: PalleteMode) => ({
             backgroundColor: "red",
             hoverColor: "#E53935",
           }
+        },
+        roles : {
+            user: "#2EE59D",
+            moderator: "#FFC107",
+            admin: "#FF5722",
         }
       }
     : {
@@ -138,6 +143,11 @@ export const tokens = (mode: PalleteMode) => ({
             backgroundColor: "#E53935",
             hoverColor: "#F44336",
           }
+        },
+        roles : {
+          user: "#2EE59D",
+          moderator: "#FFC107",
+          admin: "#FF5722",
         }
       }),
 });

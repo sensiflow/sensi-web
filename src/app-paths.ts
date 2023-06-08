@@ -13,6 +13,7 @@ export const paths = {
         'device': `/dashboard/devices/:${params.device}`,
         'groups': '/dashboard/groups',
         'group': `/dashboard/groups/:${params.group}`,
-    }
+    },
+    'not-found': '/not-found',
 }
 
