@@ -10,9 +10,13 @@ import { UserMenuDialogReducerState, UserMenuDialogReducerAction, UserMenuDialog
 import {useCurrentUser} from "../../../logic/context/user-context";
 import {useAuth} from "../../../logic/context/auth-context";
 import { updateUser } from "../../../api/axios/user/api";
+import {APIError, errorFallback} from "../../utils";
+import {useNavigate} from "react-router-dom";
+import {appToast, ToastType} from "../../../components/toast";
 
 export function UserMenu(){
     const theme = useTheme();
+    const navigate = useNavigate();
 
     const { currentUser, fetchCurrentUser } = useCurrentUser()
     const { logout } = useAuth()
@@ -25,26 +29,41 @@ export function UserMenu(){
      }
     );
 
-
-
     const onUserUpdateSubmit = async (input: UserUpdateDTO) => {
-        const userUpdateInput = {
-            firstName: input.firstName,
-            lastName: input.lastName
-        }
-        await updateUser(currentUser.id,userUpdateInput);
+        try{
+            const userUpdateInput = {
+                firstName: input.firstName,
+                lastName: input.lastName
+            }
+            await updateUser(currentUser.id,userUpdateInput);
 
-        await fetchCurrentUser()
-        dispatchDialog({type: "close", target: UserMenuDialogs.UPDATE_INFO})
+            await fetchCurrentUser()
+            dispatchDialog({type: "close", target: UserMenuDialogs.UPDATE_INFO})
+        }catch (e) {
+            if(e.status === APIError.NOT_FOUND){
+                appToast(ToastType.ERROR, "The user does not exist anymore")
+            }
+            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Invalid update input") }
+            errorFallback(e, navigate)
+        }
     }
 
     const onPasswordUpdateSubmit = async (input: PasswordUpdateDTO) => {
-        const userUpdateInput = {
-            password : input.password
+        try{
+            const userUpdateInput = {
+                password : input.password
+            }
+            await updateUser(currentUser.id,userUpdateInput);
+            dispatchDialog({type: "close", target: UserMenuDialogs.UPDATE_PASSWORD})
+        }catch (e) {
+            if(e.status === APIError.NOT_FOUND){
+                appToast(ToastType.ERROR, "The user does not exist anymore")
+            }
+            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Password too weak") }
+            errorFallback(e, navigate)
         }
-        await updateUser(currentUser.id,userUpdateInput);
-        dispatchDialog({type: "close", target: UserMenuDialogs.UPDATE_PASSWORD})
     }
+
     const onUpdateClick= () =>  dispatchDialog({type: "open", target: UserMenuDialogs.UPDATE_INFO})
     const onPasswordUpdateClick=() => dispatchDialog({type: "open", target: UserMenuDialogs.UPDATE_PASSWORD})
 

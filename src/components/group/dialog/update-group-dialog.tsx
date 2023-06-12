@@ -1,16 +1,15 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Theme } from "@mui/material";
 import * as React from "react";
 import { useForm } from "react-hook-form";
-import { DeviceInputDTO } from "../../../api/dto/input/device-input";
-import { GroupInputUpdateDTO } from "../../../api/dto/input/group-update-input";
 import {dialogSx} from "../../dialog/styles";
+import {GroupInputDTO} from "../../../api/dto/input/group-input";
 
 interface UpdateGroupDialogProps {
     isOpen: boolean;
     handleClose: () => void;
-    onSubmit: (input: GroupInputUpdateDTO) => void;
+    onSubmit: (input: GroupInputDTO) => void;
     theme: Theme;
-    defaultValues: GroupInputUpdateDTO;
+    defaultValues: GroupInputDTO;
 }
 
 
@@ -28,7 +27,7 @@ const UpdateGroupDialog = (
     register,
     reset,
     formState: { errors }
-  } = useForm<GroupInputUpdateDTO>({defaultValues})
+  } = useForm<GroupInputDTO>({defaultValues})
 
   React.useEffect(() => {
     reset(defaultValues)

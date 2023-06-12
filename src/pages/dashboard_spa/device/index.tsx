@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useLocation } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import { dtoToDevice as deviceDtoToDevice } from "../../../api/dto/output/device-output";
 import { Box, Divider, Skeleton, useMediaQuery, useTheme } from "@mui/material";
 import { params, paths } from "../../../app-paths";
@@ -12,8 +12,11 @@ import { ProcessingStateControls } from "../../../components/device/processing-s
 import { extractFromUri } from "../../../utils";
 import {getDevice} from "../../../api/axios/device/api";
 import DeviceProcessingStatus from "../../../components/device/processing-status/device-processing-status";
+import {appToast, ToastType} from "../../../components/toast";
+import {APIError, errorFallback} from "../../utils";
 
 export default function DevicePage() {
+  const navigate = useNavigate()
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -21,8 +24,11 @@ export default function DevicePage() {
   const ids = extractFromUri(pathname, paths.dashboard.device)
   const validatedDeviceID = parseInt(ids[params.device]);
 
+  //Device hooks
   const [device, setDevice] = React.useState<Device>(null);
+  const isLoading = device === null;
   const isNonMobile = useMediaQuery("(min-width:720px)");
+  const deviceColor = React.useRef<string>(null);
 
   const deviceColors = [
     colors.greenAccent[500],
@@ -30,14 +36,16 @@ export default function DevicePage() {
     colors.blueAccent[500],
     colors.grey[500],
   ];
-  const deviceColor = React.useRef<string>(null);
-
-  const isLoading = device === null;
 
   const getDeviceInformation = async () => {
-    const deviceDTO = await getDevice(validatedDeviceID);
-    const device = deviceDtoToDevice(deviceDTO);
-    setDevice(device);
+    try{
+      const deviceDTO = await getDevice(validatedDeviceID);
+      const device = deviceDtoToDevice(deviceDTO);
+      setDevice(device);
+    }catch (e){
+      if(e.status === APIError.NOT_FOUND) { navigate(paths["not-found"]) }
+      errorFallback(e, navigate)
+    }
   };
 
   const getRandomDeviceColor = () => {

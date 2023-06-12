@@ -4,8 +4,18 @@ import {DeviceGroupOutputDTO} from "../../dto/output/group-output";
 import axios from "axios";
 import {DeviceOutputDTO} from "../../dto/output/device-output";
 import {GroupDevicesInputDTO} from "../../dto/input/group-devices";
-import {GroupInputUpdateDTO} from "../../dto/input/group-update-input";
+import {GroupInputDTO} from "../../dto/input/group-input";
 import "../utils"
+import {IdOutputDTO} from "../../dto/output/id-output";
+
+export async function createDevicesGroup(inputDTO: GroupInputDTO) : Promise<IdOutputDTO>{
+    const response = await axios({
+        url: '/groups',
+        method: 'POST',
+        data: JSON.stringify(inputDTO)
+    }).logErrorAndRethrow()
+    return response.data
+}
 
 export async function getDevicesGroups(
     paginationModel: PaginationModel,
@@ -14,7 +24,7 @@ export async function getDevicesGroups(
     const response = await axios({
         url: `/groups?page=${paginationModel.page}&pageSize=${paginationModel.pageSize}&expanded=${expandable}`,
         method: 'GET',
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
     return response.data
 }
 
@@ -22,7 +32,7 @@ export async function getDevicesGroup(groupID: number, expandable: boolean = fal
     const response = await axios({
         url: `/groups/${groupID}?&expanded=${expandable}`,
         method: 'GET',
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
     return response.data
 }
 
@@ -30,7 +40,7 @@ export async function getDevicesFromGroup(paginationModel: PaginationModel, grou
     const response = await axios({
         url: `/groups/${groupID}/devices?page=${paginationModel.page}&pageSize=${paginationModel.pageSize}`,
         method: 'GET',
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
     return response.data
 }
 
@@ -39,29 +49,29 @@ export async function addGroupDevices(inputDTO: GroupDevicesInputDTO, groupID: n
         url: `/groups/${groupID}/devices`,
         method: 'POST',
         data: JSON.stringify(inputDTO)
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
     return response.data
 }
 
 export async function removeGroupDevices(inputDTO: GroupDevicesInputDTO, groupID: number) : Promise<void>{
-    const query = inputDTO.devicesIDs.join(",")
+    const ids = inputDTO.deviceIDs.join(",")
     await axios({
-        url: `/groups/${groupID}/devices?${query}`,
+        url: `/groups/${groupID}/devices?deviceIDs=${ids}`,
         method: 'DELETE'
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
 }
 
 export async function deleteGroup(groupID: number): Promise<void> {
     await axios({
         url: `/groups/${groupID}`,
         method: 'DELETE',
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
 }
 
-export async function updateGroup(inputDTO: GroupInputUpdateDTO, groupID: number): Promise<void> {
+export async function updateGroup(inputDTO: GroupInputDTO, groupID: number): Promise<void> {
     await axios({
         url: `/groups/${groupID}`,
         method: 'PUT',
         data: JSON.stringify(inputDTO)
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
 }

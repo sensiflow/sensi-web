@@ -16,7 +16,7 @@ import DeviceList from "../../../components/device/device-list";
 import {Page} from "../../../model/page";
 import DeleteGroupDialog from "../../../components/group/dialog/delete-group-dialog";
 import UpdateGroupDialog from "../../../components/group/dialog/update-group-dialog";
-import {GroupInputUpdateDTO} from "../../../api/dto/input/group-update-input";
+import {GroupInputDTO} from "../../../api/dto/input/group-input";
 import {DevicesGroup} from "../../../model/group";
 import RemoveGroupDevicesDialog from "../../../components/group/dialog/delete-devices-dialog";
 import {
@@ -35,6 +35,8 @@ import {
     updateGroup
 } from "../../../api/axios/groups/api";
 import { getDevices } from "../../../api/axios/device/api";
+import {APIError, errorFallback} from "../../utils";
+import {appToast, ToastType} from "../../../components/toast";
 
 export interface DeviceInformation{
     device: Device
@@ -50,30 +52,33 @@ export default function GroupPage() {
     const ids = extractFromUri(pathname, paths.dashboard.group)
     const validatedGroupID = parseInt(ids[params.group]);
 
+    //Group name and description hook
     const [groupInformation, setGroupInformation] =
         React.useState<DevicesGroup>(null)
-    const [isLoadingDevices, setIsLoadingDevices] =
+
+    //Group's devices hooks
+    const [groupDevicesPagination, setGroupDevicesPagination] =
+        React.useState<PaginationModel>(constants.groupPage.DEFAULT_GROUP_DEVICES_PAGINATION)
+    const [isLoadingGroupDevices, setIsLoadingGroupDevices] =
         React.useState(false)
-    const [groupDevicesPage, setGroupDevicesPage] =
+    const [groupDevices, setGroupDevices] =
         React.useState<Page<Device>>(null)
     const [devicesIDSelected, setDevicesIDSelected] = React.useState<
         Array<number>
     >([]);
 
+    //Checkbox hooks
     const checkboxListPagination =
         React.useRef<PaginationModel>(constants.groupPage.DEFAULT_CHECKBOX_LIST_PAGINATION)
-    const [groupDevicesPagination, setGroupDevicesPagination] =
-        React.useState<PaginationModel>(constants.groupPage.DEFAULT_GROUP_DEVICES_PAGINATION)
-
     const [checkboxListDevices, setCheckboxListDevices] =
         React.useState<Array<DeviceInformation>>([])
     const [loadingMoreCheckBoxDevices, setLoadingMoreCheckBoxDevices] =
         React.useState(false)
+
     const isLastCheckBoxPage = React.useRef<Boolean>(false)
-
     const [resetScrollToTop, setResetScrollToTop] = React.useState(false)
-    const searchQuery = React.useRef(null)
 
+    //Dialog reducer
     const [dialogState, dispatchDialog] : [GroupDialogReducerState, (action: GroupDialogReducerAction) => void]
         = React.useReducer(
           GroupDialogReducer,
@@ -85,25 +90,50 @@ export default function GroupPage() {
         }
     )
 
+    React.useEffect(() => {
+        const getInitialGroupInfo = async () => {
+            try{
+                const groupDTO = await getDevicesGroup(validatedGroupID)
+                setGroupInformation(groupDTO as DevicesGroup)
+            }catch(e) {
+                if(e.status === APIError.NOT_FOUND){ navigate(paths["not-found"]) }
+                errorFallback(e, navigate)
+            }
+
+        }
+        getInitialGroupInfo()
+    }, [])
+
     const reloadGroupDevicesPage = async () => {
-        console.log("FETCHING GROUP....")
-        setIsLoadingDevices(true)
-        const devicesDTOPage =
-            await getDevicesFromGroup(groupDevicesPagination, validatedGroupID)
-        const devicesItems : Device[] = devicesDTOPage.items.map((deviceDTO: DeviceSimpleOutputDTO) =>
-            dtoToDevice(deviceDTO))
-        const deviceModelPage: Page<Device> = { ...devicesDTOPage, items: devicesItems };
-        setGroupDevicesPage(deviceModelPage)
-        setIsLoadingDevices(false);
+        try{
+            setIsLoadingGroupDevices(true)
+            const devicesDTOPage =
+                await getDevicesFromGroup(groupDevicesPagination, validatedGroupID)
+            const devicesItems : Device[] = devicesDTOPage.items.map((deviceDTO: DeviceSimpleOutputDTO) =>
+                dtoToDevice(deviceDTO))
+            const deviceModelPage: Page<Device> = { ...devicesDTOPage, items: devicesItems };
+            setGroupDevices(deviceModelPage)
+            setIsLoadingGroupDevices(false);
+        }catch (e){
+            if(e.status === APIError.NOT_FOUND){ navigate(paths["not-found"]) }
+            errorFallback(e, navigate)
+        }
     }
 
-    const getCheckboxListDevices = async (pagination: PaginationModel, searchQuery: {"search": string} = null) => {
-        const devicesDTOPage : PageOutputDTO<DeviceSimpleOutputDTO> =
-            await getDevices(pagination, false, searchQuery) as PageOutputDTO<DeviceSimpleOutputDTO>
-        isLastCheckBoxPage.current = devicesDTOPage.isLast
-        return devicesDTOPage.items.map((deviceDTO) => {
-            return {"device": dtoToDevice(deviceDTO), "groupsID": deviceDTO.deviceGroupsID}
-        })
+    const getCheckboxListDevices = async (
+        pagination: PaginationModel,
+        searchQuery: {"search": string} = null
+    ) => {
+        try{
+            const devicesDTOPage : PageOutputDTO<DeviceSimpleOutputDTO> =
+                await getDevices(pagination, false, searchQuery) as PageOutputDTO<DeviceSimpleOutputDTO>
+            isLastCheckBoxPage.current = devicesDTOPage.isLast
+            return devicesDTOPage.items.map((deviceDTO) => {
+                return {"device": dtoToDevice(deviceDTO), "groupsID": deviceDTO.deviceGroupsID}
+            })
+        }catch (e) {
+            errorFallback(e, navigate)
+        }
     }
 
     const fetchCheckboxListDevices = async () => {
@@ -117,16 +147,15 @@ export default function GroupPage() {
         const newModel =
             {...checkboxListPagination.current, page: checkboxListPagination.current.page + 1}
 
-        const devices: DeviceInformation[] = await getCheckboxListDevices(newModel, searchQuery.current)
+        const devices: DeviceInformation[] = await getCheckboxListDevices(newModel)
         checkboxListPagination.current = newModel
         setCheckboxListDevices([...checkboxListDevices, ...devices])
     }
 
     const onCheckBoxListSearch = async (inputValue: string) => {
         const query = {search: inputValue}
-        searchQuery.current = query
         checkboxListPagination.current = constants.groupPage.DEFAULT_CHECKBOX_LIST_PAGINATION
-        const devices: DeviceInformation[] = await getCheckboxListDevices(searchQuery.current, query)
+        const devices: DeviceInformation[] = await getCheckboxListDevices(checkboxListPagination.current, query)
         setCheckboxListDevices(devices)
     }
 
@@ -136,55 +165,66 @@ export default function GroupPage() {
     }
 
     const onAddDevicesSubmit = async (selectedDevices: Array<Device>) => {
-        const newDevices = selectedDevices.map((device) => device.id)
-        const groupDevicesUpdateInput: GroupDevicesInputDTO = {devicesIDs: newDevices}
-        await addGroupDevices(groupDevicesUpdateInput, validatedGroupID)
-        reloadGroupDevicesPage()
-        dispatchDialog({type: "close", target: GroupDialogs.ADD_DEVICES})
+        try{
+            const newDevices = selectedDevices.map((device) => device.id)
+            const groupDevicesUpdateInput: GroupDevicesInputDTO = {deviceIDs: newDevices}
+            await addGroupDevices(groupDevicesUpdateInput, validatedGroupID)
+            reloadGroupDevicesPage()
+            dispatchDialog({type: "close", target: GroupDialogs.ADD_DEVICES})
+        }catch (e){
+            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.ERROR, "Unexpected error, try again later") }
+            if(e.status === APIError.NOT_FOUND){
+                appToast(ToastType.ERROR, "The group or a device to add does not exist anymore")
+            }
+            errorFallback(e, navigate)
+        }
     }
 
-    const onGroupUpdateSubmit = async (input: GroupInputUpdateDTO) => {
-        await updateGroup(input, validatedGroupID)
-        setGroupInformation({id: validatedGroupID, ...input})
-        dispatchDialog({type: "close", target: GroupDialogs.UPDATE})
+    const onGroupUpdateSubmit = async (input: GroupInputDTO) => {
+        try{
+            await updateGroup(input, validatedGroupID)
+            setGroupInformation({id: validatedGroupID, ...input})
+            dispatchDialog({type: "close", target: GroupDialogs.UPDATE})
+        }catch(e) {
+            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.ERROR, "Invalid group input") }
+            errorFallback(e, navigate)
+        }
+
     }
     const onGroupDeleteSubmit = async () => {
-        await deleteGroup(validatedGroupID)
-        dispatchDialog({type: "close", target: GroupDialogs.DELETE})
-        navigate(paths.dashboard.groups)
+        try{
+            await deleteGroup(validatedGroupID)
+            dispatchDialog({type: "close", target: GroupDialogs.DELETE})
+            navigate(paths.dashboard.groups)
+        }catch(e) {
+            if(e.status === APIError.NOT_FOUND){ appToast(ToastType.ERROR, "Group was already deleted") }
+            errorFallback(e, navigate)
+        }
+
     }
 
     const onDevicesRemoveSubmit = async (input: GroupDevicesInputDTO) => {
-        await removeGroupDevices(input, validatedGroupID);
-        reloadGroupDevicesPage();
-        setDevicesIDSelected((previous) => {
-          return previous.filter((id) => !input.devicesIDs.includes(id));
-        });
-        dispatchDialog({type: "close", target: GroupDialogs.REMOVE_DEVICES})
+        try{
+            await removeGroupDevices(input, validatedGroupID);
+            await reloadGroupDevicesPage();
+            setDevicesIDSelected((previous) => {
+                return previous.filter((id) => !input.deviceIDs.includes(id));
+            });
+            dispatchDialog({type: "close", target: GroupDialogs.REMOVE_DEVICES})
+        }catch(e) {
+            if(e.status === APIError.NOT_FOUND)
+                { appToast(ToastType.ERROR, "The group or a device to remove does not exist anymore") }
+            if(e.status === APIError.BAD_REQUEST)
+                { appToast(ToastType.ERROR, "Unexpected error, try again later") }
+            errorFallback(e, navigate)
+        }
       };
 
     const onInputValueChange = (input) => {
-        if (input === "") {
-          fetchCheckboxListDevices().then((_) => {
-            setResetScrollToTop(true);
-          });
-          searchQuery.current = null;
-          return;
-        }
-        if (!input) return;
         onCheckBoxListSearch(input).then((_) => {
             setResetScrollToTop(true)
         });
       };
-
-    React.useEffect(() => {
-        const getInitialGroupInfo = async () => {
-            const groupDTO = await getDevicesGroup(validatedGroupID)
-            setGroupInformation(groupDTO as DevicesGroup)
-        }
-
-        getInitialGroupInfo()
-    }, [])
     
     React.useEffect(() => {
         reloadGroupDevicesPage()
@@ -219,7 +259,7 @@ export default function GroupPage() {
                         />
                         {devicesIDSelected.length > 0 && (
                             <AppButton 
-                                text="Delete Devices"
+                                text="Remove Devices"
                                 onClick={() => dispatchDialog({type: "open", target: GroupDialogs.REMOVE_DEVICES})}
                                 backgroundColor={colors.buttonAccent.delete.backgroundColor}
                                 hoverColor={colors.buttonAccent.delete.hoverColor}
@@ -242,8 +282,8 @@ export default function GroupPage() {
             
             <Box m="40px 0 0 0" height="75vh">
                 <DeviceList
-                    isLoading={isLoadingDevices}
-                    currentPage={groupDevicesPage}
+                    isLoading={isLoadingGroupDevices}
+                    currentPage={groupDevices}
                     paginationModel={groupDevicesPagination}
                     onPaginationModelChange={setGroupDevicesPagination}
                     onRowSelection={setDevicesIDSelected}
@@ -264,7 +304,7 @@ export default function GroupPage() {
             <RemoveGroupDevicesDialog
                 isOpen={dialogState.openRemoveGroupDevicesDialog}
                 handleClose={() => dispatchDialog({type: "close", target: GroupDialogs.REMOVE_DEVICES})}
-                onSubmit={() => onDevicesRemoveSubmit({devicesIDs: devicesIDSelected})}
+                onSubmit={() => onDevicesRemoveSubmit({deviceIDs: devicesIDSelected})}
                 theme={theme}
             />
 
@@ -276,7 +316,7 @@ export default function GroupPage() {
                 defaultValues={{
                     name: groupInformation.name,
                     description: groupInformation.description
-                } as GroupInputUpdateDTO}
+                } as GroupInputDTO}
             />}
             
             <AddDevicesToGroupDialog

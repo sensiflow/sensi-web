@@ -1,3 +1,3 @@
 export interface GroupDevicesInputDTO {
-    devicesIDs: Array<number>;
+    deviceIDs: Array<number>;
 }

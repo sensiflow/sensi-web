@@ -1,8 +1,11 @@
 import * as React from "react";
-import { useCurrentUser} from "./user-context";
+import {useCurrentUser} from "./user-context";
 import {LoginInputDTO} from "../../api/dto/input/login-input";
 import {login, logout} from "../../api/axios/authentication/api";
 import useCookie from "../hooks/use-cookie";
+import {errorFallback} from "../../pages/utils";
+import {useNavigate} from "react-router-dom";
+import {appToast, ToastType} from "../../components/toast";
 
 export const AuthContext = React.createContext(null)
 
@@ -30,16 +33,16 @@ export const AuthProvider = ({children } : { children : React.ReactNode}) => {
 
 
     const loginCB = React.useCallback(async (inputDTO: LoginInputDTO) => {
-        const loginInfo = (await login(inputDTO) )
-        updateCookie(loginInfo.id, {
-            path: '/' ,
-            expires: new Date(Date.now()  + loginInfo.expiresIn - COOKIE_EXPIRE_OFFSET) //-10 secs to make sure it expires before the real auth expires
-        })
-        await fetchCurrentUser(loginInfo.id)
+            const loginInfo = (await login(inputDTO) )
+            if(!loginInfo) return
+            updateCookie(loginInfo.id, {
+                path: '/' ,
+                expires: new Date(Date.now()  + loginInfo.expiresIn - COOKIE_EXPIRE_OFFSET) //-10 secs to make sure it expires before the real auth expires
+            })
+            await fetchCurrentUser(loginInfo.id)
     }, [])
 
     const logoutCB = React.useCallback(async () => {
-
         removeCookie();
         await fetchCurrentUser(-1)
         await logout();
@@ -54,7 +57,6 @@ export const AuthProvider = ({children } : { children : React.ReactNode}) => {
         return parseInt(cookie) ;
     }, [cookie])
 
-
     return (
         <AuthContext.Provider value={{
             login : loginCB,
@@ -66,7 +68,6 @@ export const AuthProvider = ({children } : { children : React.ReactNode}) => {
         </AuthContext.Provider>
     )
 }
-
 
 //TODO: think if the useauth should be provider or the usecookie should be the provider
 export const useAuth : () => AuthReturnProps = () => React.useContext(AuthContext)

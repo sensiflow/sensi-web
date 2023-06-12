@@ -10,7 +10,7 @@ export async function getUser(id: number): Promise<UserOutputDTO> {
     const response = await axios({
         url: `/users/${id}`,
         method: 'GET',
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
 
     return response.data
 }
@@ -20,7 +20,7 @@ export async function updateUserRole(id: number, role: UserRoleInput): Promise<v
         url: `/users/${id}/role`,
         method: 'PUT',
         data: JSON.stringify(role)
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
 }
 
 export async function updateUser(id: number, newInfo: UserUpdateDTO): Promise<void> {
@@ -28,7 +28,7 @@ export async function updateUser(id: number, newInfo: UserUpdateDTO): Promise<vo
         url: `/users/${id}`,
         method: 'PUT',
         data: JSON.stringify(newInfo)
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
 }
 
 
@@ -40,7 +40,7 @@ export async function getUsers(paginationModel: PaginationModel): Promise<PageOu
     const response = await axios({
         url: `/users?page=${paginationModel.page}&pageSize=${paginationModel.pageSize}`,
         method: 'GET',
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
     return response.data
 }
 
@@ -51,5 +51,5 @@ export async function deleteUser(id: number): Promise<void> {
     await axios({
         url: `/users/${id}`,
         method: 'DELETE',
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
 }
