@@ -6,6 +6,7 @@ import { Box, Divider, Skeleton, useMediaQuery, useTheme } from "@mui/material";
 import { params, paths } from "../../../app-paths";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
 import { tokens } from "../../../theme";
+import PeopleIcon from "@mui/icons-material/People";
 import {
   Device,
   DeviceProcessingState,
@@ -13,23 +14,22 @@ import {
 } from "../../../model/device";
 import { extractFromUri } from "../../../utils";
 import * as api from "../../../api/axios/device/api";
-import { useAuth } from "../../../logic/context/auth-context";
 import { apiCore } from "../../../api/core";
-import PeopleCount from "../../../components/people-count";
+import StatelessPeopleCount from "../../../components/people-count";
 import Grid from "@mui/material/Grid";
 import { Player, RTSPLinkToHLS } from "../../../components/player/player";
 import DeviceProcessingStatus from "../../../components/device/processing-status/device-processing-status";
 import HeaderSkeleton from "../../../components/header/header-skeleton";
 import { ProcessingStateControls } from "../../../components/device/processing-state-controls";
 import Header from "../../../components/header/header";
-import { appToast, ToastType } from "../../../components/toast";
 import { APIError, errorFallback } from "../../utils";
+import { InfoBox } from "../../../components/dashboard/info-box";
+import PeopleCount from "../../../components/people-count";
 
 export default function DevicePage() {
   const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const { login, logout, isLoggedIn, uid } = useAuth();
 
   const { pathname } = useLocation();
   const ids = extractFromUri(pathname, paths.dashboard.device);
@@ -38,12 +38,9 @@ export default function DevicePage() {
   const [displayedDevice, setDisplayedDevice] = React.useState<Device>(null);
   const [isStateUpdatePending, setUpdatePending] =
     React.useState<boolean>(false);
-  const [peopleCount, setPeopleCount] = React.useState<number>(null);
 
   const deviceColor = React.useRef<string>(null);
   const isNonMobile = useMediaQuery("(min-width:720px)");
-  const stateSSE = React.useRef<EventSource>(null);
-  const peopleCountSSE = React.useRef<EventSource>(null);
 
   const deviceColors = [
     colors.greenAccent[500],
@@ -124,27 +121,6 @@ export default function DevicePage() {
         // TODO: Send toast like error message
       }
       console.log("State Update SSE connection closed. Cleaning up...");
-      setUpdatePending(false);
-    },
-    dependencies: [displayedDevice],
-  });
-
-  useSSE({
-    sseProvider: () => apiCore.getDevicePeopleCountSSE(validatedDeviceID),
-    active: displayedDevice?.status === DeviceProcessingState.ACTIVE,
-    event: "people-count", // TODO: Constants
-    eventListener: (event) => {
-      // Event Handler
-      const count = parseInt(event.data);
-      console.log("People count update received: ", count);
-      setPeopleCount(count);
-    },
-    errorListener: (error) => {
-      // Error Handler
-      if (error.type === "error") {
-        // TODO: Send toast like error message
-      }
-      console.log("People count SSE connection closed. Cleaning up...");
       setUpdatePending(false);
     },
     dependencies: [displayedDevice],
@@ -238,10 +214,18 @@ export default function DevicePage() {
               />
             </Grid>
             <Grid item xs={4}>
-              <PeopleCount
-                count={peopleCount}
-                toggle={displayedDevice.status === DeviceProcessingState.ACTIVE}
-                reason="Device is not active to grab its real-time metrics."
+              <InfoBox
+                title="Current People Detected:"
+                content={
+                  <PeopleCount
+                    deviceID={validatedDeviceID}
+                    toggle={
+                      displayedDevice?.status === DeviceProcessingState.ACTIVE
+                    }
+                    reason="Device must be active to obtain it's real time metrics"
+                  />
+                }
+                icon={<PeopleIcon />}
               />
             </Grid>
           </Grid>
