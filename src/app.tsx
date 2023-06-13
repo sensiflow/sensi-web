@@ -22,7 +22,7 @@ import {InternalErrorPage} from "./pages/dashboard_spa/error/internal-error-page
 export function App() {
     return (
         <>
-            <ErrorBoundary fallback={<InternalErrorPage/>}>
+            <ErrorBoundary fallback={<InternalErrorPage withReturnButton={false}/>}>
                 <AuthProvider>
                     <BrowserRouter>
                         <Router/>
@@ -49,7 +49,7 @@ function Router(){
                 </Route>
                 <Route path="*" element={<Navigate to={paths["not-found"]} replace={true} />}/>
                 <Route path={paths["not-found"]} element={<NotFoundPage/>}/>
-                <Route path={paths["internal-error"]} element={<InternalErrorPage/>}/>
+                <Route path={paths["internal-error"]} element={<InternalErrorPage withReturnButton={true}/>}/>
             </Routes>
     )
 }

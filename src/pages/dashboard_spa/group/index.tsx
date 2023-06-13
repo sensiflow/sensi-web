@@ -37,8 +37,8 @@ import {
 import { getDevices } from "../../../api/axios/device/api";
 import {APIError, errorFallback} from "../../utils";
 import {appToast, ToastType} from "../../../components/toast";
-import {useCurrentUser} from "../../../logic/context/user-context";
 import {UserRole} from "../../../model/roles";
+import {useAuth} from "../../../logic/context/auth-context";
 
 export interface DeviceInformation{
     device: Device
@@ -54,8 +54,8 @@ export default function GroupPage() {
     const ids = extractFromUri(pathname, paths.dashboard.group)
     const validatedGroupID = parseInt(ids[params.group]);
 
-    const { currentUser  } = useCurrentUser()
-    const userRole = currentUser.role
+    const { user } = useAuth()
+    const userRole = user.role;
     const hasCreateAndUpdatePermission = userRole === UserRole.ADMIN || userRole === UserRole.MODERATOR;
     const hasDeletePermission = userRole === UserRole.ADMIN
 

@@ -26,16 +26,16 @@ import {
 } from "./devices-dialog-reducer";
 import {tokens} from "../../../theme";
 import {constants} from "../../../constants";
-import {useCurrentUser} from "../../../logic/context/user-context";
 import {UserRole} from "../../../model/roles";
+import {useAuth} from "../../../logic/context/auth-context";
 
 export default function DevicesPage() {
   const navigate = useNavigate();
   const theme: Theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const { currentUser  } = useCurrentUser()
-  const userRole = currentUser.role
+  const { user } = useAuth()
+  const userRole = user.role;
   const hasCreateAndUpdatePermission = userRole === UserRole.ADMIN || userRole === UserRole.MODERATOR;
   const hasDeletePermission = userRole === UserRole.ADMIN
 

@@ -12,7 +12,7 @@ export interface PlayerProps {
 
 //TODO: receber portos de rtsp e hls como variaveis de ambiente ou ir buscar a um ficheiro de configuracao / api
 /**
- * The given url must be a valid RTSP link hosted on the a server capable of converting RTSP to HLS
+ * The given url must be a valid RTSP link hosted on the server capable of converting RTSP to HLS
  * @param url RTSP link to convert to HLS
  */
 export function RTSPLinkToHLS(url) {

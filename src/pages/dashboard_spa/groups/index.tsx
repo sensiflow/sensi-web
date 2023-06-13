@@ -16,8 +16,8 @@ import {useNavigate} from "react-router-dom";
 import {appToast, ToastType} from "../../../components/toast";
 import { constants } from "../../../constants";
 import {PaginationModel} from "../../../model/pagination-model";
-import {useCurrentUser} from "../../../logic/context/user-context";
 import {UserRole} from "../../../model/roles";
+import {useAuth} from "../../../logic/context/auth-context";
 
 export default function GroupsPage() {
     const theme = useTheme();
@@ -27,8 +27,8 @@ export default function GroupsPage() {
     const windowSize = useWindowSize()
     const numberOfDevicesRatio = 0.0026041667
 
-    const { currentUser  } = useCurrentUser()
-    const userRole = currentUser.role
+    const { user } = useAuth()
+    const userRole = user.role;
     const hasCreatePermission = userRole === UserRole.ADMIN || userRole === UserRole.MODERATOR;
 
     // Groups hooks

@@ -8,9 +8,10 @@ import {paths} from "../../../app-paths";
 import * as React from "react";
 import {AppButton} from "../../../components/buttons/app-button";
 
-export function InternalErrorPage(){
+export function InternalErrorPage({withReturnButton}: {withReturnButton:boolean}){
     const [theme, colorMode] = useMode();
-    const navigate = useNavigate();
+    let navigate
+    if(withReturnButton) { navigate = useNavigate()}
     const color= tokens(theme.palette.mode)
     return (
         <ColorModeContext.Provider value={colorMode}>
@@ -36,12 +37,17 @@ export function InternalErrorPage(){
                                         variant="body2" gutterBottom>
                                 Something wrong occurred. Please be patient or try again later.
                             </Typography>
-                            <AppButton
+                            {withReturnButton ? <AppButton
                                 text={"Home page"}
                                 backgroundColor={color.buttonAccent.add.backgroundColor}
                                 hoverColor={color.buttonAccent.add.hoverColor}
                                 onClick={() => navigate(paths.dashboard.home) }
-                            />
+                            /> :
+                                <Typography style={ {fontSize: "1rem"}}
+                                            variant="body2" gutterBottom>
+                                   Refresh the page.
+                                </Typography>
+                            }
                         </div>
                     </main>
                 </div>
