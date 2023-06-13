@@ -15,23 +15,22 @@ import { UserRole, checkRolePermission, getRoleHierarchy, getRolesBellow } from 
 import { DeleteUserDialog } from "../../../components/users/dialog/delete-user-dialog";
 import { UpdateRoleDialog } from "../../../components/users/dialog/update-role-dialog";
 import { UserUpdateInfoDialog } from "../../../components/users/dialog/update-info-dialog";
-import { useCurrentUser } from "../../../logic/context/user-context";
 import {deleteUser, getUsers, updateUser, updateUserRole} from "../../../api/axios/user/api";
 import { register } from "../../../api/axios/authentication/api";
+import {useAuth} from "../../../logic/context/auth-context";
 import {APIError, errorFallback} from "../../utils";
 import {useNavigate} from "react-router-dom";
 import {appToast, ToastType} from "../../../components/toast";
 import { constants } from "../../../constants";
-
 
 export default function UserManagementPage(){
     const theme: Theme = useTheme();
     const isDarkMode = theme.palette.mode === "dark";
     const navigate = useNavigate()
 
-    const { currentUser, fetchCurrentUser } = useCurrentUser()
-    const userRole = currentUser.role;
-    const userID = currentUser.id
+    const { user, fetchCurrentUser } = useAuth()
+    const userRole = user.role;
+    const userID = user.id
 
     const [paginationModel, setPaginationModel] = React.useState<PaginationModel>(
       constants.usersPage.DEFAULT_USERS_PAGINATION
@@ -153,10 +152,10 @@ export default function UserManagementPage(){
 
             await reloadUsersPage()
 
-            if(currentUser.id === userUnderUpdate.id){
-                console.log("fetching current user");
-                await fetchCurrentUser()
-            }
+          if(user.id === userUnderUpdate.id){
+              console.log("fetching current user");
+              await fetchCurrentUser()
+          }
 
             setUserUnderUpdate(null);
             dispatchDialog({type: "close", target: UserMGMDialogs.UPDATE_ROLE})
@@ -175,9 +174,9 @@ export default function UserManagementPage(){
             }
             await updateUser(userUnderUpdate.id,userUpdateInput);
 
-            await reloadUsersPage()
-            if(currentUser.id === userUnderUpdate.id)
-                await fetchCurrentUser();
+          await reloadUsersPage()
+          if(user.id === userUnderUpdate.id)
+              await fetchCurrentUser();
 
             setUserUnderUpdate(null);
             dispatchDialog({type: "close", target: UserMGMDialogs.UPDATE_INFO})

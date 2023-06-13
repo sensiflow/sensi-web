@@ -29,7 +29,6 @@ export default function DevicePage() {
   const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const { login, logout, isLoggedIn, uid } = useAuth();
 
   const { pathname } = useLocation();
   const ids = extractFromUri(pathname, paths.dashboard.device);
@@ -234,7 +233,6 @@ export default function DevicePage() {
             <Grid item xs={8}>
               <Player
                 url={RTSPLinkToHLS(displayedDevice.processedStreamURL)}
-                setURL={null}
               />
             </Grid>
             <Grid item xs={4}>

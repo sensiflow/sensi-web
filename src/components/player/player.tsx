@@ -7,7 +7,6 @@ import ReplayIcon from '@mui/icons-material/Replay';
 
 export interface PlayerProps {
     url : string;
-    setURL : (url : string) => void;
 }
 
 
@@ -22,7 +21,6 @@ export function RTSPLinkToHLS(url) {
     if(!url.includes("rtsp://")) throw new Error("Invalid RTSP link")
 
     return url.replace("rtsp://","http://").replace(":8554",":8888") + "/stream.m3u8"
-
 }
 
 const PLAYER_NETWORK_ERROR ='networkError'
@@ -32,7 +30,7 @@ const PLAYER_NETWORK_ERROR ='networkError'
  * Has a backdrop for when the video is loading
  * Has a retry button when the video fails to load, or when the video times out
  * 
- * @param props
+ * @param props : url must be a valid hls link
  * @returns 
  */
 export function Player(props: PlayerProps) {
@@ -179,7 +177,7 @@ export function Player(props: PlayerProps) {
                 onBufferEnd={onBufferEnd}
             
                 volume = {0}
-                url= {props.url} 
+                url= {props.url}
             />
         </Box>
     )

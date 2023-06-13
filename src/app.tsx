@@ -11,7 +11,6 @@ import CreateUserPage from "./pages/dashboard_spa/user-form";
 import UserManagementPage from "./pages/dashboard_spa/user-management";
 import GroupsPage from "./pages/dashboard_spa/groups";
 import GroupPage from "./pages/dashboard_spa/group";
-import {CurrentUserProvider} from "./logic/context/user-context";
 import {UserRole} from "./model/roles";
 import {AuthProvider} from "./logic/context/auth-context";
 import {ProtectedRoute} from "./components/protected-route";
@@ -24,13 +23,11 @@ export function App() {
     return (
         <>
             <ErrorBoundary fallback={<InternalErrorPage/>}>
-                <CurrentUserProvider>
-                    <AuthProvider>
-                        <BrowserRouter>
-                            <Router/>
-                        </BrowserRouter>
-                    </AuthProvider>
-                </CurrentUserProvider>
+                <AuthProvider>
+                    <BrowserRouter>
+                        <Router/>
+                    </BrowserRouter>
+                </AuthProvider>
             </ErrorBoundary>
             <ToastContainer/>
         </>
