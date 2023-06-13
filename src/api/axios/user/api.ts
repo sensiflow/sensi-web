@@ -19,7 +19,7 @@ export async function getMyUser(): Promise<UserOutputDTO> {
     const response = await axios({
         url: `/users/myinfo`,
         method: 'GET',
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
 
     return response.data
 }

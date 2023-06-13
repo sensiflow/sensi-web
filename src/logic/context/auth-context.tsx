@@ -62,6 +62,7 @@ export const AuthProvider = ({children } : { children : React.ReactNode}) => {
         console.log("creting")
         createCookie(user, {
             path: '/' ,
+            sameSite: "strict",
             expires: new Date(Date.now()  + loginInfo.expiresIn - COOKIE_EXPIRE_OFFSET) //-10 secs to make sure it expires before the real auth expires
         })
     }, [])

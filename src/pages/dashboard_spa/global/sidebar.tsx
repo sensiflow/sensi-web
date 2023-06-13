@@ -85,7 +85,7 @@ const userRole = user.role
 
 const isUserMgmtVisible = userRole === UserRole.ADMIN || userRole === UserRole.MODERATOR;
 
-const roleColor = getRoleColor(userRole)//TODO: change color based on role
+const roleColor = getRoleColor(userRole)
 
   return (
     <Box
