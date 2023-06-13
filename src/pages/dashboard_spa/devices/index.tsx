@@ -11,9 +11,6 @@ import {
   DeleteDeviceInputDTO,
   DeviceInputDTO,
 } from "../../../api/dto/input/device-input";
-import {
-  deleteDevices
-} from "../../../api/fake/fake-api";
 import { PaginationModel } from "../../../model/pagination-model";
 import { Page } from "../../../model/page";
 import UpdateDeviceUrlDialog from "../../../components/device/dialog/edit-confirm-dialog";
@@ -22,7 +19,11 @@ import { paths } from "../../../app-paths";
 import { dtoToDevice } from "../../../api/dto/output/device-output";
 import { AppButton } from "../../../components/buttons/app-button";
 import { tokens } from "../../../theme";
-import {createDevice, getDevices, updateDevice} from "../../../api/axios/device/api";
+import {
+  createDevice,
+  getDevices,
+  updateDevice,
+} from "../../../api/axios/device/api";
 
 export default function DevicesPage() {
   const navigate = useNavigate();
@@ -71,7 +72,7 @@ export default function DevicesPage() {
   };
 
   const onDeviceDeleteSubmit = async (input: DeleteDeviceInputDTO) => {
-    await deleteDevices(input);
+    // delete from api
     reloadDevicesPage();
     setDevicesIDSelected((previous) => {
       return previous.filter((id) => !input.ids.includes(id));

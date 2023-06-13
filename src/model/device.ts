@@ -3,6 +3,7 @@ export interface Device{
     name: string,
     description: string,
     streamURL: string,
+    processedStreamURL: string | null,
     status: DeviceProcessingState,
 }
 

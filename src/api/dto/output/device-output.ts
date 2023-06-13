@@ -7,6 +7,7 @@ export interface DeviceOutputDTO{
     name: string,
     description: string,
     streamURL   : string,
+    processedStreamURL: string,
     processingState: DeviceProcessingStateKey,
 }
 
@@ -26,6 +27,7 @@ export function dtoToDevice(dto: DeviceOutputDTO): Device {
         name: dto.name,
         description: dto.description,
         streamURL: dto.streamURL,
+        processedStreamURL: dto.processedStreamURL,
         status: DeviceProcessingState[dto.processingState]
     }
 }
