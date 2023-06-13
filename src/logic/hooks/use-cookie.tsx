@@ -14,17 +14,29 @@ export default function useCookie(
         if (defaultValue === undefined) {
             return null
         }
-        Cookies.set(name, defaultValue)
+
+        Cookies.set(name, JSON.stringify(defaultValue))
         return defaultValue
     })
+    const savedOptions = React.useRef()
 
-    const updateCookie = React.useCallback(
+    const createCookie = React.useCallback(
         (newValue, options) => {
-            Cookies.set(name, newValue, options)
+            console.log(newValue)
+            Cookies.set(name, JSON.stringify(newValue), options)
+            savedOptions.current = options
             setValue(newValue)
         },
         [name]
     )
+
+    const updateCookie = React.useCallback(
+        (newValue) => {
+
+            Cookies.set(name, JSON.stringify(newValue), savedOptions.current)
+            setValue(newValue)
+        }
+    , [name, savedOptions.current])
 
     React.useEffect(() => {
         if(!value) return
@@ -38,7 +50,6 @@ export default function useCookie(
                 setValue(null)
                 onCookieExpire()
             }
-
         },constants.cookie.USE_COOKIE_CHECK_INTERVAL)
         return () => {
             clearInterval(intervalID)
@@ -50,5 +61,5 @@ export default function useCookie(
         setValue(null)
     }, [name])
 
-    return [value, updateCookie, deleteCookie]
+    return [value, updateCookie, createCookie , deleteCookie]
 }

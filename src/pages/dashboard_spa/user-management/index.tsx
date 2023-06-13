@@ -15,18 +15,18 @@ import { UserRole, checkRolePermission, getRoleHierarchy, getRolesBellow } from 
 import { DeleteUserDialog } from "../../../components/users/dialog/delete-user-dialog";
 import { UpdateRoleDialog } from "../../../components/users/dialog/update-role-dialog";
 import { UserUpdateInfoDialog } from "../../../components/users/dialog/update-info-dialog";
-import { useCurrentUser } from "../../../logic/context/user-context";
 import {deleteUser, getUsers, updateUser, updateUserRole} from "../../../api/axios/user/api";
 import { register } from "../../../api/axios/authentication/api";
+import {useAuth} from "../../../logic/context/auth-context";
 
 
 export default function UserManagementPage(){
     const theme: Theme = useTheme();
     const isDarkMode = theme.palette.mode === "dark";
    
-    const { currentUser, fetchCurrentUser } = useCurrentUser()
-    const userRole = currentUser.role;
-    const userID = currentUser.id
+    const { user, fetchCurrentUser } = useAuth()
+    const userRole = user.role;
+    const userID = user.id
 
 
     const [paginationModel, setPaginationModel] = React.useState<PaginationModel>(
@@ -129,7 +129,7 @@ export default function UserManagementPage(){
 
       await reloadUsersPage()
 
-      if(currentUser.id === userUnderUpdate.id){
+      if(user.id === userUnderUpdate.id){
           console.log("fetching current user");
           await fetchCurrentUser()
       }
@@ -146,7 +146,7 @@ export default function UserManagementPage(){
       await updateUser(userUnderUpdate.id,userUpdateInput);
 
       await reloadUsersPage()
-      if(currentUser.id === userUnderUpdate.id)
+      if(user.id === userUnderUpdate.id)
           await fetchCurrentUser();
 
       setUserUnderUpdate(null);

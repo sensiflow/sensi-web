@@ -1,8 +1,10 @@
 import * as React from "react";
-import { useCurrentUser} from "./user-context";
 import {LoginInputDTO} from "../../api/dto/input/login-input";
 import {login, logout} from "../../api/axios/authentication/api";
 import useCookie from "../hooks/use-cookie";
+import {User} from "../../model/user";
+import {getMyUser} from "../../api/axios/user/api";
+import {dtoToUser} from "../../api/dto/output/user-output";
 
 export const AuthContext = React.createContext(null)
 
@@ -10,57 +12,81 @@ interface AuthReturnProps {
     login: (inputDTO: LoginInputDTO) => Promise<void>;
     logout: () => Promise<void>;
     isLoggedIn: boolean;
-    uid: number | undefined;
+    user : User,
+    fetchCurrentUser : () => Promise<void>;
 }
 
-export const AUTH_COOKIE_NAME = "uid";
+export const AUTH_COOKIE_NAME = "user-info";
 const COOKIE_EXPIRE_OFFSET = 10000 //30 secs
-
-//TODO: alternativa para utilizar cookie para saber se temos login, fazer um endpoint que nao requer autenticacao, que devolve o user, e se nao tiver user, nao esta logado, se tiver esta logado, devolve o user
 
 
 export const AuthProvider = ({children } : { children : React.ReactNode}) => {
-    const [cookie, updateCookie, removeCookie] = useCookie(
+    const [cookie, updateCookie, createCookie, removeCookie] = useCookie(
         AUTH_COOKIE_NAME,
         undefined,
-        () => {
-            fetchCurrentUser(-1)
-        })
-    const {currentUser, fetchCurrentUser } = useCurrentUser()
+        () => {}
+    )
+
+    /**
+     * Fetches the current user from the api and stores it in the local storage
+     * @param argUID the id of the user to fetch, if not provided, the id is taken from the cookie, if this id is -1, the current user is set to null
+     */
+    const fetchCurrentUser = React.useCallback(async () => {
+        let user;
+        try{
+            if(cookie !== undefined && cookie !== null) {
+                user = await getMyUser()
+            }
+        }catch (e){
+            removeCookie()
+            return
+        }
+        if(user === null || user === undefined){
+            console.log("awdwadddddd")
+            removeCookie()
+            return
+        }
+        updateCookie(dtoToUser(user))
+    },[cookie])
+
+    //Fetch the current user when the component is mounted
+    // React.useEffect(() => {
+    //     fetchCurrentUser()
+    // } , [])
 
 
     const loginCB = React.useCallback(async (inputDTO: LoginInputDTO) => {
-        const loginInfo = (await login(inputDTO) )
-        updateCookie(loginInfo.id, {
+        const loginInfo = await login(inputDTO)
+        const user = dtoToUser(await getMyUser())
+        console.log("creting")
+        createCookie(user, {
             path: '/' ,
             expires: new Date(Date.now()  + loginInfo.expiresIn - COOKIE_EXPIRE_OFFSET) //-10 secs to make sure it expires before the real auth expires
         })
-        await fetchCurrentUser(loginInfo.id)
     }, [])
 
     const logoutCB = React.useCallback(async () => {
-
         removeCookie();
-        await fetchCurrentUser(-1)
         await logout();
     }, [])
 
     const isLoggedIn = React.useMemo(() => {
-        return (( currentUser !== undefined && currentUser !== null) && (cookie !== undefined && cookie !== null )  )
-    }, [currentUser, cookie])
-
-    const uid = React.useMemo(() => {
-        if(cookie === undefined || cookie === null) return undefined
-        return parseInt(cookie) ;
+        return (cookie !== undefined && cookie !== null)
     }, [cookie])
 
+    const user = React.useMemo(() => {
+        if(cookie === undefined || cookie === null) return null
+        if(typeof cookie === "object") return cookie
+        if(typeof cookie === "string") return JSON.parse(cookie)
+    } , [cookie])
 
     return (
         <AuthContext.Provider value={{
             login : loginCB,
             logout : logoutCB,
             isLoggedIn : isLoggedIn,
-            uid : uid
+            user : user,
+            fetchCurrentUser : fetchCurrentUser,
         }}>
             {children}
         </AuthContext.Provider>

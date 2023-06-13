@@ -12,8 +12,8 @@ import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
 import VideoCameraFrontIcon from "@mui/icons-material/VideoCameraFront";
 import DevicesIcon from '@mui/icons-material/Devices';
 import GroupIcon from '@mui/icons-material/Group';
-import {useCurrentUser} from "../../../logic/context/user-context";
 import {getRoleHierarchy, getRolesBellow, UserRole} from "../../../model/roles";
+import {useAuth} from "../../../logic/context/auth-context";
 
 const SIDEBAR_TRANSITION_DURATION = 300;
 
@@ -74,14 +74,14 @@ const DashboardSidebar = () => {
   const colors = tokens(theme.palette.mode);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
-  const { currentUser  } = useCurrentUser()
+  const { user  } = useAuth()
 
   const SwitchIsCollapsed = () => {
     setIsCollapsed(!isCollapsed);
     document.dispatchEvent(sidebarEvent)
   };
 
-const userRole = currentUser.role
+const userRole = user.role
 
 const isUserMgmtVisible = userRole === UserRole.ADMIN || userRole === UserRole.MODERATOR;
 
@@ -144,10 +144,10 @@ const roleColor = getRoleColor(userRole)//TODO: change color based on role
                   fontWeight="bold"
                   sx={{ m: "10px 0 0 0" }}
                 >
-                    {`${currentUser.firstName} ${currentUser.lastName}`}
+                    {`${user.firstName} ${user.lastName}`}
                 </Typography>
                 <Typography variant="h5" color={roleColor}>
-                    {currentUser.role}
+                    {user.role}
                 </Typography>
               </Box>
             </Box>

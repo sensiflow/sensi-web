@@ -4,7 +4,6 @@ import userEvent from "@testing-library/user-event"
 import * as React from "react"
 import Login from "../src/pages/auth/login"
 import { AuthProvider } from "../src/logic/context/auth-context"
-import { CurrentUserProvider } from "../src/logic/context/user-context"
 import Cookies from 'js-cookie'
 
 
@@ -67,12 +66,10 @@ describe('Test the Login component', () => {
  */
 const renderLoginComponent = () => {
     return render(
-        <CurrentUserProvider>
             <AuthProvider>
                 <BrowserRouter>
                     <Login />
                 </BrowserRouter>
             </AuthProvider>
-        </CurrentUserProvider>
     )
 }
