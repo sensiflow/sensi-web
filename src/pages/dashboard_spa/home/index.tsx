@@ -156,8 +156,8 @@ export default function DashboardHome() {
         <LineChart
           xdata={date}
           ydata={data}
-          chartName="People over time"
-          dataName="Data"
+          chartName={`People over time for ${selectedDevice?.name}`}
+          dataName="People"
           EChartsProps={{
             style: { height: "100%", width: "100%", borderRadius: "5px" },
             theme: theme.palette.mode,
