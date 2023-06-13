@@ -5,6 +5,7 @@ import axios from "axios";
 import {DeleteDeviceInputDTO, DeviceInputDTO} from "../../dto/input/device-input";
 import {IdOutputDTO} from "../../dto/output/id-output";
 import "../utils"
+import { DeviceProcessingStateKey } from "../../../model/device";
 
 export async function getDevices(
     paginationModel: PaginationModel,
@@ -43,6 +44,14 @@ export async function updateDevice(inputDTO: DeviceInputDTO, deviceID: number): 
         url: `/devices/${deviceID}`,
         method: 'PUT',
         data: JSON.stringify(inputDTO)
+    }).logErrorAndRethrow()
+}
+
+export async function updateProcessingState(newProcessingState: DeviceProcessingStateKey, deviceID: number): Promise<void> {
+    await axios({
+        url: `/devices/${deviceID}/processing-state`,
+        method: 'PUT',
+        data: JSON.stringify({state: newProcessingState})
     }).logErrorAndRethrow()
 }
 

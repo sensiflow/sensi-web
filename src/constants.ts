@@ -19,7 +19,9 @@ export const constants = {
       DEFAULT_CHECKBOX_LIST_PAGINATION: {pageSize: 10, page: 0},
       DEFAULT_GROUP_DEVICES_PAGINATION: {pageSize: 5, page: 0}
     },
-
+    api: {
+        baseUrl: 'http://localhost:8090' + '/api/v1',
+    },
     devicesPage: {
         DEFAULT_DEVICES_PAGINATION: { pageSize: 5, page: 0 }
     },

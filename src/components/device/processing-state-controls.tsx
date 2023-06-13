@@ -32,7 +32,8 @@ export function ProcessingStateControls(props: ProcessingStateControlsProps) {
       label: "Start",
       icon: <PlayArrow />,
       color: "success",
-      disabledCondition: props.processingState === DeviceProcessingState.ACTIVE,
+      disabledCondition:
+        props.enabled && props.processingState === DeviceProcessingState.ACTIVE,
     },
     {
       processingState: DeviceProcessingState.INACTIVE,
@@ -40,6 +41,7 @@ export function ProcessingStateControls(props: ProcessingStateControlsProps) {
       icon: <Stop />,
       color: "error",
       disabledCondition:
+        props.enabled &&
         props.processingState === DeviceProcessingState.INACTIVE,
     },
     {
@@ -56,8 +58,9 @@ export function ProcessingStateControls(props: ProcessingStateControlsProps) {
         },
       },
       disabledCondition:
-        props.processingState === DeviceProcessingState.PAUSED ||
-        props.processingState === DeviceProcessingState.INACTIVE,
+        props.enabled &&
+        (props.processingState === DeviceProcessingState.PAUSED ||
+          props.processingState === DeviceProcessingState.INACTIVE),
     },
   ];
 
