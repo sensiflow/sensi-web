@@ -57,6 +57,7 @@ export const AuthProvider = ({children } : { children : React.ReactNode}) => {
 
     const loginCB = React.useCallback(async (inputDTO: LoginInputDTO) => {
         const loginInfo = await login(inputDTO)
+        if(!loginInfo) return
         const user = dtoToUser(await getMyUser())
         console.log("creting")
         createCookie(user, {
@@ -93,6 +94,4 @@ export const AuthProvider = ({children } : { children : React.ReactNode}) => {
     )
 }
 
-
-//TODO: think if the useauth should be provider or the usecookie should be the provider
 export const useAuth : () => AuthReturnProps = () => React.useContext(AuthContext)

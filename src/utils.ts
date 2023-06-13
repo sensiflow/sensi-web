@@ -19,3 +19,24 @@ export function extractFromUri(uri: string, template: string){
      }
      return extractedValues;
  }
+
+ /**
+  * Expands the given URL with the given placeholders.
+  * @param url The URL to expand.
+  * @param placeholders  The placeholders to use.
+  * @returns  The expanded URL.
+  */
+ function expandUrl(url: string, placeholders: Record<string, string>): string {
+    let expandedUrl = url;
+  
+    // Replace each placeholder in the URL
+    for (const placeholder in placeholders) {
+      if (Object.prototype.hasOwnProperty.call(placeholders, placeholder)) {
+        const value = placeholders[placeholder];
+        const regex = new RegExp(`:${placeholder}`, 'g');
+        expandedUrl = expandedUrl.replace(regex, value);
+      }
+    }
+  
+    return expandedUrl;
+  }

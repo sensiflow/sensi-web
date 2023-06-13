@@ -135,7 +135,7 @@ export default function DashboardHome(){
     React.useEffect( () => {
         //get fake devices
         setTimeout(function() {
-            const devices = getDevices() //get the top 10 devices
+            const devices = getDevices() // get the top 10 devices
             setDeviceList(devices)
             setDeviceCount(40)
             setUserCount(4)
@@ -144,9 +144,6 @@ export default function DashboardHome(){
         }, 4000);
         
     }, [])
-
-
-
 
     return (
         <Grid

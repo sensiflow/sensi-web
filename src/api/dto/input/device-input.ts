@@ -5,6 +5,6 @@ export interface DeviceInputDTO {
 }
 
 export interface DeleteDeviceInputDTO {
-    ids: number[]
+    deviceIDs: Array<number>
 }
   

@@ -14,29 +14,41 @@ import GroupPage from "./pages/dashboard_spa/group";
 import {UserRole} from "./model/roles";
 import {AuthProvider} from "./logic/context/auth-context";
 import {ProtectedRoute} from "./components/protected-route";
-import {ErrorPage} from "./pages/dashboard_spa/error";
+import {NotFoundPage} from "./pages/dashboard_spa/error";
+import { ErrorBoundary } from "react-error-boundary";
+import {ToastContainer} from "react-toastify";
+import {InternalErrorPage} from "./pages/dashboard_spa/error/internal-error-page";
 
 export function App() {
 
-  
-  return (
-       <AuthProvider>
-          <BrowserRouter>
+    return (
+        <>
+                <AuthProvider>
+                    <BrowserRouter>
+                        <Router/>
+                    </BrowserRouter>
+                </AuthProvider>
+            <ToastContainer/>
+        </>
+    );
+}
+
+function Router(){
+    return(
             <Routes>
                 <Route path={paths.login} element={<Login/>}/>
                 <Route path={paths.dashboard.home} element={<ProtectedRoute element=<DashboardSPA/> />}>
-                  <Route path={paths.dashboard.home} element={<ProtectedRoute element=<DashboardHome/> />}></Route>
-                  <Route path={paths.dashboard.devices} element={<ProtectedRoute element=<DevicesPage/> />}></Route>
-                  <Route path={paths.dashboard.device} element={<ProtectedRoute element=<DevicePage/> />}></Route>
-                  <Route path={paths.dashboard["user-form"]} element={<ProtectedRoute element=<CreateUserPage/> />}></Route>
-                  <Route path={paths.dashboard.groups} element={<ProtectedRoute element=<GroupsPage/> />}></Route>
-                  <Route path={paths.dashboard.group} element={<ProtectedRoute element=<GroupPage/> />}></Route>
-                  <Route path={paths.dashboard.users} element={<ProtectedRoute element=<UserManagementPage/> allowedRoles={[UserRole.MODERATOR,UserRole.ADMIN]} />}></Route>
+                    <Route path={paths.dashboard.home} element={<ProtectedRoute element=<DashboardHome/> />}></Route>
+                    <Route path={paths.dashboard.devices} element={<ProtectedRoute element=<DevicesPage/> />}></Route>
+                    <Route path={paths.dashboard.device} element={<ProtectedRoute element=<DevicePage/> />}></Route>
+                    <Route path={paths.dashboard["user-form"]} element={<ProtectedRoute element=<CreateUserPage/> />}></Route>
+                    <Route path={paths.dashboard.groups} element={<ProtectedRoute element=<GroupsPage/> />}></Route>
+                    <Route path={paths.dashboard.group} element={<ProtectedRoute element=<GroupPage/> />}></Route>
+                    <Route path={paths.dashboard.users} element={<ProtectedRoute element=<UserManagementPage/> allowedRoles={[UserRole.MODERATOR,UserRole.ADMIN]} />}></Route>
                 </Route>
                 <Route path="*" element={<Navigate to={paths["not-found"]} replace={true} />}/>
-                <Route path={paths["not-found"]} element={<ErrorPage/>}/>
+                <Route path={paths["not-found"]} element={<NotFoundPage/>}/>
+                <Route path={paths["internal-error"]} element={<InternalErrorPage/>}/>
             </Routes>
-          </BrowserRouter>
-       </AuthProvider>
-  );
+    )
 }

@@ -8,9 +8,7 @@ export interface User{
     role : UserRole,
 }
 
-
 const EmailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/
-
 const PasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[*.!@$%^&(#){}\[\]:;<>,.?/~_+\-=|]).{5,20}/
 
 export const EmailConstraints = 

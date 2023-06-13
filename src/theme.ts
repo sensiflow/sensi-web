@@ -224,6 +224,13 @@ export const themeSettings = (mode: PalleteMode) => { // Where is the return typ
         fontSize: 14,
       },
     },
+    classes: {
+      DashboardContainer: {
+        bgcolor: colors.primary[400],
+        borderRadius: "5px",
+        boxShadow: "0px 0px 0px 5px" + colors.primary[600],
+      }
+    }
   };
 };
 

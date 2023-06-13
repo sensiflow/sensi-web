@@ -9,16 +9,16 @@ export async function login(inputDTO: LoginInputDTO): Promise<AuthOutputDTO>{
         url: '/users/login',
         method: 'POST',
         data: JSON.stringify(inputDTO)
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
 
-    return response.data
+    return response?.data
 }
 
 export async function logout(): Promise<void>{
     await axios({
         url: '/users/logout',
         method: 'POST'
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
 }
 
 export async function register(inputDTO: RegisterInputDTO): Promise<RegisterOutputDTO> {
@@ -26,7 +26,7 @@ export async function register(inputDTO: RegisterInputDTO): Promise<RegisterOutp
         url: '/users',
         method: 'POST',
         data: JSON.stringify(inputDTO)
-    }).catchAndThrowAsProblem()
+    }).logErrorAndRethrow()
 
     return response.data
 }
