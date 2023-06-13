@@ -169,7 +169,6 @@ export default function DashboardHome(){
                 >
                     <Player 
                         url={selectedVideoURL}
-                        setURL={setVideoURL}
                     />
                 </Box>
             </GridItem>
