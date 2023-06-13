@@ -210,7 +210,6 @@ export default function DevicePage() {
             <Grid item xs={8}>
               <Player
                 url={RTSPLinkToHLS(displayedDevice.processedStreamURL)}
-                setURL={null}
               />
             </Grid>
             <Grid item xs={4}>

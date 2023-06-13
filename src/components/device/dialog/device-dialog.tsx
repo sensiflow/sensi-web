@@ -4,6 +4,7 @@ import { DeviceFormDialogProps } from "./device-dialog-interface";
 import { dialogSx } from "../../dialog/styles";
 import { useForm } from "react-hook-form";
 import { DeviceInputDTO } from "../../../api/dto/input/device-input";
+import {DescriptionConstraints, NameConstraints, StreamURLConstraints} from "../../../model/device";
 
 
 const DeviceDialog = (
@@ -24,9 +25,15 @@ const DeviceDialog = (
     formState: { errors }
   } = useForm<DeviceInputDTO>({defaultValues})
 
-  const nameRegisterOption = isRequiredField(requiredTextFields, 'name') ? { required: 'Name is required' } : { required: false }
-  const descriptionRegisterOption = isRequiredField(requiredTextFields, 'description') ? { required: 'Description is required' } : { required: false }
-  const streamUrlRegisterOption = isRequiredField(requiredTextFields, 'streamURL') ? { required: 'Stream URL is required' } : { required: false }
+  const nameRegisterOption =
+      isRequiredField(requiredTextFields, 'name') ?
+          {...NameConstraints, required: 'Name is required' } : { ...NameConstraints, required: false }
+  const descriptionRegisterOption =
+      isRequiredField(requiredTextFields, 'description') ?
+          {...DescriptionConstraints, required: 'Description is required' } : {...DescriptionConstraints, required: false }
+  const streamUrlRegisterOption =
+      isRequiredField(requiredTextFields, 'streamURL') ?
+          {...StreamURLConstraints, required: 'Stream URL is required' } : {...StreamURLConstraints,  required: false }
 
   React.useEffect(() => {
     reset()

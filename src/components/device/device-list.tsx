@@ -9,6 +9,7 @@ import DeviceProcessingStatus from "./processing-status/device-processing-status
 import { DataGridListProps } from "../lists/data-grid-list";
 
 interface DeviceListProps extends DataGridListProps<Device> {
+  hasCheckboxSelection: boolean;
   onRowSelection: (newSelection) => void;
   onRowUpdate: (deviceToUpdate: Device) => void;
   onRowInfoRequest: (deviceID: number) => void;
@@ -28,7 +29,7 @@ const deviceColumnDefinition: (
   return [
     { field: "name", headerName: "Name", flex: 1 },
     { field: "description", headerName: "Description", flex: 1 },
-    { field: "streamUrl", headerName: "Stream", flex: 1 },
+    { field: "streamURL", headerName: "Stream", flex: 1 },
     {
       field: "status",
       headerName: "Processing Status",
@@ -81,6 +82,7 @@ export default function DeviceList({
   currentPage,
   paginationModel,
   onPaginationModelChange,
+  hasCheckboxSelection,
   onRowSelection,
   onRowUpdate,
   onRowInfoRequest,
@@ -103,7 +105,7 @@ export default function DeviceList({
       keepNonExistentRowsSelected
       autoHeight
       density="comfortable"
-      checkboxSelection
+      checkboxSelection={hasCheckboxSelection}
       disableRowSelectionOnClick
       loading={isLoading}
       slots={{

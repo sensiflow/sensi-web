@@ -37,6 +37,8 @@ import {
 import { getDevices } from "../../../api/axios/device/api";
 import {APIError, errorFallback} from "../../utils";
 import {appToast, ToastType} from "../../../components/toast";
+import {UserRole} from "../../../model/roles";
+import {useAuth} from "../../../logic/context/auth-context";
 
 export interface DeviceInformation{
     device: Device
@@ -51,6 +53,11 @@ export default function GroupPage() {
     const { pathname} = useLocation();
     const ids = extractFromUri(pathname, paths.dashboard.group)
     const validatedGroupID = parseInt(ids[params.group]);
+
+    const { user } = useAuth()
+    const userRole = user.role;
+    const hasCreateAndUpdatePermission = userRole === UserRole.ADMIN || userRole === UserRole.MODERATOR;
+    const hasDeletePermission = userRole === UserRole.ADMIN
 
     //Group name and description hook
     const [groupInformation, setGroupInformation] =
@@ -96,7 +103,7 @@ export default function GroupPage() {
                 const groupDTO = await getDevicesGroup(validatedGroupID)
                 setGroupInformation(groupDTO as DevicesGroup)
             }catch(e) {
-                if(e.status === APIError.NOT_FOUND){ navigate(paths["not-found"]) }
+                if(e.status === APIError.NOT_FOUND){ navigate(paths["not-found"]); return }
                 errorFallback(e, navigate)
             }
 
@@ -115,7 +122,7 @@ export default function GroupPage() {
             setGroupDevices(deviceModelPage)
             setIsLoadingGroupDevices(false);
         }catch (e){
-            if(e.status === APIError.NOT_FOUND){ navigate(paths["not-found"]) }
+            if(e.status === APIError.NOT_FOUND){ navigate(paths["not-found"]); return }
             errorFallback(e, navigate)
         }
     }
@@ -172,9 +179,12 @@ export default function GroupPage() {
             reloadGroupDevicesPage()
             dispatchDialog({type: "close", target: GroupDialogs.ADD_DEVICES})
         }catch (e){
-            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.ERROR, "Unexpected error, try again later") }
+            if(e.status === APIError.BAD_REQUEST)
+                { appToast(ToastType.ERROR, "Unexpected error, try again later") ; return }
             if(e.status === APIError.NOT_FOUND){
+                reloadGroupDevicesPage()
                 appToast(ToastType.ERROR, "The group or a device to add does not exist anymore")
+                return
             }
             errorFallback(e, navigate)
         }
@@ -186,7 +196,7 @@ export default function GroupPage() {
             setGroupInformation({id: validatedGroupID, ...input})
             dispatchDialog({type: "close", target: GroupDialogs.UPDATE})
         }catch(e) {
-            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.ERROR, "Invalid group input") }
+            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.ERROR, "Invalid group input"); return }
             errorFallback(e, navigate)
         }
 
@@ -197,7 +207,7 @@ export default function GroupPage() {
             dispatchDialog({type: "close", target: GroupDialogs.DELETE})
             navigate(paths.dashboard.groups)
         }catch(e) {
-            if(e.status === APIError.NOT_FOUND){ appToast(ToastType.ERROR, "Group was already deleted") }
+            if(e.status === APIError.NOT_FOUND){ appToast(ToastType.ERROR, "Group was already deleted"); return }
             errorFallback(e, navigate)
         }
 
@@ -213,9 +223,13 @@ export default function GroupPage() {
             dispatchDialog({type: "close", target: GroupDialogs.REMOVE_DEVICES})
         }catch(e) {
             if(e.status === APIError.NOT_FOUND)
-                { appToast(ToastType.ERROR, "The group or a device to remove does not exist anymore") }
+                {
+                    await reloadGroupDevicesPage();
+                    appToast(ToastType.ERROR, "The group or a device to remove does not exist anymore")
+                    return;
+                }
             if(e.status === APIError.BAD_REQUEST)
-                { appToast(ToastType.ERROR, "Unexpected error, try again later") }
+                { appToast(ToastType.ERROR, "Unexpected error, try again later"); return }
             errorFallback(e, navigate)
         }
       };
@@ -251,12 +265,12 @@ export default function GroupPage() {
                     subTitle={groupInformation.description}
                 />
                     <div style={{ display: "flex" }}>
-                        <AppButton
+                        {hasCreateAndUpdatePermission && <AppButton
                             text="Add Devices"
                             onClick={onAddDevicesRequest}
                             backgroundColor={colors.buttonAccent.add.backgroundColor} 
                             hoverColor={colors.buttonAccent.add.hoverColor}            
-                        />
+                        />}
                         {devicesIDSelected.length > 0 && (
                             <AppButton 
                                 text="Remove Devices"
@@ -265,18 +279,18 @@ export default function GroupPage() {
                                 hoverColor={colors.buttonAccent.delete.hoverColor}
                              /> 
                         )}
-                        <AppButton 
+                        {hasDeletePermission && <AppButton
                                 text="Delete Group"
                                 onClick={() => dispatchDialog({type: "open", target: GroupDialogs.DELETE})}
                                 backgroundColor={colors.buttonAccent.delete.backgroundColor}
                                 hoverColor={colors.buttonAccent.delete.hoverColor}
-                        /> 
-                        <AppButton
+                        />}
+                        {hasCreateAndUpdatePermission && <AppButton
                             text="Edit Group"
                             onClick={() => dispatchDialog({type: "open", target: GroupDialogs.UPDATE})}
                             backgroundColor={colors.blueAccent[500]}
                             hoverColor={colors.blueAccent[500]}
-                        />
+                        />}
                     </div>
             </div>}
             
@@ -291,9 +305,10 @@ export default function GroupPage() {
                     onRowInfoRequest={(deviceID) => navigate(paths.dashboard.devices + "/" + deviceID)}
                     rowSelectionModel={devicesIDSelected}
                     enableEdit={false}
+                    hasCheckboxSelection={hasDeletePermission}
                 />
             </Box>
-            
+
             <DeleteGroupDialog
                 isOpen={dialogState.openDeleteGroupDialog}
                 handleClose={() => dispatchDialog({type: "close", target: GroupDialogs.DELETE})}
@@ -318,7 +333,7 @@ export default function GroupPage() {
                     description: groupInformation.description
                 } as GroupInputDTO}
             />}
-            
+
             <AddDevicesToGroupDialog
                 isOpen={dialogState.openAddDevicesToGroupDialog}
                 onSubmit={onAddDevicesSubmit}

@@ -88,7 +88,6 @@ export default function DashboardHome() {
               /*RTSPLinkToHLS(selectedDevice?.processedStreamURL)*/
               "http://localhost:8888/video/detected/stream.m3u8?user=user&pass=user"
             }
-            setURL={null}
           />
         </Box>
       </GridItem>

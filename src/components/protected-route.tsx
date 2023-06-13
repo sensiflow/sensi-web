@@ -1,6 +1,5 @@
 import * as React from "react"
 import { Route, Navigate } from "react-router-dom"
-import { useCurrentUser } from "../logic/context/user-context"
 import { UserRole } from "../model/roles"
 import {paths} from "../app-paths";
 import {useAuth} from "../logic/context/auth-context";
@@ -22,8 +21,7 @@ export function ProtectedRoute({
     allowedRoles,
     element
     } : ProtectedRouteProps ): JSX.Element {
-    const { currentUser , fetchCurrentUser } = useCurrentUser()
-    const { login, logout, isLoggedIn , uid } = useAuth()
+    const { login, logout, isLoggedIn, user  } = useAuth()
 
     const isAllowed = () => {
         if (!isLoggedIn) {
@@ -33,7 +31,7 @@ export function ProtectedRoute({
             return true
         }
 
-        return allowedRoles.includes(UserRole[currentUser.role])
+        return allowedRoles.includes(UserRole[user.role])
     }
 
     return (

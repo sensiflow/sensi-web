@@ -11,7 +11,6 @@ import CreateUserPage from "./pages/dashboard_spa/user-form";
 import UserManagementPage from "./pages/dashboard_spa/user-management";
 import GroupsPage from "./pages/dashboard_spa/groups";
 import GroupPage from "./pages/dashboard_spa/group";
-import {CurrentUserProvider} from "./logic/context/user-context";
 import {UserRole} from "./model/roles";
 import {AuthProvider} from "./logic/context/auth-context";
 import {ProtectedRoute} from "./components/protected-route";
@@ -21,16 +20,15 @@ import {ToastContainer} from "react-toastify";
 import {InternalErrorPage} from "./pages/dashboard_spa/error/internal-error-page";
 
 export function App() {
-
     return (
         <>
-            <CurrentUserProvider>
+            <ErrorBoundary fallback={<InternalErrorPage withReturnButton={false}/>}>
                 <AuthProvider>
                     <BrowserRouter>
                         <Router/>
                     </BrowserRouter>
                 </AuthProvider>
-            </CurrentUserProvider>
+            </ErrorBoundary>
             <ToastContainer/>
         </>
     );
@@ -51,7 +49,7 @@ function Router(){
                 </Route>
                 <Route path="*" element={<Navigate to={paths["not-found"]} replace={true} />}/>
                 <Route path={paths["not-found"]} element={<NotFoundPage/>}/>
-                <Route path={paths["internal-error"]} element={<InternalErrorPage/>}/>
+                <Route path={paths["internal-error"]} element={<InternalErrorPage withReturnButton={true}/>}/>
             </Routes>
     )
 }

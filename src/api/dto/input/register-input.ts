@@ -4,4 +4,3 @@ export interface RegisterInputDTO {
     lastName: string;
     password: string;
 }
-//TODO: EMAIL REGEX

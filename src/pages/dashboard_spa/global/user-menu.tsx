@@ -7,7 +7,6 @@ import { UserUpdateDTO, PasswordUpdateDTO } from "../../../api/dto/input/user-in
 import { UserUpdateInfoDialog } from "../../../components/users/dialog/update-info-dialog";
 import { UpdatePasswordDialog } from "../../../components/users/dialog/update-password-dialog";
 import { UserMenuDialogReducerState, UserMenuDialogReducerAction, UserMenuDialogReducer, UserMenuDialogs } from "./user-menu-dialog-reducer";
-import {useCurrentUser} from "../../../logic/context/user-context";
 import {useAuth} from "../../../logic/context/auth-context";
 import { updateUser } from "../../../api/axios/user/api";
 import {APIError, errorFallback} from "../../utils";
@@ -18,8 +17,7 @@ export function UserMenu(){
     const theme = useTheme();
     const navigate = useNavigate();
 
-    const { currentUser, fetchCurrentUser } = useCurrentUser()
-    const { logout } = useAuth()
+    const { user, fetchCurrentUser, logout } = useAuth()
 
     const [dialogState, dispatchDialog] : [UserMenuDialogReducerState, (action: UserMenuDialogReducerAction) => void]
     = React.useReducer( UserMenuDialogReducer,
@@ -35,15 +33,16 @@ export function UserMenu(){
                 firstName: input.firstName,
                 lastName: input.lastName
             }
-            await updateUser(currentUser.id,userUpdateInput);
+            await updateUser(user.id,userUpdateInput);
 
             await fetchCurrentUser()
             dispatchDialog({type: "close", target: UserMenuDialogs.UPDATE_INFO})
         }catch (e) {
             if(e.status === APIError.NOT_FOUND){
                 appToast(ToastType.ERROR, "The user does not exist anymore")
+                return
             }
-            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Invalid update input") }
+            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Invalid update input"); return }
             errorFallback(e, navigate)
         }
     }
@@ -53,13 +52,14 @@ export function UserMenu(){
             const userUpdateInput = {
                 password : input.password
             }
-            await updateUser(currentUser.id,userUpdateInput);
+            await updateUser(user.id,userUpdateInput);
             dispatchDialog({type: "close", target: UserMenuDialogs.UPDATE_PASSWORD})
         }catch (e) {
             if(e.status === APIError.NOT_FOUND){
                 appToast(ToastType.ERROR, "The user does not exist anymore")
+                return
             }
-            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Password too weak") }
+            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Password too weak"); return }
             errorFallback(e, navigate)
         }
     }
@@ -91,7 +91,7 @@ export function UserMenu(){
                 onSubmit={onPasswordUpdateSubmit}
                 theme={theme}
             />
-            { currentUser &&
+            { user &&
             <UserUpdateInfoDialog
                 isOpen={dialogState.openUpdateInfoDialog}
                 handleClose={() => dispatchDialog({type: "close", target: UserMenuDialogs.UPDATE_INFO})}
@@ -99,8 +99,8 @@ export function UserMenu(){
                 theme={theme}
                 defaultValues = {
                     {
-                        firstName: currentUser.firstName,
-                        lastName: currentUser.lastName
+                        firstName: user.firstName,
+                        lastName: user.lastName
                     }
                 }
                 label={`Update your information:`}

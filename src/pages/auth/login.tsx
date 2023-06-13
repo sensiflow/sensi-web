@@ -25,6 +25,7 @@ export default function Login() {
             event.preventDefault();
             await login({email, password})
         }catch (e) {
+            console.log(e)
             if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Invalid Credentials"); return }
             errorFallback(e, navigate)
         }
@@ -47,7 +48,7 @@ export default function Login() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random)',
+            backgroundImage: 'url(https://source.unsplash.com/random/?city,day)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],

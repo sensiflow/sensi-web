@@ -6,13 +6,12 @@ import { tokens } from "../../theme";
 import ReplayIcon from "@mui/icons-material/Replay";
 
 export interface PlayerProps {
-  url: string;
-  setURL: (url: string) => void;
+    url : string;
 }
 
 //TODO: receber portos de rtsp e hls como variaveis de ambiente ou ir buscar a um ficheiro de configuracao / api
 /**
- * The given url must be a valid RTSP link hosted on the a server capable of converting RTSP to HLS
+ * The given url must be a valid RTSP link hosted on the server capable of converting RTSP to HLS
  * @param url RTSP link to convert to HLS
  */
 export function RTSPLinkToHLS(url) {
@@ -32,9 +31,9 @@ const PLAYER_NETWORK_ERROR = "networkError";
  * Creates a player that is reactive to the given url
  * Has a backdrop for when the video is loading
  * Has a retry button when the video fails to load, or when the video times out
- *
- * @param props
- * @returns
+ * 
+ * @param props : url must be a valid hls link
+ * @returns 
  */
 export function Player(props: PlayerProps) {
   const theme: Theme = useTheme();
