@@ -21,16 +21,17 @@ import {ToastContainer} from "react-toastify";
 import {InternalErrorPage} from "./pages/dashboard_spa/error/internal-error-page";
 
 export function App() {
-
     return (
         <>
-            <CurrentUserProvider>
-                <AuthProvider>
-                    <BrowserRouter>
-                        <Router/>
-                    </BrowserRouter>
-                </AuthProvider>
-            </CurrentUserProvider>
+            <ErrorBoundary fallback={<InternalErrorPage/>}>
+                <CurrentUserProvider>
+                    <AuthProvider>
+                        <BrowserRouter>
+                            <Router/>
+                        </BrowserRouter>
+                    </AuthProvider>
+                </CurrentUserProvider>
+            </ErrorBoundary>
             <ToastContainer/>
         </>
     );

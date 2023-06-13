@@ -26,11 +26,18 @@ import {
 } from "./devices-dialog-reducer";
 import {tokens} from "../../../theme";
 import {constants} from "../../../constants";
+import {useCurrentUser} from "../../../logic/context/user-context";
+import {UserRole} from "../../../model/roles";
 
 export default function DevicesPage() {
   const navigate = useNavigate();
   const theme: Theme = useTheme();
   const colors = tokens(theme.palette.mode);
+
+  const { currentUser  } = useCurrentUser()
+  const userRole = currentUser.role
+  const hasCreateAndUpdatePermission = userRole === UserRole.ADMIN || userRole === UserRole.MODERATOR;
+  const hasDeletePermission = userRole === UserRole.ADMIN
 
   //devices hooks
   const [paginationModel, setPaginationModel] =
@@ -82,7 +89,7 @@ export default function DevicesPage() {
       dispatchDialog({type: "close", target: DevicesDialogs.CREATE_DEVICE})
       navigateToDevice(deviceID);
     }catch(e){
-      if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.ERROR, "Invalid device input") }
+      if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.ERROR, "Invalid device input"); return }
       errorFallback(e, navigate)
     }
   }
@@ -99,6 +106,7 @@ export default function DevicesPage() {
       if(e.status === APIError.NOT_FOUND) {
         reloadDevicesPage();
         appToast(ToastType.ERROR, "One of the devices was already deleted, try again")
+        return
       }
       errorFallback(e, navigate)
     }
@@ -111,9 +119,11 @@ export default function DevicesPage() {
       dispatchDialog({type: "close", target: DevicesDialogs.UPDATE})
     }catch (e){
       if(e.status === APIError.NOT_FOUND) {
+        reloadDevicesPage();
         appToast(ToastType.ERROR, "The device to update does not exist anymore")
+        return
       }
-      if(e.status === APIError.BAD_REQUEST) { appToast(ToastType.ERROR, "Invalid update input") }
+      if(e.status === APIError.BAD_REQUEST) { appToast(ToastType.ERROR, "Invalid update input"); return }
       errorFallback(e, navigate)
     }
   };
@@ -174,12 +184,12 @@ export default function DevicesPage() {
             />
           )}
 
-          <AppButton
+          {hasCreateAndUpdatePermission && <AppButton
             text="Add"
             backgroundColor={colors.buttonAccent.add.backgroundColor}
             hoverColor={colors.buttonAccent.add.hoverColor}
             onClick={() => dispatchDialog({type: "open", target: DevicesDialogs.CREATE_DEVICE})}
-          />
+          />}
         </div>
       </div>
 
@@ -193,7 +203,8 @@ export default function DevicesPage() {
           onRowUpdate={onDeviceUpdateRequest}
           onRowInfoRequest={navigateToDevice}
           rowSelectionModel={devicesIDSelected}
-          enableEdit={true}
+          hasCheckboxSelection={hasDeletePermission}
+          enableEdit={hasCreateAndUpdatePermission}
         />
         <Box m="40px 0 0 0" />
       </Box>

@@ -3,6 +3,7 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import {dialogSx} from "../../dialog/styles";
 import {GroupInputDTO} from "../../../api/dto/input/group-input";
+import {DescriptionConstraints, NameConstraints} from "../../../model/group";
 
 interface UpdateGroupDialogProps {
     isOpen: boolean;
@@ -45,7 +46,7 @@ const UpdateGroupDialog = (
               label="Name"
               fullWidth
               margin="normal"
-              {...register('name')}
+              {...register('name', {...NameConstraints, required:' Name is required'})}
               error={!!errors.name}
               helperText={errors.name?.message}
               color='secondary'
@@ -54,7 +55,7 @@ const UpdateGroupDialog = (
               label="Description"
               fullWidth
               margin="normal"
-              {...register('description')}
+              {...register('description', {...DescriptionConstraints, required: false})}
               error={!!errors.description}
               helperText={errors.description?.message}
               color='secondary'

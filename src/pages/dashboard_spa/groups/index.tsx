@@ -16,6 +16,8 @@ import {useNavigate} from "react-router-dom";
 import {appToast, ToastType} from "../../../components/toast";
 import { constants } from "../../../constants";
 import {PaginationModel} from "../../../model/pagination-model";
+import {useCurrentUser} from "../../../logic/context/user-context";
+import {UserRole} from "../../../model/roles";
 
 export default function GroupsPage() {
     const theme = useTheme();
@@ -24,6 +26,10 @@ export default function GroupsPage() {
 
     const windowSize = useWindowSize()
     const numberOfDevicesRatio = 0.0026041667
+
+    const { currentUser  } = useCurrentUser()
+    const userRole = currentUser.role
+    const hasCreatePermission = userRole === UserRole.ADMIN || userRole === UserRole.MODERATOR;
 
     // Groups hooks
     const [isPageLoading, setIsPageLoading] = React.useState(false)
@@ -137,7 +143,7 @@ export default function GroupsPage() {
             setIsPageLoading(false)
             dispatchDialog({type: "close", target: GroupsDialogs.CREATE})
         }catch (e){
-            if(e.status === APIError.BAD_REQUEST) { appToast(ToastType.ERROR, "Invalid group input") }
+            if(e.status === APIError.BAD_REQUEST) { appToast(ToastType.ERROR, "Invalid group input"); return }
             errorFallback(e, navigate)
         }
     }
@@ -169,12 +175,12 @@ export default function GroupsPage() {
                     justifyContent: "end"
                 }}
             >
-                <AppButton
+                {hasCreatePermission && <AppButton
                     text={"Add a group"}
                     backgroundColor={colors.buttonAccent.add.backgroundColor}
                     hoverColor={colors.buttonAccent.add.hoverColor}
                     onClick={() => dispatchDialog({type: "open", target: GroupsDialogs.CREATE})}
-                />
+                />}
             </div>
 
             <GroupList

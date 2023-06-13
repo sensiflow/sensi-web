@@ -47,7 +47,7 @@ export default function GroupList(
         height: 190
     }
 
-    const onAddDevicesToGroupButtonClick = (groupID: number) => {
+    const onMoreGroupInfoButtonClick = (groupID: number) => {
         navigate(paths.dashboard.groups + "/" + groupID)
     }
 
@@ -92,10 +92,10 @@ export default function GroupList(
                                 alignItems= 'center'
                             >
                                 <AppButton
-                                    text="Add Devices"
+                                    text="More Options"
                                     backgroundColor={colors.buttonAccent.add.backgroundColor}
                                     hoverColor={colors.buttonAccent.add.hoverColor}
-                                    onClick={() => onAddDevicesToGroupButtonClick(group.id)}
+                                    onClick={() => onMoreGroupInfoButtonClick(group.id)}
                                 />
                             </Box> :
                             devices?.map((device: Device) => {
