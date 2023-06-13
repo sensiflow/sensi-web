@@ -15,5 +15,6 @@ export const paths = {
         'group': `/dashboard/groups/:${params.group}`,
     },
     'not-found': '/not-found',
+    'internal-error': '/internal-error'
 }
 

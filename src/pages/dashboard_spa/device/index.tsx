@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useSSE } from "../../../logic/hooks/use-sse";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { dtoToDevice as deviceDtoToDevice } from "../../../api/dto/output/device-output";
 import { Box, Divider, Skeleton, useMediaQuery, useTheme } from "@mui/material";
 import { params, paths } from "../../../app-paths";
@@ -22,8 +22,11 @@ import DeviceProcessingStatus from "../../../components/device/processing-status
 import HeaderSkeleton from "../../../components/header/header-skeleton";
 import { ProcessingStateControls } from "../../../components/device/processing-state-controls";
 import Header from "../../../components/header/header";
+import { appToast, ToastType } from "../../../components/toast";
+import { APIError, errorFallback } from "../../utils";
 
 export default function DevicePage() {
+  const navigate = useNavigate();
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const { login, logout, isLoggedIn, uid } = useAuth();
@@ -48,20 +51,26 @@ export default function DevicePage() {
     colors.blueAccent[500],
     colors.grey[500],
   ];
+
+  const getDeviceInformation = async () => {
+    try {
+      setDisplayedDevice(null);
+      const deviceDTO = await api.getDevice(validatedDeviceID);
+      console.log(deviceDTO);
+      const device = deviceDtoToDevice(deviceDTO);
+      setDisplayedDevice(device);
+      setUpdatePending(device.status === DeviceProcessingState.PENDING);
+    } catch (e) {
+      if (e.status === APIError.NOT_FOUND) {
+        navigate(paths["not-found"]);
+      }
+      errorFallback(e, navigate);
+    }
+  };
+
   const getRandomDeviceColor = () => {
     const index = Math.floor(Math.random() * deviceColors.length);
     return deviceColors[index];
-  };
-
-  const isLoading = displayedDevice === null;
-
-  const getDeviceInformation = async () => {
-    setDisplayedDevice(null);
-    const deviceDTO = await api.getDevice(validatedDeviceID);
-    console.log(deviceDTO);
-    const device = deviceDtoToDevice(deviceDTO);
-    setDisplayedDevice(device);
-    setUpdatePending(device.status === DeviceProcessingState.PENDING);
   };
 
   const onDeviceProcessingStateChange = async (
@@ -94,11 +103,12 @@ export default function DevicePage() {
 
   // State update effect
 
-  useSSE(
-    () => apiCore.getDeviceStateUpdateSSE(validatedDeviceID),
-    isStateUpdatePending,
-    "device-state", // TODO: Constants
-    (event) => {
+  useSSE({
+    sseProvider: () => apiCore.getDeviceStateUpdateSSE(validatedDeviceID),
+    active: isStateUpdatePending,
+    event: "device-state", // TODO: Constants
+    eventListener: (event) => {
+      // Event Handler
       const cleanedUpState = event.data.replace(/"/g, "");
       const state = cleanedUpState as DeviceProcessingStateKey;
       console.log("State update received: ", state);
@@ -108,34 +118,39 @@ export default function DevicePage() {
       };
       setDisplayedDevice(newDevice);
     },
-    (e) => {
+    errorListener: (e) => {
+      // Error Handler
       if (e.type === "error") {
         // TODO: Send toast like error message
       }
       console.log("State Update SSE connection closed. Cleaning up...");
       setUpdatePending(false);
     },
-    [displayedDevice]
-  );
+    dependencies: [displayedDevice],
+  });
 
-  useSSE(
-    () => apiCore.getDevicePeopleCountSSE(validatedDeviceID),
-    displayedDevice?.status === DeviceProcessingState.ACTIVE,
-    "people-count", // TODO: Constants
-    (event) => {
+  useSSE({
+    sseProvider: () => apiCore.getDevicePeopleCountSSE(validatedDeviceID),
+    active: displayedDevice?.status === DeviceProcessingState.ACTIVE,
+    event: "people-count", // TODO: Constants
+    eventListener: (event) => {
+      // Event Handler
       const count = parseInt(event.data);
       console.log("People count update received: ", count);
       setPeopleCount(count);
     },
-    (e) => {
-      if (e.type === "error") {
+    errorListener: (error) => {
+      // Error Handler
+      if (error.type === "error") {
         // TODO: Send toast like error message
       }
       console.log("People count SSE connection closed. Cleaning up...");
       setUpdatePending(false);
     },
-    [displayedDevice]
-  );
+    dependencies: [displayedDevice],
+  });
+
+  const isLoading = displayedDevice === null;
 
   return (
     <Box m="20px">

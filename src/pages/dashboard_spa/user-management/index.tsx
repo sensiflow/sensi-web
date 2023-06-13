@@ -18,19 +18,23 @@ import { UserUpdateInfoDialog } from "../../../components/users/dialog/update-in
 import { useCurrentUser } from "../../../logic/context/user-context";
 import {deleteUser, getUsers, updateUser, updateUserRole} from "../../../api/axios/user/api";
 import { register } from "../../../api/axios/authentication/api";
+import {APIError, errorFallback} from "../../utils";
+import {useNavigate} from "react-router-dom";
+import {appToast, ToastType} from "../../../components/toast";
+import { constants } from "../../../constants";
 
 
 export default function UserManagementPage(){
     const theme: Theme = useTheme();
     const isDarkMode = theme.palette.mode === "dark";
-   
+    const navigate = useNavigate()
+
     const { currentUser, fetchCurrentUser } = useCurrentUser()
     const userRole = currentUser.role;
     const userID = currentUser.id
 
-
     const [paginationModel, setPaginationModel] = React.useState<PaginationModel>(
-      { pageSize: 5, page: 0 }
+      constants.usersPage.DEFAULT_USERS_PAGINATION
     );
     const [isLoading, setIsLoading] = React.useState(true);
     const [users, setUsers] = React.useState<Page<User>>(null);
@@ -49,21 +53,23 @@ export default function UserManagementPage(){
     const [userUnderUpdate, setUserUnderUpdate] =
       React.useState<User>(null);
 
-
     const addHoverColor = isDarkMode ? "#09A065" : "#0BC87E";
   
     const reloadUsersPage = async () => {
-      setIsLoading(true);
-      const userModelPage : Page<User> = await getUsers(paginationModel);
-      setUsers(userModelPage);
-      setIsLoading(false);
+      try{
+          setIsLoading(true);
+          const userModelPage : Page<User> = await getUsers(paginationModel);
+          setUsers(userModelPage);
+          setIsLoading(false);
+      } catch (e) {
+          errorFallback(e, navigate)
+      }
+
     };
 
     React.useEffect(() => {
       reloadUsersPage();
     }, [paginationModel]);
-
-
 
     //Open Dialog and set info
 
@@ -91,69 +97,96 @@ export default function UserManagementPage(){
     //Submit functions
 
     const onRegisterSubmit = async (input: RegisterDialogForm) => {
-        const registerInput : RegisterInputDTO = {
-            firstName: input.firstName,
-            lastName: input.lastName,
-            email: input.email,
-            password: input.password
+        try{
+            const registerInput : RegisterInputDTO = {
+                firstName: input.firstName,
+                lastName: input.lastName,
+                email: input.email,
+                password: input.password
+            }
+
+            const registerOutput = await register(registerInput)
+            await updateUserRole(registerOutput.id, {role:  input.role});
+            await reloadUsersPage()
+            setUserUnderUpdate(null);
+            dispatchDialog({type: "close", target: UserMGMDialogs.REGISTER})
+        }catch (e) {
+            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Invalid register input") }
+            errorFallback(e, navigate)
         }
 
-        const registerOutput = await register(registerInput)
-        await updateUserRole(registerOutput.id, {role:  input.role});
-        await reloadUsersPage()
-        setUserUnderUpdate(null);
-        dispatchDialog({type: "close", target: UserMGMDialogs.REGISTER})
     };
 
     const onPasswordUpdateSubmit = async (input: PasswordUpdateDTO) => {
-      const userUpdateInput = {
-        password : input.password
+      try{
+          const userUpdateInput = {
+              password : input.password
+          }
+          await updateUser(userUnderUpdate.id,userUpdateInput);
+          await reloadUsersPage()
+          setUserUnderUpdate(null);
+          dispatchDialog({type: "close", target: UserMGMDialogs.UPDATE_PASSWORD})
+      }catch (e) {
+          if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Password is too weak") }
+          errorFallback(e, navigate)
       }
-      await updateUser(userUnderUpdate.id,userUpdateInput);
-      await reloadUsersPage()
-      setUserUnderUpdate(null);
-      dispatchDialog({type: "close", target: UserMGMDialogs.UPDATE_PASSWORD})
+
     }
 
     const onUserDeleteSubmit = async (id : number) => {
-      await deleteUser(id)
-      await reloadUsersPage()
+        try{
+            await deleteUser(id)
+            await reloadUsersPage()
 
-      setUserUnderUpdate(null);
-      dispatchDialog({type: "close", target: UserMGMDialogs.DELETE})
+            setUserUnderUpdate(null);
+            dispatchDialog({type: "close", target: UserMGMDialogs.DELETE})
+        }catch (e) {
+            if(e.status === APIError.NOT_FOUND){ appToast(ToastType.ERROR, "The user was already deleted") }
+            errorFallback(e, navigate)
+        }
     }
 
     const onRoleUpdateSubmit = async (newRole: UserRole) => {
-      const newUserRole = {role: newRole} as UserRoleInput
-      await updateUserRole(userUnderUpdate.id, newUserRole);
+        try{
+            const newUserRole = {role: newRole} as UserRoleInput
+            await updateUserRole(userUnderUpdate.id, newUserRole);
 
-      await reloadUsersPage()
+            await reloadUsersPage()
 
-      if(currentUser.id === userUnderUpdate.id){
-          console.log("fetching current user");
-          await fetchCurrentUser()
-      }
+            if(currentUser.id === userUnderUpdate.id){
+                console.log("fetching current user");
+                await fetchCurrentUser()
+            }
 
-      setUserUnderUpdate(null);
-      dispatchDialog({type: "close", target: UserMGMDialogs.UPDATE_ROLE})
+            setUserUnderUpdate(null);
+            dispatchDialog({type: "close", target: UserMGMDialogs.UPDATE_ROLE})
+        }catch (e) {
+            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.ERROR, "Invalid role") }
+            if(e.status === APIError.NOT_FOUND){ appToast(ToastType.ERROR, "The user was already deleted") }
+            errorFallback(e, navigate)
+        }
     }
 
     const onUserUpdateSubmit = async (input: UserUpdateDTO) => {
-      const userUpdateInput = {
-        firstName: input.firstName,
-        lastName: input.lastName
-      }
-      await updateUser(userUnderUpdate.id,userUpdateInput);
+        try{
+            const userUpdateInput = {
+                firstName: input.firstName,
+                lastName: input.lastName
+            }
+            await updateUser(userUnderUpdate.id,userUpdateInput);
 
-      await reloadUsersPage()
-      if(currentUser.id === userUnderUpdate.id)
-          await fetchCurrentUser();
+            await reloadUsersPage()
+            if(currentUser.id === userUnderUpdate.id)
+                await fetchCurrentUser();
 
-      setUserUnderUpdate(null);
-      dispatchDialog({type: "close", target: UserMGMDialogs.UPDATE_INFO})
+            setUserUnderUpdate(null);
+            dispatchDialog({type: "close", target: UserMGMDialogs.UPDATE_INFO})
+        }catch (e) {
+            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.ERROR, "Invalid user input") }
+            if(e.status === APIError.NOT_FOUND){ appToast(ToastType.ERROR, "The user was already deleted") }
+            errorFallback(e, navigate)
+        }
     }
-
-
 
     const canUserActOn = (user: User, action : UserAction) => {
       //if user is the same as the one being updated, then it can act

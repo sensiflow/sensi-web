@@ -105,14 +105,14 @@ export default function DevicesCheckboxList(
     >
       {devices.map((item) => (
           <ListItem 
-            key={`item-${item.device.name}`}
+            key={`item-${item.device.id}`}
             secondaryAction={
               <Checkbox
                 edge="end"
                 onChange={handleToggle(item.device)}
                 checked={getCheckedDeviceIndex(item.device) !== -1}
                 disabled={item.groupsID.includes(groupID)}
-                inputProps={{ 'aria-labelledby':  `checkbox-list-secondary-label-${item.device.name}` }}
+                inputProps={{ 'aria-labelledby':  `checkbox-list-secondary-label-${item.device.id}` }}
               />
             }
             sx={{
