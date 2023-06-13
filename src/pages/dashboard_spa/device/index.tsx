@@ -25,6 +25,7 @@ import Header from "../../../components/header/header";
 import { APIError, errorFallback } from "../../utils";
 import { InfoBox } from "../../../components/dashboard/info-box";
 import PeopleCount from "../../../components/people-count";
+import {MEDIA_READ_PASSWORD, MEDIA_READ_USER, MEDIA_SERVER_SECURE} from "../../../constants";
 
 export default function DevicePage() {
   const navigate = useNavigate();
@@ -210,6 +211,8 @@ export default function DevicePage() {
             <Grid item xs={8}>
               <Player
                 url={RTSPLinkToHLS(displayedDevice.processedStreamURL)}
+                user={MEDIA_READ_USER}
+                password={MEDIA_READ_PASSWORD}
               />
             </Grid>
             <Grid item xs={4}>

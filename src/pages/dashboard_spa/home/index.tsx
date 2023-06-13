@@ -9,7 +9,8 @@ import { LineChart } from "../../../components/charts/line-chart";
 import { Grid, GridItem } from "../../../components/grid";
 import PeopleIcon from "@mui/icons-material/People";
 import { SelectedListItem } from "../../../components/lists/selected-list-item";
-import { Player } from "../../../components/player/player";
+import { Player, RTSPLinkToHLS } from "../../../components/player/player";
+import {MEDIA_READ_PASSWORD, MEDIA_READ_USER, MEDIA_SERVER_SECURE} from "../../../constants";
 import { getDevices } from "../../../api/axios/device/api";
 import { constants } from "../../../constants";
 import { Device, DeviceProcessingState } from "../../../model/device";
@@ -83,12 +84,11 @@ export default function DashboardHome() {
     >
       <GridItem column={"span 6"} row={"span 20"} sx={classes.gridItem}>
         <Box height="100%" display="flex" justifyContent="center">
-          <Player
-            url={
-              /*RTSPLinkToHLS(selectedDevice?.processedStreamURL)*/
-              "http://localhost:8888/video/detected/stream.m3u8?user=user&pass=user"
-            }
-          />
+            <Player
+                url={RTSPLinkToHLS(selectedDevice.processedStreamURL)}
+                user={MEDIA_READ_USER}
+                password={MEDIA_READ_PASSWORD}
+            />
         </Box>
       </GridItem>
 
