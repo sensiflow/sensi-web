@@ -11,8 +11,6 @@ import PeopleIcon from "@mui/icons-material/People";
 import { SelectedListItem } from "../../../components/lists/selected-list-item";
 import { Player, RTSPLinkToHLS } from "../../../components/player/player";
 import {MEDIA_READ_PASSWORD, MEDIA_READ_USER, MEDIA_SERVER_SECURE} from "../../../constants";
-
-import { Player } from "../../../components/player/player";
 import { getDevices } from "../../../api/axios/device/api";
 import { constants } from "../../../constants";
 import { Device, DeviceProcessingState } from "../../../model/device";

@@ -6,7 +6,6 @@ import { tokens } from "../../theme";
 import ReplayIcon from '@mui/icons-material/Replay';
 import {HLS_PORT, RTSP_PORT, RTSPS_PORT} from "../../constants";
 import { Base64 } from  'js-base64';
-import ReplayIcon from "@mui/icons-material/Replay";
 
 export interface PlayerProps {
     url: string,
