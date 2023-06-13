@@ -36,3 +36,11 @@ export const constants = {
         DEFAULT_USERS_PAGINATION: {pageSize: 5, page: 0}
     }
 }
+
+//TODO: environment variables
+export const RTSP_PORT = 8554
+export const HLS_PORT = 8888
+export const RTSPS_PORT = 8322
+export const MEDIA_READ_USER = "user"
+export const MEDIA_READ_PASSWORD = "user"
+export const MEDIA_SERVER_SECURE = false

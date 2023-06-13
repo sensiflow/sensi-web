@@ -24,6 +24,7 @@ import { ProcessingStateControls } from "../../../components/device/processing-s
 import Header from "../../../components/header/header";
 import { appToast, ToastType } from "../../../components/toast";
 import { APIError, errorFallback } from "../../utils";
+import {MEDIA_READ_PASSWORD, MEDIA_READ_USER, MEDIA_SERVER_SECURE} from "../../../constants";
 
 export default function DevicePage() {
   const navigate = useNavigate();
@@ -233,6 +234,8 @@ export default function DevicePage() {
             <Grid item xs={8}>
               <Player
                 url={RTSPLinkToHLS(displayedDevice.processedStreamURL)}
+                user={MEDIA_READ_USER}
+                password={MEDIA_READ_PASSWORD}
               />
             </Grid>
             <Grid item xs={4}>

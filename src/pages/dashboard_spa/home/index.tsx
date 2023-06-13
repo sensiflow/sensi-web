@@ -10,6 +10,7 @@ import { Grid, GridItem } from "../../../components/grid";
 import PeopleIcon from '@mui/icons-material/People';
 import { SelectedListItem } from "../../../components/lists/selected-list-item";
 import { Player, RTSPLinkToHLS } from "../../../components/player/player";
+import {MEDIA_READ_PASSWORD, MEDIA_READ_USER, MEDIA_SERVER_SECURE} from "../../../constants";
 
 
 //Temporary memory data
@@ -34,7 +35,7 @@ function getDevices(){
             name: "Device 1",
             description : "This is a device",
             status: "ONLINE",
-            streamUrl : "rtsp://192.168.1.186:8554/mystream",
+            streamUrl : "rtsp://user:user@192.168.1.185:8554/webcam",
         },  
         {
             id: "2",
@@ -166,6 +167,8 @@ export default function DashboardHome(){
                 >
                     <Player 
                         url={selectedVideoURL}
+                        user={MEDIA_READ_USER}
+                        password={MEDIA_READ_PASSWORD}
                     />
                 </Box>
             </GridItem>

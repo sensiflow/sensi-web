@@ -4,9 +4,13 @@ import * as React from 'react';
 import ReactPlayer from 'react-player'
 import { tokens } from "../../theme";
 import ReplayIcon from '@mui/icons-material/Replay';
+import {HLS_PORT, RTSP_PORT, RTSPS_PORT} from "../../constants";
+import { Base64 } from  'js-base64';
 
 export interface PlayerProps {
-    url : string;
+    url: string,
+    user: string,
+    password: string
 }
 
 
@@ -17,10 +21,10 @@ export interface PlayerProps {
  */
 export function RTSPLinkToHLS(url) {
     //check if url is valid
-    if(url.includes("http://") || url.includes("https://")) return url
-    if(!url.includes("rtsp://")) throw new Error("Invalid RTSP link")
-
-    return url.replace("rtsp://","http://").replace(":8554",":8888") + "/stream.m3u8"
+    if(url.includes("rtsps://"))
+        return url.replace("rtsps://","https://").replace(`:${RTSPS_PORT}`,`:${HLS_PORT}`) + "/stream.m3u8"
+    if(url.includes("rtsp://"))
+        return url.replace("rtsp://","http://").replace(`:${RTSP_PORT}`,`:${HLS_PORT}`) + "/stream.m3u8"
 }
 
 const PLAYER_NETWORK_ERROR ='networkError'
@@ -160,24 +164,35 @@ export function Player(props: PlayerProps) {
                     onError(error,data,hl,hls)
                     }
                 }
-                config={{
-                    file: {
-                      attributes: {
-                        controlsList:
-                          "nofullscreen nodownload noremoteplayback noplaybackrate",
-                      },
-                    },
-                  }}
                 onStart={onStart}
                 onPlay={onPlay}
                 onPause={onPause}
                 onReady={onReady}
 
-                onBuffer={onBuffer} 
+                onBuffer={onBuffer}
                 onBufferEnd={onBufferEnd}
-            
+
                 volume = {0}
                 url= {props.url}
+                config={{
+                    file: {
+                        attributes: {
+                            controlsList:
+                                "nofullscreen nodownload noremoteplayback noplaybackrate",
+                        },
+                        forceHLS: true,
+                        hlsOptions: {
+                            debug: true,
+                            xhrSetup: function (xhr, url) {
+                                xhr.open("GET", url, true)
+                                xhr.setRequestHeader(
+                                    "Authorization",
+                                    "Basic " + Base64.encode(props.user + ":" + props.password) //encodes to base64
+                                );
+                            }
+                        }
+                    }
+                }}
             />
         </Box>
     )
