@@ -31,7 +31,9 @@ export const constants = {
         SCROLL_HEIGHT_OFFSET: 120,
         SCROLL_DEBOUNCE_MS: 20
     },
-
+    homePage:{
+        DEFAULT_DEVICES_CHANNELS_PAGINATION: {pageSize: 10, page: 0},
+    },
     usersPage:{
         DEFAULT_USERS_PAGINATION: {pageSize: 5, page: 0}
     }

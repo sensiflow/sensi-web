@@ -15,7 +15,7 @@ export const NameConstraints =
         },
         maxLength: {
             value: 35,
-            message: 'Name must be at most 20 characters long'
+            message: 'Name must be at most 35 characters long'
         }
     }
 

@@ -40,8 +40,9 @@ export function UserMenu(){
         }catch (e) {
             if(e.status === APIError.NOT_FOUND){
                 appToast(ToastType.ERROR, "The user does not exist anymore")
+                return
             }
-            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Invalid update input") }
+            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Invalid update input"); return }
             errorFallback(e, navigate)
         }
     }
@@ -56,8 +57,9 @@ export function UserMenu(){
         }catch (e) {
             if(e.status === APIError.NOT_FOUND){
                 appToast(ToastType.ERROR, "The user does not exist anymore")
+                return
             }
-            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Password too weak") }
+            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Password too weak"); return }
             errorFallback(e, navigate)
         }
     }

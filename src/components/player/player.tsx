@@ -1,11 +1,12 @@
-import { Backdrop, Box, CircularProgress, } from "@mui/material";
-import { Theme, useTheme } from '@mui/material/styles';
-import * as React from 'react';
-import ReactPlayer from 'react-player'
+import { Backdrop, Box, CircularProgress } from "@mui/material";
+import { Theme, useTheme } from "@mui/material/styles";
+import * as React from "react";
+import ReactPlayer from "react-player";
 import { tokens } from "../../theme";
 import ReplayIcon from '@mui/icons-material/Replay';
 import {HLS_PORT, RTSP_PORT, RTSPS_PORT} from "../../constants";
 import { Base64 } from  'js-base64';
+import ReplayIcon from "@mui/icons-material/Replay";
 
 export interface PlayerProps {
     url: string,
@@ -13,10 +14,9 @@ export interface PlayerProps {
     password: string
 }
 
-
 //TODO: receber portos de rtsp e hls como variaveis de ambiente ou ir buscar a um ficheiro de configuracao / api
 /**
- * The given url must be a valid RTSP link hosted on the a server capable of converting RTSP to HLS
+ * The given url must be a valid RTSP link hosted on the server capable of converting RTSP to HLS
  * @param url RTSP link to convert to HLS
  */
 export function RTSPLinkToHLS(url) {
@@ -27,7 +27,7 @@ export function RTSPLinkToHLS(url) {
         return url.replace("rtsp://","http://").replace(`:${RTSP_PORT}`,`:${HLS_PORT}`) + "/stream.m3u8"
 }
 
-const PLAYER_NETWORK_ERROR ='networkError'
+const PLAYER_NETWORK_ERROR = "networkError";
 
 /**
  * Creates a player that is reactive to the given url
@@ -38,12 +38,10 @@ const PLAYER_NETWORK_ERROR ='networkError'
  * @returns 
  */
 export function Player(props: PlayerProps) {
-
     const theme: Theme = useTheme()
     const colors = tokens(theme.palette.mode);
     const playerRef = React.useRef<ReactPlayer | null>(null)
 
-    
     const [videoBackDropOpen, setVideoBackDropOpen] = React.useState(true)
     const [hasTimedOut, setHasTimedOut] = React.useState(false)
     const [hasPaused, setHasPaused] = React.useState(false)
@@ -75,6 +73,7 @@ export function Player(props: PlayerProps) {
             }
         }
     }
+
 
     const onReady = () => {
         setVideoBackDropOpen(false)
@@ -109,8 +108,7 @@ export function Player(props: PlayerProps) {
     //TODO: para o relatorio por um diagrama como o do android, com os estados do player
     // e quando intervimos com o player (ex: quando se muda de pagina , ou quando este carrega pela primeira vez)
 
-
-    const backDropCursor = hasTimedOut ? "pointer" : "default"
+  const backDropCursor = hasTimedOut ? "pointer" : "default";
 
     return (
         <Box
