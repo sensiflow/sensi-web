@@ -11,7 +11,7 @@ export function dtoToMetric(dto: DeviceMetricOutputDTO): DeviceMetric {
     return {
         deviceID: dto.deviceID,
         startTime: new Date(dto.startTime),
-        endTime: new Date(dto.endTime),
+        endTime: dto.endTime !== null ? new Date(dto.endTime) : null,
         peopleCount: dto.peopleCount
     }
 }

@@ -67,6 +67,10 @@ export default function GroupsPage() {
         
         window?.addEventListener('scroll', handleScroll, true);
 
+        fetchPageInformation().then((_) => {
+            setIsPageLoading(false)
+        })
+
         return () => {
             window.removeEventListener('scroll', handleScroll);
         }
@@ -81,6 +85,7 @@ export default function GroupsPage() {
             isLastGroupPage.current = devicesGroupsDTOPage.isLast
             const devicesListPromises = devicesGroupsDTOPage.items.map(async (group) => {
                 const groupDevices = await getDevicesFromGroup(devicesPaginationModel.current, group.id)
+                console.log(groupDevices)
                 return {
                     groupID: group.id,
                     devices: groupDevices.items.map((deviceDTO) => dtoToDevice(deviceDTO))
@@ -95,12 +100,6 @@ export default function GroupsPage() {
         }
 
     }
-
-    React.useEffect(() => {
-        fetchPageInformation().then((_) => {
-            setIsPageLoading(false)
-        })
-    }, [])
 
     const fetchMoreGroups = async () => {
         try{

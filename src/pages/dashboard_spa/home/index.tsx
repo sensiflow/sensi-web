@@ -52,15 +52,17 @@ export default function DashboardHome() {
   };
 
   const handleDateString = (date: Date) => {
-    const year = date.getFullYear();
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDate().toString().padStart(2, "0");
-    const hour = date.getHours().toString().padStart(2, "0");
-    const minute = date.getMinutes().toString().padStart(2, "0");
-    const second = date.getSeconds().toString().padStart(2, "0");
+    const options: Intl.DateTimeFormatOptions = {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    };
 
-    const dateString = `${year}/${month}/${day} ${hour}:${minute}:${second}`;
-    return dateString;
+    return date.toLocaleString(undefined, options)?.replace(",", "");
   };
 
   const reloadDevices = async () => {
@@ -106,11 +108,15 @@ export default function DashboardHome() {
     >
       <GridItem column={"span 6"} row={"span 20"} sx={classes.gridItem}>
         <Box height="100%" display="flex" justifyContent="center">
-            <Player
-                url={selectedDevice?.processedStreamURL ?   RTSPLinkToHLS(selectedDevice.processedStreamURL) : null}
-                user={MEDIA_READ_USER}
-                password={MEDIA_READ_PASSWORD}
-            />
+          <Player
+            url={
+              selectedDevice?.processedStreamURL
+                ? RTSPLinkToHLS(selectedDevice.processedStreamURL)
+                : null
+            }
+            user={MEDIA_READ_USER}
+            password={MEDIA_READ_PASSWORD}
+          />
         </Box>
       </GridItem>
 
@@ -180,9 +186,11 @@ export default function DashboardHome() {
           <LineChart
             xdata={metrics.map(
               (metric) =>
-                `${handleDateString(metric.startTime)} - ${handleDateString(
-                  metric.endTime
-                )}`
+                `${handleDateString(metric.startTime)} - ${
+                  metric.endTime !== null
+                    ? handleDateString(metric.endTime)
+                    : "Current"
+                }`
             )}
             ydata={metrics.map((metric) => metric.peopleCount)}
             chartName={`People over time for ${selectedDevice?.name ?? ""}`}
