@@ -45,7 +45,6 @@ export function Player(props: PlayerProps) {
     const [hasTimedOut, setHasTimedOut] = React.useState(false)
     const [hasPaused, setHasPaused] = React.useState(false)
     const [errorMessage, setErrorMessage] = React.useState("")
-
     //Used to reload player
     const [playerKey, setPlayerKey] = React.useState(1)
     
@@ -120,7 +119,7 @@ export function Player(props: PlayerProps) {
             }}
         >   
             {/* Backdrop for when video loading */}
-            
+
             <Backdrop
                 sx={{ 
                     position: "absolute",
@@ -129,22 +128,22 @@ export function Player(props: PlayerProps) {
                     cursor: backDropCursor,
                     }}
                 onClick={() => {
-                        if(hasTimedOut){
-                            console.log("retrying")
-                            console.log(playerKey)
-                            resetPlayer()
-                            console.log(playerKey)
-                        }
+                    if(hasTimedOut){
+                        console.log("refreshing")
+                        resetPlayer()
+                    }
                 }}
                 open={videoBackDropOpen == true}
             >
                 {
+                    props.url != null ? (
                     hasTimedOut ?
                     <ReplayIcon
                         fontSize="large"
                         color="inherit" />
                     :
                     <CircularProgress color="inherit" />
+                    ) : "Waiting for a stream"
                 }
                 
             </Backdrop>
@@ -174,12 +173,12 @@ export function Player(props: PlayerProps) {
                 config={{
                     file: {
                         attributes: {
+                            preload: "none",
                             controlsList:
                                 "nofullscreen nodownload noremoteplayback noplaybackrate",
                         },
                         forceHLS: true,
                         hlsOptions: {
-                            debug: true,
                             xhrSetup: function (xhr, url) {
                                 xhr.open("GET", url, true)
                                 xhr.setRequestHeader(

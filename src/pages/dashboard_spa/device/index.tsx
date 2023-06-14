@@ -1,31 +1,27 @@
 import * as React from "react";
-import { useSSE } from "../../../logic/hooks/use-sse";
-import { useLocation, useNavigate } from "react-router-dom";
-import { dtoToDevice as deviceDtoToDevice } from "../../../api/dto/output/device-output";
-import { Box, Divider, Skeleton, useMediaQuery, useTheme } from "@mui/material";
-import { params, paths } from "../../../app-paths";
+import {useSSE} from "../../../logic/hooks/use-sse";
+import {useLocation, useNavigate} from "react-router-dom";
+import {dtoToDevice as deviceDtoToDevice} from "../../../api/dto/output/device-output";
+import {Box, Divider, Skeleton, useMediaQuery, useTheme} from "@mui/material";
+import {params, paths} from "../../../app-paths";
 import VideocamOutlinedIcon from "@mui/icons-material/VideocamOutlined";
-import { tokens } from "../../../theme";
+import {tokens} from "../../../theme";
 import PeopleIcon from "@mui/icons-material/People";
-import {
-  Device,
-  DeviceProcessingState,
-  DeviceProcessingStateKey,
-} from "../../../model/device";
-import { extractFromUri } from "../../../utils";
+import {Device, DeviceProcessingState, DeviceProcessingStateKey,} from "../../../model/device";
+import {extractFromUri} from "../../../utils";
 import * as api from "../../../api/axios/device/api";
-import { apiCore } from "../../../api/core";
-import StatelessPeopleCount from "../../../components/people-count";
+import {getDevice} from "../../../api/axios/device/api";
+import {apiCore} from "../../../api/core";
+import PeopleCount from "../../../components/people-count";
 import Grid from "@mui/material/Grid";
-import { Player, RTSPLinkToHLS } from "../../../components/player/player";
+import {Player, RTSPLinkToHLS} from "../../../components/player/player";
 import DeviceProcessingStatus from "../../../components/device/processing-status/device-processing-status";
 import HeaderSkeleton from "../../../components/header/header-skeleton";
-import { ProcessingStateControls } from "../../../components/device/processing-state-controls";
+import {ProcessingStateControls} from "../../../components/device/processing-state-controls";
 import Header from "../../../components/header/header";
-import { APIError, errorFallback } from "../../utils";
-import { InfoBox } from "../../../components/dashboard/info-box";
-import PeopleCount from "../../../components/people-count";
-import {MEDIA_READ_PASSWORD, MEDIA_READ_USER, MEDIA_SERVER_SECURE} from "../../../constants";
+import {APIError, errorFallback} from "../../utils";
+import {InfoBox} from "../../../components/dashboard/info-box";
+import {MEDIA_READ_PASSWORD, MEDIA_READ_USER} from "../../../constants";
 
 export default function DevicePage() {
   const navigate = useNavigate();
@@ -94,11 +90,6 @@ export default function DevicePage() {
     deviceColor.current = getRandomDeviceColor();
   }, []);
 
-  const sseCleanUp = (sseRef: React.MutableRefObject<EventSource>) => {
-    sseRef.current?.close();
-    sseRef.current = null;
-  };
-
   // State update effect
 
   useSSE({
@@ -110,11 +101,13 @@ export default function DevicePage() {
       const cleanedUpState = event.data.replace(/"/g, "");
       const state = cleanedUpState as DeviceProcessingStateKey;
       console.log("State update received: ", state);
-      const newDevice = {
-        ...displayedDevice,
-        status: DeviceProcessingState[state],
-      };
-      setDisplayedDevice(newDevice);
+
+      if(DeviceProcessingState[state] !== DeviceProcessingState.PENDING){
+          getDevice(validatedDeviceID).then((deviceDTO) => {
+              const newDevice = deviceDtoToDevice(deviceDTO);
+              setDisplayedDevice(newDevice);
+          })
+      }
     },
     errorListener: (e) => {
       // Error Handler
@@ -124,10 +117,12 @@ export default function DevicePage() {
       console.log("State Update SSE connection closed. Cleaning up...");
       setUpdatePending(false);
     },
-    dependencies: [displayedDevice],
+    dependencies: [isStateUpdatePending],
   });
 
   const isLoading = displayedDevice === null;
+
+  const streamURL =  displayedDevice?.status == DeviceProcessingState.ACTIVE ? displayedDevice?.processedStreamURL : null
 
   return (
     <Box m="20px">
@@ -209,8 +204,8 @@ export default function DevicePage() {
         {!isLoading && (
           <Grid container spacing={2}>
             <Grid item xs={8}>
-              <Player
-                url={RTSPLinkToHLS(displayedDevice.processedStreamURL)}
+              <Player//TODO: quando a stream volta, tenho q clicar para voltar a carregar FIX
+                url={streamURL ? RTSPLinkToHLS(streamURL) : null}
                 user={MEDIA_READ_USER}
                 password={MEDIA_READ_PASSWORD}
               />

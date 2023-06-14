@@ -31,12 +31,10 @@ export const useSSE = ({
         errorListener(e);
         sseCleanUp(sseRef);
       };
-    } else {
-      sseCleanUp(sseRef);
     }
 
     return () => {
       sseCleanUp(sseRef);
     };
-  }, [dependencies]);
+  }, [...dependencies,active]);
 };

@@ -1,6 +1,7 @@
 import { Box, Tooltip } from "@mui/material";
 import * as React from "react";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import Typography from "@mui/material/Typography";
 
 /**
  * This component displays a value when it exists and an error icon when it doesn't.
@@ -20,7 +21,13 @@ const Obtainable = (props: {
     <Box width={"100px"}>
       <p>{props.toggle && props.value}</p>
       {!props.toggle && (
-        <Tooltip title={props.reason}>
+        <Tooltip style={{
+            fontSize: "2rem"
+          }}
+            title={
+              <Typography style={{fontSize: "0.9rem"}}>{props.reason}</Typography>
+              }
+            >
           <ErrorOutlineIcon color="error" />
         </Tooltip>
       )}

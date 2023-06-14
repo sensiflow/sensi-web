@@ -121,7 +121,15 @@ export default function GroupList(
                         />
                     </Box>
                 })
-            }</>
+            }
+                {!isLoading && groups?.length === 0 ?
+                    <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+                        <Typography variant="h6" color="text.secondary">
+                            No groups found
+                        </Typography>
+                    </div>
+                    : ""}
+            </>
     )
 }
 

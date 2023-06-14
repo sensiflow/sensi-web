@@ -9,8 +9,7 @@ const PeopleCount = (props: {
   reason: string;
 }) => {
   const [peopleCount, setPeopleCount] = React.useState<number>(null);
-
-  console.log("PeopleCount: ", props.deviceID, props.toggle, props.reason);
+  console.log(props.toggle)
 
   useSSE({
     sseProvider: () => apiCore.getDevicePeopleCountSSE(props.deviceID),
@@ -18,9 +17,11 @@ const PeopleCount = (props: {
     event: "people-count", // TODO: Constants
     eventListener: (event) => {
       // Event Handler
+      setTimeout(() => {
       const count = parseInt(event.data);
       console.log("People count update received: ", count);
       setPeopleCount(count);
+        }, 1000);
     },
     errorListener: (error) => {
       // Error Handler

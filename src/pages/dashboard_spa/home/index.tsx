@@ -85,7 +85,7 @@ export default function DashboardHome() {
       <GridItem column={"span 6"} row={"span 20"} sx={classes.gridItem}>
         <Box height="100%" display="flex" justifyContent="center">
             <Player
-                url={RTSPLinkToHLS(selectedDevice.processedStreamURL)}
+                url={selectedDevice?.processedStreamURL ?   RTSPLinkToHLS(selectedDevice.processedStreamURL) : null}
                 user={MEDIA_READ_USER}
                 password={MEDIA_READ_PASSWORD}
             />
