@@ -10,26 +10,19 @@ import { Grid, GridItem } from "../../../components/grid";
 import PeopleIcon from "@mui/icons-material/People";
 import { SelectedListItem } from "../../../components/lists/selected-list-item";
 import { Player, RTSPLinkToHLS } from "../../../components/player/player";
-import {MEDIA_READ_PASSWORD, MEDIA_READ_USER, MEDIA_SERVER_SECURE} from "../../../constants";
-import { getDevices } from "../../../api/axios/device/api";
+import {
+  MEDIA_READ_PASSWORD,
+  MEDIA_READ_USER,
+  MEDIA_SERVER_SECURE,
+} from "../../../constants";
+import { getDevices, getDeviceMetrics } from "../../../api/axios/device/api";
 import { constants } from "../../../constants";
 import { Device, DeviceProcessingState } from "../../../model/device";
 import { dtoToDevice } from "../../../api/dto/output/device-output";
 import PeopleCount from "../../../components/people-count";
 import Obtainable from "../../../components/obtainable";
-
-//Temporary memory data
-let base = +new Date(2000, 9, 3);
-let oneDay = 24 * 3600 * 1000;
-let date = [];
-
-let data = [Math.round(Math.random() * 20)];
-
-for (let i = 1; i < 200; i++) {
-  var now = new Date((base += oneDay));
-  date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join("/"));
-  data.push(Math.round(Math.random() * 20));
-}
+import { dtoToMetric } from "../../../api/dto/output/device-metric-output-dto";
+import { DeviceMetric } from "../../../model/metric";
 
 const useStyles = (theme: Theme) => {
   const colors = tokens(theme.palette.mode);
@@ -50,11 +43,24 @@ export default function DashboardHome() {
   const classes = useStyles(theme);
 
   const [selectedDevice, setDeviceSelected] = React.useState<Device>(null);
-  const [deviceList, setDeviceList] = React.useState<Array<Device>>([]);
+  const [deviceList, setDeviceList] = React.useState<Array<Device>>(null);
   const [deviceCount, setDeviceCount] = React.useState<number>(null);
+  const [metrics, setMetrics] = React.useState<Array<DeviceMetric>>([]);
 
   const handleListItemClick = (item: Device) => {
     setDeviceSelected(item);
+  };
+
+  const handleDateString = (date: Date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const hour = date.getHours().toString().padStart(2, "0");
+    const minute = date.getMinutes().toString().padStart(2, "0");
+    const second = date.getSeconds().toString().padStart(2, "0");
+
+    const dateString = `${year}/${month}/${day} ${hour}:${minute}:${second}`;
+    return dateString;
   };
 
   const reloadDevices = async () => {
@@ -70,9 +76,25 @@ export default function DashboardHome() {
     setDeviceSelected(devices[0]);
   };
 
+  const grabMetrics = async (deviceID: number) => {
+    const metricsDTOPage = await getDeviceMetrics(deviceID, {
+      page: 0,
+      pageSize: 50,
+    });
+    console.log(metricsDTOPage);
+    const metrics = metricsDTOPage.items.map((dto) => dtoToMetric(dto));
+    setMetrics(metrics);
+  };
+
   React.useEffect(() => {
     reloadDevices();
   }, []);
+
+  React.useEffect(() => {
+    if (selectedDevice) {
+      grabMetrics(selectedDevice.id);
+    }
+  }, [selectedDevice]);
 
   return (
     <Grid
@@ -84,11 +106,11 @@ export default function DashboardHome() {
     >
       <GridItem column={"span 6"} row={"span 20"} sx={classes.gridItem}>
         <Box height="100%" display="flex" justifyContent="center">
-            <Player
-                url={RTSPLinkToHLS(selectedDevice.processedStreamURL)}
-                user={MEDIA_READ_USER}
-                password={MEDIA_READ_PASSWORD}
-            />
+          <Player
+            url={RTSPLinkToHLS(selectedDevice?.processedStreamURL)}
+            user={MEDIA_READ_USER}
+            password={MEDIA_READ_PASSWORD}
+          />
         </Box>
       </GridItem>
 
@@ -99,7 +121,7 @@ export default function DashboardHome() {
             padding="8px"
             sx={{ color: colors.grey[400] }}
           >
-            Top 10 Devices
+            Top 10 devices
           </Typography>
         </Box>
 
@@ -108,6 +130,7 @@ export default function DashboardHome() {
           selectedColor={colors.grey[400]}
           hoverColor={colors.grey[500]}
           deviceCount={10}
+          isLoading={deviceList === null}
           list={deviceList}
           onItemClick={(device) => {
             handleListItemClick(device);
@@ -144,26 +167,33 @@ export default function DashboardHome() {
         />
       </GridItem>
 
-      <GridItem
-        column={"span 9"}
-        row={"span 27"}
-        sx={{
-          bgcolor: colors.primary[400],
-          borderRadius: "5px",
-          boxShadow: "0px 0px 0px 5px" + colors.primary[600],
-        }}
-      >
-        <LineChart
-          xdata={date}
-          ydata={data}
-          chartName={`People over time for ${selectedDevice?.name}`}
-          dataName="People"
-          EChartsProps={{
-            style: { height: "100%", width: "100%", borderRadius: "5px" },
-            theme: theme.palette.mode,
+      {selectedDevice && (
+        <GridItem
+          column={"span 9"}
+          row={"span 27"}
+          sx={{
+            bgcolor: colors.primary[400],
+            borderRadius: "5px",
+            boxShadow: "0px 0px 0px 5px" + colors.primary[600],
           }}
-        />
-      </GridItem>
+        >
+          <LineChart
+            xdata={metrics.map(
+              (metric) =>
+                `${handleDateString(metric.startTime)} - ${handleDateString(
+                  metric.endTime
+                )}`
+            )}
+            ydata={metrics.map((metric) => metric.peopleCount)}
+            chartName={`People over time for ${selectedDevice?.name ?? ""}`}
+            dataName="People"
+            EChartsProps={{
+              style: { height: "100%", width: "100%", borderRadius: "5px" },
+              theme: theme.palette.mode,
+            }}
+          />
+        </GridItem>
+      )}
     </Grid>
   );
 }
