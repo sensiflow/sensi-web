@@ -6,6 +6,7 @@ import {DeleteDeviceInputDTO, DeviceInputDTO} from "../../dto/input/device-input
 import {IdOutputDTO} from "../../dto/output/id-output";
 import "../utils"
 import { DeviceProcessingStateKey } from "../../../model/device";
+import { DeviceMetricOutputDTO } from "../../dto/output/device-metric-output-dto";
 
 export async function getDevices(
     paginationModel: PaginationModel,
@@ -61,4 +62,12 @@ export async function deleteDevices(inputDTO: DeleteDeviceInputDTO): Promise<voi
         url: `/devices?deviceIDs=${ids}`,
         method: 'DELETE',
     }).logErrorAndRethrow()
+}
+
+export async function getDeviceMetrics(deviceID: number, paginationModel: PaginationModel): Promise<PageOutputDTO<DeviceMetricOutputDTO>> {
+    const response = await axios({
+        url: `/devices/${deviceID}/stats?page=${paginationModel.page}&size=${paginationModel.pageSize}`,
+        method: 'GET',
+    }).logErrorAndRethrow()
+    return response.data
 }

@@ -19,6 +19,7 @@ export interface PlayerProps {
  * @param url RTSP link to convert to HLS
  */
 export function RTSPLinkToHLS(url) {
+    if(!url) return null  
     //check if url is valid
     if(url.includes("rtsps://"))
         return url.replace("rtsps://","https://").replace(`:${RTSPS_PORT}`,`:${HLS_PORT}`) + "/stream.m3u8"
