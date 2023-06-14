@@ -1,41 +1,31 @@
 import { Box, TextField, Button, Grid, Link } from "@mui/material";
 import * as React from "react";
-import { AuthType } from "../pages/auth/auth-type";
 import { Copyright } from "./copyright";
 
 /**
- * An authentication form. This provides different fields depending on the type of the form.
- * 
+ * An authentication form.
+ *
+ * TODO: Retrieve the actual value of the form fields on load instead of initializing them to empty strings
+ *
  * @param handleSubmit A function that handles the form submission
- * @param type The type of the form (Login or Register)
- * @param redirectHref The href to redirect to when the user clicks on the link~
- * 
- * @returns A JSX element that can be used for login or register
+ *
+ * @returns A JSX element that can be used for login
  */
-export function AuthForm(
-  {handleSubmit, type, redirectHref}: {
-    handleSubmit: (e, firstName, lastName, email, password) => void,
-    type: AuthType,
-    redirectHref: string
-  }
-){
-  const [firstName, setFirstName] = React.useState('')
-  const [lastName, setLastName] = React.useState('')
-  const [email, setEmail] = React.useState('')
-  const [password, setPassword] = React.useState('')
+export function SignInForm({
+  handleSubmit,
+}: {
+  handleSubmit: (e, email, password) => void;
+}) {
+  const [email, setEmail] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
-  const onFirstNameSubmit = e=>{ setFirstName(e.target.value) }
-  const onLastNameSubmit =  e=>{ setLastName(e.target.value) }
-
-  const redirectType = type === AuthType.Login ? 'Sign Up' : 'Sign In';
-  
-    return(
-    <Box component="form" noValidate onSubmit={e => handleSubmit(e, firstName, lastName, email, password)} sx={{ mt: 1 }}>
-      <FullNameInput
-        isRegisterAction={type === AuthType.Register}
-        onFirstNameSubmit={onFirstNameSubmit}
-        onLastNameSubmit={onLastNameSubmit}
-      />
+  return (
+    <Box
+      component="form"
+      noValidate
+      onSubmit={(e) => handleSubmit(e, email, password)}
+      sx={{ mt: 1 }}
+    >
       <TextField
         margin="normal"
         required
@@ -45,7 +35,9 @@ export function AuthForm(
         name="email"
         autoComplete="email"
         autoFocus
-        onChange={e=>{setEmail(e.target.value)}}
+        onChange={(e) => {
+          setEmail(e.target.value);
+        }}
       />
       <TextField
         margin="normal"
@@ -56,7 +48,9 @@ export function AuthForm(
         type="password"
         id="password"
         autoComplete="current-password"
-        onChange={e=>{setPassword(e.target.value)}}
+        onChange={(e) => {
+          setPassword(e.target.value);
+        }}
       />
       <Button
         type="submit"
@@ -65,57 +59,18 @@ export function AuthForm(
         variant="contained"
         sx={{ mt: 3, mb: 2 }}
       >
-        {type}
+        Sign in
       </Button>
-      <Grid 
+      <Grid
         container
         spacing={0}
         direction="column"
         alignItems="center"
         justifyContent="center"
       >
-        <Grid item>
-          <Link href={redirectHref} variant="body2">
-            {`Don't have an account? ${redirectType}`}
-          </Link>
-        </Grid>
+        <Grid item>{`Don't have an account? Contact your Administator`}</Grid>
       </Grid>
       <Copyright sx={{ mt: 5 }} />
     </Box>
-  )
-}
-
-function FullNameInput({isRegisterAction, onFirstNameSubmit, onLastNameSubmit}: 
-  {
-    isRegisterAction: boolean
-    onFirstNameSubmit: (event) => void,
-    onLastNameSubmit: (event) => void,
-  }){
-  return (
-    isRegisterAction ? <Grid container spacing={2}>
-      <Grid item xs={12} sm={6}>
-        <TextField
-            autoComplete="given-name"
-            name="firstName"
-            required
-            fullWidth
-            id="firstName"
-            label="First Name"
-            autoFocus
-            onChange={onFirstNameSubmit}
-        />  
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <TextField
-            required
-            fullWidth
-            id="lastName"
-            label="Last Name"
-            name="lastName"
-            autoComplete="family-name"
-            onChange={onLastNameSubmit}
-        />
-      </Grid>
-    </Grid> : <></>
-  )
+  );
 }

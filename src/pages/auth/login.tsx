@@ -6,36 +6,37 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useNavigate } from 'react-router-dom';
-import { login } from '../../api/fake/fake-api';
-import { AuthForm } from '../../components/auth-form';
-import { paths } from '../../app-paths';
-import { AuthType } from './auth-type';
+import {createTheme, ThemeProvider} from '@mui/material/styles';
+import {useNavigate} from 'react-router-dom';
+import {SignInForm} from '../../components/auth-form';
+import {paths} from '../../app-paths';
+import {useAuth} from "../../logic/context/auth-context";
+import {APIError, errorFallback} from "../utils";
+import {appToast, ToastType} from "../../components/toast";
 
 
 const theme = createTheme();
 
 export default function Login() {
-  const navigate = useNavigate()
+    const navigate = useNavigate()
+    const { login , isLoggedIn } = useAuth()
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>, email, password) => {
+        try{
+            event.preventDefault();
+            await login({email, password})
+        }catch (e) {
+            console.log(e)
+            if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Invalid Credentials"); return }
+            errorFallback(e, navigate)
+        }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>, firstName, lastName, email, password) => {
-    event.preventDefault();
+    };
 
-    const success = login(
-      email,
-      password
-    )
-    
-    console.log({
-      email,
-      password
-    });
-
-    if (success) {
-      navigate(paths.home)
+  React.useEffect(() => {
+    if (isLoggedIn) {
+      navigate(paths.dashboard.home)
     }
-  };
+  }, [isLoggedIn])
 
   return (
     <ThemeProvider theme={theme}>
@@ -47,7 +48,7 @@ export default function Login() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random)',
+            backgroundImage: 'url(https://source.unsplash.com/random/?city,day)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -71,10 +72,8 @@ export default function Login() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <AuthForm 
+            <SignInForm 
               handleSubmit={handleSubmit}
-              type={AuthType.Login}
-              redirectHref={paths.register}
             />
           </Box>
         </Grid>
