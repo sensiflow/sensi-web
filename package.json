@@ -4,8 +4,8 @@
   "description": "![Workflow](https://github.com/<OWNER>/<REPOSITORY>/actions/workflows/<WORKFLOW_FILE>/badge.svg)",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve",
-    "build": "npm install && webpack",
+    "start": "webpack serve --config webpack.config.dev.js",
+    "build": "npm install && webpack --config webpack.config.prod.js",
     "lint": "npx eslint src/**",
     "test": "jest"
   },
@@ -47,6 +47,7 @@
     "@testing-library/dom": "^9.0.1",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
+    "@types/dotenv-webpack": "^7.0.4",
     "@types/jest": "^29.4.4",
     "@types/js-base64": "^3.3.1",
     "@types/node": "^18.15.2",
@@ -57,6 +58,7 @@
     "@typescript-eslint/parser": "^5.55.0",
     "babel-jest": "^29.5.0",
     "css-loader": "^6.7.3",
+    "dotenv-webpack": "^8.0.1",
     "eslint": "^8.36.0",
     "eslint-plugin-react": "^7.32.2",
     "jest": "^29.5.0",

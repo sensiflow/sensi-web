@@ -25,7 +25,6 @@ export default function Login() {
             event.preventDefault();
             await login({email, password})
         }catch (e) {
-            console.log(e)
             if(e.status === APIError.BAD_REQUEST){ appToast(ToastType.WARNING, "Invalid Credentials"); return }
             errorFallback(e, navigate)
         }

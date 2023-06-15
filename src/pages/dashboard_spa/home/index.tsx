@@ -12,8 +12,7 @@ import { SelectedListItem } from "../../../components/lists/selected-list-item";
 import { Player, RTSPLinkToHLS } from "../../../components/player/player";
 import {
   MEDIA_READ_PASSWORD,
-  MEDIA_READ_USER,
-  MEDIA_SERVER_SECURE,
+  MEDIA_READ_USER
 } from "../../../constants";
 import { getDevices, getDeviceMetrics } from "../../../api/axios/device/api";
 import { constants } from "../../../constants";

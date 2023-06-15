@@ -1,8 +1,8 @@
 export interface PageOutputDTO <T> {
     totalElements: number
     totalPages: number
-    isLast: Boolean
-    isFirst: Boolean
+    isLast: boolean
+    isFirst: boolean
     items: Array<T>
 }
 

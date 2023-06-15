@@ -9,8 +9,8 @@ import { Base64 } from  'js-base64';
 
 export interface PlayerProps {
     url: string,
-    user: string,
-    password: string
+    user?: string,
+    password?: string
 }
 
 //TODO: receber portos de rtsp e hls como variaveis de ambiente ou ir buscar a um ficheiro de configuracao / api
@@ -107,7 +107,14 @@ export function Player(props: PlayerProps) {
     //TODO: para o relatorio por um diagrama como o do android, com os estados do player
     // e quando intervimos com o player (ex: quando se muda de pagina , ou quando este carrega pela primeira vez)
 
-  const backDropCursor = hasTimedOut ? "pointer" : "default";
+    const backDropCursor = hasTimedOut ? "pointer" : "default";
+
+    const xhrStep = (xhr, url) => {
+        xhr.open("GET", url, true)
+        if(props.user && props.password) {
+            xhr.setRequestHeader("Authorization", "Basic " + Base64.encode(props.user + ":" + props.password))
+        }
+    }
 
     return (
         <Box
@@ -180,13 +187,7 @@ export function Player(props: PlayerProps) {
                         },
                         forceHLS: true,
                         hlsOptions: {
-                            xhrSetup: function (xhr, url) {
-                                xhr.open("GET", url, true)
-                                xhr.setRequestHeader(
-                                    "Authorization",
-                                    "Basic " + Base64.encode(props.user + ":" + props.password) //encodes to base64
-                                );
-                            }
+                            xhrSetup: xhrStep
                         }
                     }
                 }}

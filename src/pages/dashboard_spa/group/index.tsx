@@ -82,7 +82,7 @@ export default function GroupPage() {
     const [loadingMoreCheckBoxDevices, setLoadingMoreCheckBoxDevices] =
         React.useState(false)
 
-    const isLastCheckBoxPage = React.useRef<Boolean>(false)
+    const isLastCheckBoxPage = React.useRef<boolean>(false)
     const [resetScrollToTop, setResetScrollToTop] = React.useState(false)
 
     //Dialog reducer
