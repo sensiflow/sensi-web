@@ -1,23 +1,7 @@
 import * as echarts from 'echarts';
-import type { ReactEChartsProps } from './react-e-charts';
 import { ReactECharts } from './react-e-charts';
 import type { CSSProperties } from "react";
-import type { EChartsOption, ECharts, SetOptionOpts } from "echarts";
-
-
-
-
-let base = +new Date(1990, 9, 3);
-let oneDay = 24 * 3600 * 1000;
-let date = [];
-
-let data = [Math.random() * 30];
-
-for (let i = 1; i < 2000; i++) {
-  var now = new Date((base += oneDay));
-  date.push([now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'));
-  data.push(Math.round((Math.random() - 0.5) * 20 + data[i - 1]));
-}
+import type { EChartsOption, SetOptionOpts } from "echarts";
 
 export interface MyEChartsProps {
     style?: CSSProperties;
@@ -55,7 +39,7 @@ export function LineChart({xdata, ydata, chartName, dataName, EChartsProps } : E
           dataZoom: {
             yAxisIndex: 'none'
           },
-          restore: {},
+            dataView: {readOnly: true},
           saveAsImage: {}
         }
       },
