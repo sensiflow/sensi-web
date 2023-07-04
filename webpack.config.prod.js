@@ -1,4 +1,4 @@
-const Dotenv = require('@types/dotenv-webpack');
+const Dotenv = require('dotenv-webpack');
 module.exports = {
     mode: "production",
     resolve: {
