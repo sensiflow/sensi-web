@@ -2,7 +2,7 @@ import {API_URL} from "../constants";
 
 
 const getDeviceSSEInterface = (deviceID: number, eventName: string) => {
-    return new EventSource(`${API_URL}/devices/${deviceID}/server-events/${eventName}`,
+    return new EventSource(`${API_URL}devices/${deviceID}/server-events/${eventName}`,
     {withCredentials: true});
 }
 
