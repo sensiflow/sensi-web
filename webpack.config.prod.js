@@ -1,10 +1,8 @@
+const Dotenv = require('dotenv-webpack');
 module.exports = {
-    mode: "development",
+    mode: "production",
     resolve: {
         extensions: [".js", ".ts", ".tsx"],
-    },
-    devServer: {
-        historyApiFallback: true,
     },
     module: {
         rules: [
@@ -21,5 +19,10 @@ module.exports = {
                 ]
               }
         ]
-    }
+    },
+    plugins: [
+        new Dotenv({
+            path: "./.env.example",
+        }),
+    ],
 }

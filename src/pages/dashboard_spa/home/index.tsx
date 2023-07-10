@@ -12,8 +12,7 @@ import { SelectedListItem } from "../../../components/lists/selected-list-item";
 import { Player, RTSPLinkToHLS } from "../../../components/player/player";
 import {
   MEDIA_READ_PASSWORD,
-  MEDIA_READ_USER,
-  MEDIA_SERVER_SECURE,
+  MEDIA_READ_USER
 } from "../../../constants";
 import { getDevices, getDeviceMetrics } from "../../../api/axios/device/api";
 import { constants } from "../../../constants";
@@ -35,6 +34,37 @@ const useStyles = (theme: Theme) => {
     },
   };
 };
+
+function getMetricXAxisLabel(metrics: Array<DeviceMetric>) {
+  const xAxisLabels = [];
+  
+  metrics.forEach((metric) => {
+    const startDate = metric.startTime;
+    const endDate = metric.endTime;
+    const seconds = (endDate.getTime() - startDate.getTime()) / 1000;
+    const xAxisLabelsCount = Math.floor(seconds);
+    for (let i = 0; i < xAxisLabelsCount; i++) {
+      const date = new Date(startDate.getTime() + i * 1000);
+      xAxisLabels.push(date);
+    }
+  });
+  
+ return xAxisLabels;
+}
+
+function getMetricYAxisLabel(metrics: Array<DeviceMetric>) {
+    const yAxisLabels = [];
+    metrics.forEach((metric) => {
+      const startDate = metric.startTime;
+        const endDate = metric.endTime;
+        const seconds = (endDate.getTime() - startDate.getTime()) / 1000;
+        const xAxisLabelsCount = Math.floor(seconds);
+        for (let i = 0; i < xAxisLabelsCount; i++) {
+           yAxisLabels.push(metric.peopleCount)
+        }
+    });
+    return yAxisLabels;
+}
 
 export default function DashboardHome() {
   const theme: Theme = useTheme();
@@ -184,15 +214,8 @@ export default function DashboardHome() {
           }}
         >
           <LineChart
-            xdata={metrics.map(
-              (metric) =>
-                `${handleDateString(metric.startTime)} - ${
-                  metric.endTime !== null
-                    ? handleDateString(metric.endTime)
-                    : "Current"
-                }`
-            )}
-            ydata={metrics.map((metric) => metric.peopleCount)}
+            xdata={getMetricXAxisLabel(metrics)}
+            ydata={getMetricYAxisLabel(metrics)}
             chartName={`People over time for ${selectedDevice?.name ?? ""}`}
             dataName="People"
             EChartsProps={{

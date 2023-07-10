@@ -5,12 +5,10 @@ import {appToast, ToastType} from "../../components/toast";
 import {logout} from "./authentication/api";
 import {AUTH_COOKIE_NAME} from "../../logic/context/auth-context";
 import Cookies from 'js-cookie'
+import {API_URL} from "../../constants";
 
-const basePath = "/api/v1"
-const apiURL = `http://localhost:8090`
-const baseUrl = `${apiURL}${basePath}`
 
-axios.defaults.baseURL = baseUrl
+axios.defaults.baseURL = API_URL
 axios.defaults.withCredentials = true
 axios.defaults.headers['Content-Type'] = 'application/json'
 
