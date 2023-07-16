@@ -41,6 +41,7 @@ function getMetricXAxisLabel(metrics: Array<DeviceMetric>) {
   metrics.forEach((metric) => {
     const startDate = metric.startTime;
     const endDate = metric.endTime;
+        if(startDate === undefined || startDate === null || endDate === null || endDate === undefined) return;
     const seconds = (endDate.getTime() - startDate.getTime()) / 1000;
     const xAxisLabelsCount = Math.floor(seconds);
     for (let i = 0; i < xAxisLabelsCount; i++) {
@@ -57,6 +58,7 @@ function getMetricYAxisLabel(metrics: Array<DeviceMetric>) {
     metrics.forEach((metric) => {
       const startDate = metric.startTime;
         const endDate = metric.endTime;
+        if(startDate === undefined || startDate === null || endDate === null || endDate === undefined) return;
         const seconds = (endDate.getTime() - startDate.getTime()) / 1000;
         const xAxisLabelsCount = Math.floor(seconds);
         for (let i = 0; i < xAxisLabelsCount; i++) {
